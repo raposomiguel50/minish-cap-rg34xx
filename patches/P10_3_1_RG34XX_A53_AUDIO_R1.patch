@@ -1,0 +1,16 @@
+diff --git a/port/port_m4a_backend.cpp b/port/port_m4a_backend.cpp
+index 8bd646e..167c12f 100644
+--- a/port/port_m4a_backend.cpp
++++ b/port/port_m4a_backend.cpp
+@@ -207,7 +207,10 @@ static AgbplaySoundMode MakeAgbplayMode(void) {
+ #elif defined(__ANDROID__)
+     const ResamplerType enhancedRs = ResamplerType::LINEAR;
+ #else
+-    const ResamplerType enhancedRs = ResamplerType::SINC;
++    /* RG34XX/H700 is Linux, but its in-order Cortex-A53 has the same measured\n     * synth-cost class as the weak Android A53 path above. Keep desktop Linux\n     * unchanged and opt in only from the RG34XX launcher. */
++    const char* rg34xxA53 = getenv("TMC_RG34XX_A53_AUDIO");
++    const ResamplerType enhancedRs =
++        (rg34xxA53 && *rg34xxA53 && rg34xxA53[0] != '0') ? ResamplerType::LINEAR : ResamplerType::SINC;
+ #endif
+     const ResamplerType rs = sState.gbaAccurate ? ResamplerType::NEAREST : enhancedRs;
+     mode.resamplerTypeNormal = rs;

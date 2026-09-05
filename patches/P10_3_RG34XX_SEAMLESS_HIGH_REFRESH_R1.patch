@@ -1,0 +1,352 @@
+diff --git a/port/port_bios.c b/port/port_bios.c
+index c27cad6..4e9f7ea 100644
+--- a/port/port_bios.c
++++ b/port/port_bios.c
+@@ -247,12 +247,101 @@ static void Port_UpdateInput(void) {
+     }
+ }
+ 
++
++static bool Port_RG34XX_Seamless(void) {
++    const char* e=getenv("TMC_RG34XX_SEAMLESS");
++    return e && *e && e[0] != '0';
++}
++
++static bool Port_RG34XX_HighRefresh2x(void) {
++    const char* e=getenv("TMC_RG34XX_HIGH_REFRESH_2X");
++    return e && *e && e[0] != '0';
++}
++
++static bool sRgGuideHeld=false;
++static bool sRgL2Held=false;
++static bool sRgR2Held=false;
++static bool sRgExitLatch=false;
++static bool sRgSettingsLatch=false;
++
++static bool Port_RG34XX_HandleSystemEvent(const SDL_Event* e) {
++    if (!Port_RG34XX_Seamless() || !e)
++        return false;
++
++    if (e->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN ||
++        e->type == SDL_EVENT_GAMEPAD_BUTTON_UP) {
++        const bool down=e->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN;
++        if (e->gbutton.button == SDL_GAMEPAD_BUTTON_GUIDE)
++            sRgGuideHeld=down;
++
++        /* MENU+X/Y are horizontal navigation only while settings are open.
++         * Outside settings they are simply reserved/consumed; they never
++         * trigger an original-GBA action or a soft-slot. */
++        if (down && sRgGuideHeld &&
++            e->gbutton.button == SDL_GAMEPAD_BUTTON_WEST) {
++            if (Port_DebugMenu_IsOpen()) {
++                Port_ImGui_RG34XXPulseHorizontal(-1);
++                fprintf(stderr,"[rg34xx] settings-nav=left\n");
++            }
++            return true;
++        }
++        if (down && sRgGuideHeld &&
++            e->gbutton.button == SDL_GAMEPAD_BUTTON_NORTH) {
++            if (Port_DebugMenu_IsOpen()) {
++                Port_ImGui_RG34XXPulseHorizontal(+1);
++                fprintf(stderr,"[rg34xx] settings-nav=right\n");
++            }
++            return true;
++        }
++    }
++
++    if (e->type == SDL_EVENT_GAMEPAD_AXIS_MOTION) {
++        const bool pressed=e->gaxis.value > 16384;
++        if (e->gaxis.axis == SDL_GAMEPAD_AXIS_LEFT_TRIGGER)
++            sRgL2Held=pressed;
++        if (e->gaxis.axis == SDL_GAMEPAD_AXIS_RIGHT_TRIGGER)
++            sRgR2Held=pressed;
++    }
++
++    if (!(sRgGuideHeld && sRgL2Held))
++        sRgExitLatch=false;
++    if (!(sRgGuideHeld && sRgR2Held))
++        sRgSettingsLatch=false;
++
++    if (sRgGuideHeld && sRgL2Held && !sRgExitLatch) {
++        sRgExitLatch=true;
++        fprintf(stderr,"[rg34xx] MENU+L2: returning to muOS.\n");
++        gQuitRequested=true;
++        return true;
++    }
++
++    if (sRgGuideHeld && sRgR2Held && !sRgSettingsLatch) {
++        sRgSettingsLatch=true;
++        Port_DebugMenu_Toggle();
++        fprintf(stderr,"[rg34xx] MENU+R2: settings=%s\n",
++                Port_DebugMenu_IsOpen() ? "open" : "closed");
++        return true;
++    }
++
++    /* MENU itself is a modifier, not a gameplay input. */
++    if ((e->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN ||
++         e->type == SDL_EVENT_GAMEPAD_BUTTON_UP) &&
++        e->gbutton.button == SDL_GAMEPAD_BUTTON_GUIDE)
++        return true;
++
++    return false;
++}
++
+ static void Port_PumpEvents(void) {
+     SDL_Event e;
+     while (SDL_PollEvent(&e)) {
+         /* Forward every event to ImGui so its window/keyboard tracking
+          * stays in sync. ImGui only consumes input when a widget is
+          * actively hovered/focused; game input passes through. */
++        if (Port_RG34XX_HandleSystemEvent(&e))
++            continue;
++        if (Port_ImGui_HandleRG34XXNav(&e))
++            continue;
+         Port_ImGui_HandleEvent(&e);
+         if (e.type == SDL_EVENT_QUIT) {
+             /* Route the close-button (X) / OS-quit signal through the
+@@ -489,7 +578,7 @@ static void Port_PumpEvents(void) {
+                     s_select_held = is_down;
+                 if (e.gbutton.button == SDL_GAMEPAD_BUTTON_START)
+                     s_start_held = is_down;
+-                if (is_down && s_select_held && s_start_held) {
++                if (!Port_RG34XX_Seamless() && is_down && s_select_held && s_start_held) {
+                     extern void Port_DebugMenu_Toggle(void);
+                     Port_DebugMenu_Toggle();
+                     s_select_held = false;
+@@ -500,7 +589,8 @@ static void Port_PumpEvents(void) {
+                  * the second button's down-edge; Select is not consumed so
+                  * repeated taps (e.g. frame-advance) work while held. Start is
+                  * excluded — that pair is the menu toggle. */
+-                if (is_down && s_select_held && e.gbutton.button != SDL_GAMEPAD_BUTTON_BACK &&
++                if (!Port_RG34XX_Seamless() && is_down && s_select_held &&
++                    e.gbutton.button != SDL_GAMEPAD_BUTTON_BACK &&
+                     e.gbutton.button != SDL_GAMEPAD_BUTTON_START) {
+                     switch (e.gbutton.button) {
+                         case SDL_GAMEPAD_BUTTON_SOUTH: /* A: reload point */
+@@ -907,6 +997,9 @@ void VBlankIntrWait(void) {
+          * console parity Port_Config_FrameTimeNs pins this to the GBA rate,
+          * which intentionally also pins presentation to one-per-tick. */
+         renderPeriodNs = (targetFps != 0 && !sFastForward) ? Port_Config_FrameTimeNs() : 16666667ULL;
++        if (Port_RG34XX_Seamless() && Port_RG34XX_HighRefresh2x() && tickPeriodNs != 0) {
++            renderPeriodNs = tickPeriodNs / 2;
++        }
+ 
+         now = entryNs;
+         if (tickPeriodNs == 0) {
+diff --git a/port/port_imgui_menu.cpp b/port/port_imgui_menu.cpp
+index 6337673..2f3c362 100644
+--- a/port/port_imgui_menu.cpp
++++ b/port/port_imgui_menu.cpp
+@@ -42,6 +42,7 @@ extern "C" int Port_GlslpRuntime_IsActive(void);
+ #include "port_runtime_config.h" /* PortInput enum (PORT_INPUT_*) */
+ #include "item_ids.h"            /* ITEM_* / BOTTLE_CHARM_* enum ids (C++-safe split header) */
+ #include <cstring>               /* strcmp — group-header breaks in the item toggle list */
++#include <cstdlib>               /* getenv — RG34XX seamless profile */
+ #include <cstdio>                /* snprintf — dungeon selector labels */
+ 
+ extern "C" u32* gTranslations[];
+@@ -100,6 +101,76 @@ static bool sRibbonEnabled = true; /* Office-style ribbon at top */
+ static SDL_Window* sWindow = nullptr;
+ static SDL_Renderer* sRenderer = nullptr;
+ 
++static bool Port_RG34XX_SeamlessUi(void) {
++    const char* e = getenv("TMC_RG34XX_SEAMLESS");
++    return e && *e && e[0] != '0';
++}
++
++extern "C" bool Port_ImGui_HandleRG34XXNav(const SDL_Event* event) {
++    if (!Port_RG34XX_SeamlessUi() || !sImGuiInited || !Port_DebugMenu_IsOpen() || !event)
++        return false;
++
++    ImGuiIO& io = ImGui::GetIO();
++
++    if (event->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN ||
++        event->type == SDL_EVENT_GAMEPAD_BUTTON_UP) {
++        const bool down = event->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN;
++        switch ((SDL_GamepadButton)event->gbutton.button) {
++            case SDL_GAMEPAD_BUTTON_WEST:  /* RG34XX X */
++                io.AddKeyEvent(ImGuiKey_Enter, down);
++                return true;
++            case SDL_GAMEPAD_BUTTON_NORTH: /* RG34XX Y */
++                io.AddKeyEvent(ImGuiKey_Escape, down);
++                return true;
++
++            /* Original GBA controls never navigate port settings. */
++            case SDL_GAMEPAD_BUTTON_SOUTH:
++            case SDL_GAMEPAD_BUTTON_EAST:
++            case SDL_GAMEPAD_BUTTON_BACK:
++            case SDL_GAMEPAD_BUTTON_START:
++            case SDL_GAMEPAD_BUTTON_LEFT_SHOULDER:
++            case SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER:
++            case SDL_GAMEPAD_BUTTON_DPAD_UP:
++            case SDL_GAMEPAD_BUTTON_DPAD_DOWN:
++            case SDL_GAMEPAD_BUTTON_DPAD_LEFT:
++            case SDL_GAMEPAD_BUTTON_DPAD_RIGHT:
++            case SDL_GAMEPAD_BUTTON_GUIDE:
++                return true;
++            default:
++                break;
++        }
++    }
++
++    if (event->type == SDL_EVENT_GAMEPAD_AXIS_MOTION) {
++        static bool l2=false, r2=false;
++        const bool pressed=event->gaxis.value > 16384;
++        if (event->gaxis.axis == SDL_GAMEPAD_AXIS_LEFT_TRIGGER) {
++            if (pressed != l2) {
++                l2=pressed;
++                io.AddKeyEvent(ImGuiKey_UpArrow, pressed);
++            }
++            return true;
++        }
++        if (event->gaxis.axis == SDL_GAMEPAD_AXIS_RIGHT_TRIGGER) {
++            if (pressed != r2) {
++                r2=pressed;
++                io.AddKeyEvent(ImGuiKey_DownArrow, pressed);
++            }
++            return true;
++        }
++    }
++    return false;
++}
++
++extern "C" void Port_ImGui_RG34XXPulseHorizontal(int direction) {
++    if (!Port_RG34XX_SeamlessUi() || !sImGuiInited || !Port_DebugMenu_IsOpen())
++        return;
++    ImGuiIO& io=ImGui::GetIO();
++    ImGuiKey key=direction < 0 ? ImGuiKey_LeftArrow : ImGuiKey_RightArrow;
++    io.AddKeyEvent(key,true);
++    io.AddKeyEvent(key,false);
++}
++
+ extern "C" void Port_ImGui_Init(SDL_Window* window, SDL_Renderer* renderer) {
+     if (sImGuiInited)
+         return;
+@@ -126,7 +197,8 @@ extern "C" void Port_ImGui_Init(SDL_Window* window, SDL_Renderer* renderer) {
+     /* Gamepad nav so Steam Deck users (and anyone on a controller) can
+      * drive the menu without keyboard/mouse. SDL3 backend forwards the
+      * connected gamepad's stick + D-pad + A/B as ImGui nav inputs. */
+-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
++    if (!Port_RG34XX_SeamlessUi())
++        io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+     /* Don't capture keyboard from the game — we render to a window
+      * that's also receiving game input; let game keys pass through
+      * unless an ImGui widget genuinely wants them. */
+@@ -1205,6 +1277,42 @@ static const char* InputLabel(int input) {
+ }
+ 
+ static void DrawRibbonControlsTab(void) {
++    if (Port_RG34XX_SeamlessUi()) {
++        ImGui::SeparatorText("RG34XX");
++        ImGui::TextWrapped("The original GBA controls remain unchanged: D-Pad, A, B, L, R, START and SELECT are reserved for the game.");
++
++        struct Row { const char* key; const char* action; };
++        static const Row rows[] = {
++            { "MENU + L2", "Return to muOS" },
++            { "MENU + R2", "Open / close port settings" },
++            { "L2 / R2", "Previous / next setting" },
++            { "X", "Confirm" },
++            { "Y", "Back" },
++            { "MENU + X / Y", "Previous / next value" },
++        };
++        if (ImGui::BeginTable("##rg34xx_controls",2,
++                              ImGuiTableFlags_SizingFixedFit |
++                              ImGuiTableFlags_RowBg |
++                              ImGuiTableFlags_BordersInnerH)) {
++            ImGui::TableSetupColumn("Control",ImGuiTableColumnFlags_WidthFixed,180.0f);
++            ImGui::TableSetupColumn("Action",ImGuiTableColumnFlags_WidthStretch);
++            for (const Row& row: rows) {
++                ImGui::TableNextRow();
++                ImGui::TableSetColumnIndex(0);
++                ImGui::TextUnformatted(row.key);
++                ImGui::TableSetColumnIndex(1);
++                ImGui::TextUnformatted(row.action);
++            }
++            ImGui::EndTable();
++        }
++
++        ImGui::SeparatorText("Presentation");
++        ImGui::TextWrapped("Gameplay remains at the original GBA timing. The RG34XX display is driven at an exact 2x presentation cadence while this DEV is running.");
++
++        ImGui::SeparatorText("Audio");
++        ImGui::TextWrapped("Original music, instruments and sound effects are preserved. Performance/audio diagnostics are written to log.txt only.");
++        return;
++    }
+     if (ImGui::CollapsingHeader("Keyboard shortcuts")) {
+         struct HotkeyRow {
+             const char* key;
+@@ -3228,15 +3336,15 @@ static void DrawRibbonAccessibilityTab(void) {
+                        "animals, enemies, exits); Shift+F10 steps through them one at a "
+                        "time; Ctrl+F10 reads the surface under you, walls around you, and "
+                        "exits.");
+-    if (ImGui::Button("Scan surroundings (F10)")) {
++    if (ImGui::Button(Port_RG34XX_SeamlessUi() ? "Scan surroundings" : "Scan surroundings (F10)")) {
+         Port_A11y_ScanSurroundings();
+     }
+     ImGui::SameLine();
+-    if (ImGui::Button("Cycle (Shift+F10)")) {
++    if (ImGui::Button(Port_RG34XX_SeamlessUi() ? "Cycle" : "Cycle (Shift+F10)")) {
+         Port_A11y_CycleNext();
+     }
+     ImGui::SameLine();
+-    if (ImGui::Button("Look around (Ctrl+F10)")) {
++    if (ImGui::Button(Port_RG34XX_SeamlessUi() ? "Look around" : "Look around (Ctrl+F10)")) {
+         Port_A11y_LookAround();
+     }
+ 
+@@ -4244,7 +4352,7 @@ extern "C" bool Port_ImGui_Render(void) {
+      * game's KEYINPUT is masked by port_bios.c. */
+     static bool sPrevMenuOpen = false;
+     const bool menuOpen = Port_DebugMenu_IsOpen();
+-    const bool navWanted = menuOpen || Port_RandoFileMenu_IsOpen();
++    const bool navWanted = !Port_RG34XX_SeamlessUi() && (menuOpen || Port_RandoFileMenu_IsOpen());
+     {
+         ImGuiIO& io = ImGui::GetIO();
+         if (navWanted) {
+diff --git a/port/port_imgui_menu.h b/port/port_imgui_menu.h
+index 8e74b5d..899e94b 100644
+--- a/port/port_imgui_menu.h
++++ b/port/port_imgui_menu.h
+@@ -13,6 +13,8 @@ void Port_ImGui_Shutdown(void);
+ bool Port_ImGui_CanPresent(void);
+ bool Port_ImGui_WantsTextInput(void);
+ void Port_ImGui_HandleEvent(const SDL_Event* event);
++bool Port_ImGui_HandleRG34XXNav(const SDL_Event* event);
++void Port_ImGui_RG34XXPulseHorizontal(int direction);
+ 
+ bool Port_ImGui_IsEnabled(void);
+ bool Port_ImGui_RibbonEnabled(void);
+diff --git a/port/port_ppu.cpp b/port/port_ppu.cpp
+index c88fa96..add2651 100644
+--- a/port/port_ppu.cpp
++++ b/port/port_ppu.cpp
+@@ -1644,11 +1644,25 @@ extern "C" void Port_PPU_PresentFrame(void) {
+              * failed), fall back to the legacy SDL_RenderDebugText
+              * overlay so the menu still works. The soft-slot overlay
+              * is a separate HUD layer and always uses SDL primitives. */
+-            if (!Port_ImGui_Render()) {
+-                Port_DebugMenu_Render(sRenderer, outW, outH);
++            {
++                const char* rgSeamless=getenv("TMC_RG34XX_SEAMLESS");
++                const bool seamless=rgSeamless && *rgSeamless && rgSeamless[0] != '0';
++                if (seamless) {
++                    if (Port_DebugMenu_IsOpen()) {
++                        SDL_SetRenderDrawColor(sRenderer,0,0,0,255);
++                        SDL_RenderClear(sRenderer);
++                        if (!Port_ImGui_Render()) {
++                            Port_DebugMenu_Render(sRenderer,outW,outH);
++                        }
++                    }
++                } else {
++                    if (!Port_ImGui_Render()) {
++                        Port_DebugMenu_Render(sRenderer,outW,outH);
++                    }
++                    Port_SoftSlots_RenderOverlay(sRenderer,outW,outH);
++                    Port_TouchControls_Render(sRenderer,outW,outH);
++                }
+             }
+-            Port_SoftSlots_RenderOverlay(sRenderer, outW, outH);
+-            Port_TouchControls_Render(sRenderer, outW, outH);
+         }
+         if (!SDL_RenderPresent(sRenderer)) {
+             /* Log throttled: a failing present on Android (EGL surface loss

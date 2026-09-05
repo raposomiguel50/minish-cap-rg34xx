@@ -1,0 +1,4 @@
+algorithm	digest	label	filename_hint
+sha1	b4bd50e4131b027c334547b4524e2dbbd4227130	USA	*.gba
+sha1	cff199b36ff173fb6faf152653d1bccf87c26fb7	EU	*.gba
+sha1	6c5404a1effb17f481f352181d0f1c61a2765c5d	JP	*.gba

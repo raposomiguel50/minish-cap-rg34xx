@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "project": "The Minish Cap - RG34XX",
+  "lab": "Miguel's Game Dev Lab",
+  "publication_type": "source-patch-launcher integration publication",
+  "upstream": {
+    "name": "Project Picori",
+    "repository": "https://github.com/EstebanPdN/zelda-tmc-3ds",
+    "commit": "e72663ca4059dabf9dbf7f03c36fc791d90b8db5",
+    "license": "GPL-3.0-or-later",
+    "vendored_complete_source": false
+  },
+  "validated_reference_target": {
+    "device": "ANBERNIC RG34XX-H",
+    "soc": "Allwinner H700",
+    "cfw": "muOS",
+    "architecture": "aarch64"
+  },
+  "private_v1": {
+    "sha256": "787ba3cb8c297ea44a0605745347fe5a6e792094f0be755b51a8200c1eadc710",
+    "distributed": false,
+    "reproducible_byte_for_byte_claim": false
+  },
+  "virtuaapu": {
+    "audited_commit": "6d5eb47901778a07c284e64bb4de993cf8773a9a",
+    "bundled": false,
+    "license_status_at_audit": "no explicit published license file found"
+  },
+  "proprietary_game_data_in_repository": false
+}

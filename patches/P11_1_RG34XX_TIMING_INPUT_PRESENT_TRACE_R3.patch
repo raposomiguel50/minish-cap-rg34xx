@@ -1,0 +1,282 @@
+diff --git a/port/port_bios.c b/port/port_bios.c
+index e745180..4b44c7e 100644
+--- a/port/port_bios.c
++++ b/port/port_bios.c
+@@ -39,6 +39,7 @@
+ #include <SDL3/SDL.h>
+ #include <math.h>
+ #include <setjmp.h>
++#include <stdarg.h>
+ #include "port_repro.h"
+ #endif
+ 
+@@ -111,6 +112,9 @@ u64 DivAndModCombined(s32 num, s32 denom) {
+     return ((u64)(u32)remainder << 32) | (u32)quotient;
+ }
+ 
++static void Port_P11TraceEvent(const SDL_Event* e);
++static void Port_P11TraceInputCommit(u16 keyinput);
++
+ static void Port_UpdateInput(void) {
+     Port_ApplyLanguage();
+     u16 keyinput = 0x03FF;
+@@ -164,6 +168,7 @@ static void Port_UpdateInput(void) {
+         if (Port_DebugMenu_IsOpen() || Port_SoftSlots_ConfigIsOpen() || Port_InGameSettingsModalIsOpen() ||
+             Port_RandoFileMenu_IsOpen()) {
+             *(vu16*)(gIoMem + REG_OFFSET_KEYINPUT) = keyinput;
++            Port_P11TraceInputCommit(keyinput);
+             Port_SoftSlots_TickPause();
+             sFrameNum++;
+             return;
+@@ -193,6 +198,7 @@ static void Port_UpdateInput(void) {
+     Port_SoftSlots_TickPause();
+ 
+     *(vu16*)(gIoMem + REG_OFFSET_KEYINPUT) = keyinput;
++    Port_P11TraceInputCommit(keyinput);
+ 
+     /* Edge cache served its purpose for this frame's KEYINPUT — clear
+      * so the next frame starts fresh and a held key reverts to the
+@@ -340,6 +346,7 @@ static bool Port_RG34XX_HandleSystemEvent(const SDL_Event* e) {
+ static void Port_PumpEvents(void) {
+     SDL_Event e;
+     while (SDL_PollEvent(&e)) {
++        Port_P11TraceEvent(&e);
+         /* Forward every event to ImGui so its window/keyboard tracking
+          * stays in sync. ImGui only consumes input when a widget is
+          * actively hovered/focused; game input passes through. */
+@@ -678,6 +685,110 @@ double gPortPaceFps = 0.0;
+ double gPortPaceTps = 0.0;
+ bool gPortPaceDecoupled = false;
+ 
++/* P11.1 RG34XX instrumentation only. Buffered /tmp trace minimizes observer effect. */
++static int sP11TraceEnabled = -1;
++static FILE* sP11TraceFile = NULL;
++static char sP11TraceBuffer[262144];
++static u64 sP11TraceLastFlushNs = 0;
++static u64 sP11TickSeq = 0;
++static u64 sP11PresentSeq = 0;
++static u64 sP11InputSeq = 0;
++static u64 sP11EventSeq = 0;
++static u64 sP11LastEventSeq = 0;
++static u64 sP11LastEventDequeueNs = 0;
++static u64 sP11LastEventSdlNs = 0;
++
++static bool Port_P11TraceEnabled(void) {
++    if (sP11TraceEnabled < 0) {
++        const char* e = getenv("TMC_P11_TRACE");
++        sP11TraceEnabled = (e && *e && e[0] != '0') ? 1 : 0;
++    }
++    return sP11TraceEnabled != 0;
++}
++
++static FILE* Port_P11TraceGetFile(void) {
++    if (!Port_P11TraceEnabled())
++        return NULL;
++    if (sP11TraceFile)
++        return sP11TraceFile;
++    const char* path = getenv("TMC_P11_TRACE_PATH");
++    if (!path || !*path)
++        path = "/tmp/minishcap-p11-trace.tsv";
++    sP11TraceFile = fopen(path, "wb");
++    if (!sP11TraceFile) {
++        sP11TraceEnabled = 0;
++        return NULL;
++    }
++    setvbuf(sP11TraceFile, sP11TraceBuffer, _IOFBF, sizeof(sP11TraceBuffer));
++    fprintf(sP11TraceFile, "#P11TRACE\t1\n");
++    fprintf(sP11TraceFile, "M\t%llu\tP10.3.2\t59.7275\t119.455\t1920\n",
++            (unsigned long long)SDL_GetTicksNS());
++    return sP11TraceFile;
++}
++
++static void Port_P11Trace(const char* fmt, ...) {
++    FILE* f = Port_P11TraceGetFile();
++    if (!f)
++        return;
++    va_list ap;
++    va_start(ap, fmt);
++    vfprintf(f, fmt, ap);
++    va_end(ap);
++    u64 now = SDL_GetTicksNS();
++    if (sP11TraceLastFlushNs == 0 || now - sP11TraceLastFlushNs >= 1000000000ULL) {
++        fflush(f);
++        sP11TraceLastFlushNs = now;
++    }
++}
++
++static void Port_P11TraceEvent(const SDL_Event* e) {
++    if (!Port_P11TraceEnabled() || !e)
++        return;
++    const char* kind = NULL;
++    int control = -1;
++    int value = 0;
++    u64 sdlTs = 0;
++    if (e->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN || e->type == SDL_EVENT_GAMEPAD_BUTTON_UP) {
++        kind = "BTN";
++        control = (int)e->gbutton.button;
++        value = (e->type == SDL_EVENT_GAMEPAD_BUTTON_DOWN) ? 1 : 0;
++        sdlTs = (u64)e->gbutton.timestamp;
++    } else if (e->type == SDL_EVENT_GAMEPAD_AXIS_MOTION) {
++        kind = "AXIS";
++        control = (int)e->gaxis.axis;
++        value = (int)e->gaxis.value;
++        sdlTs = (u64)e->gaxis.timestamp;
++    } else {
++        return;
++    }
++    u64 deq = SDL_GetTicksNS();
++    u64 seq = ++sP11EventSeq;
++    sP11LastEventSeq = seq;
++    sP11LastEventDequeueNs = deq;
++    sP11LastEventSdlNs = sdlTs;
++    Port_P11Trace("E\t%llu\t%llu\t%llu\t%llu\t%s\t%d\t%d\n",
++                  (unsigned long long)seq,
++                  (unsigned long long)deq,
++                  (unsigned long long)sdlTs,
++                  (unsigned long long)sP11TickSeq,
++                  kind, control, value);
++}
++
++static void Port_P11TraceInputCommit(u16 keyinput) {
++    if (!Port_P11TraceEnabled())
++        return;
++    u64 now = SDL_GetTicksNS();
++    u64 seq = ++sP11InputSeq;
++    Port_P11Trace("I\t%llu\t%llu\t%llu\t%04x\t%llu\t%llu\t%llu\n",
++                  (unsigned long long)seq,
++                  (unsigned long long)now,
++                  (unsigned long long)sP11TickSeq,
++                  (unsigned)keyinput,
++                  (unsigned long long)sP11LastEventSeq,
++                  (unsigned long long)sP11LastEventDequeueNs,
++                  (unsigned long long)sP11LastEventSdlNs);
++}
++
+ int Port_Profile_Enabled(void); /* defined below */
+ 
+ /* TMC_TEST_INPUT="420:start,480:a,520:down": fire synthetic input edges at
+@@ -765,6 +876,13 @@ static bool Port_PacingForceLegacy(void) {
+  * whip the budget around). */
+ static void Port_PresentOnce(bool firstOfTick) {
+     u64 t0 = SDL_GetTicksNS();
++    u64 p11PresentSeq = ++sP11PresentSeq;
++    Port_P11Trace("PB\t%llu\t%llu\t%llu\t%d\t%d\n",
++                  (unsigned long long)p11PresentSeq,
++                  (unsigned long long)sP11TickSeq,
++                  (unsigned long long)t0,
++                  firstOfTick ? 1 : 0,
++                  Port_PPU_VSyncEnabled() ? 1 : 0);
+     u64 end, dt;
+     /* LCD persistence accumulates once per tick (rho is defined per GBA
+      * frame); repeat presents blend against the accumulator read-only. */
+@@ -773,6 +891,11 @@ static void Port_PresentOnce(bool firstOfTick) {
+     port_hdma_vblank_reset();
+     end = SDL_GetTicksNS();
+     dt = end - t0;
++    Port_P11Trace("PE\t%llu\t%llu\t%llu\t%llu\n",
++                  (unsigned long long)p11PresentSeq,
++                  (unsigned long long)sP11TickSeq,
++                  (unsigned long long)end,
++                  (unsigned long long)dt);
+     sPresentCostEmaNs += (u64)(((s64)dt - (s64)sPresentCostEmaNs) / 8);
+     sLastPresentEndNs = end;
+     sPresentsThisSec++;
+@@ -858,6 +981,11 @@ void VBlankIntrWait(void) {
+ #else
+     u64 nowNs;
+     bool decoupled;
++    u64 p11TickEntryNs = SDL_GetTicksNS();
++    ++sP11TickSeq;
++    Port_P11Trace("B\t%llu\t%llu\n",
++                  (unsigned long long)sP11TickSeq,
++                  (unsigned long long)p11TickEntryNs);
+ 
+     /* Practice-mode pause: hold the engine here, presenting and pumping
+      * events only (no Port_UpdateInput, so the game state can't advance),
+@@ -1008,6 +1136,16 @@ void VBlankIntrWait(void) {
+         if (Port_RG34XX_Seamless() && Port_RG34XX_HighRefresh2x() && tickPeriodNs != 0) {
+             renderPeriodNs = tickPeriodNs / 2;
+         }
++        Port_P11Trace("C\t%llu\t%llu\t%u\t%llu\t%llu\t%d\t%llu\t%llu\t%u\n",
++                      (unsigned long long)sP11TickSeq,
++                      (unsigned long long)entryNs,
++                      (unsigned)targetFps,
++                      (unsigned long long)tickPeriodNs,
++                      (unsigned long long)renderPeriodNs,
++                      Port_PPU_VSyncEnabled() ? 1 : 0,
++                      (unsigned long long)sNextPresentNs,
++                      (unsigned long long)sPresentCostEmaNs,
++                      (unsigned)sVsyncOverloadHold);
+ 
+         now = entryNs;
+         if (tickPeriodNs == 0) {
+@@ -1036,6 +1174,7 @@ void VBlankIntrWait(void) {
+              * speed at a lower FPS — but never lets more than ~100 ms pass
+              * without showing a frame. */
+             bool firstOfTick = true;
++            u64 p11PresentBase = sP11PresentSeq;
+             for (;;) {
+                 now = SDL_GetTicksNS();
+                 if (now >= deadline) {
+@@ -1063,6 +1202,21 @@ void VBlankIntrWait(void) {
+                     break;
+                 }
+                 if (now >= sNextPresentNs) {
++                    {
++                        const int p11VsyncEager = (Port_PPU_VSyncEnabled() && sVsyncOverloadHold == 0) ? 1 : 0;
++                        const int p11Fits = (now + sPresentCostEmaNs <= deadline) ? 1 : 0;
++                        const int p11Starve = (now - sLastPresentEndNs > 100000000ULL) ? 1 : 0;
++                        const int p11Accept = (p11VsyncEager || p11Fits || p11Starve) ? 1 : 0;
++                        Port_P11Trace("D\t%llu\t%llu\t%llu\t%llu\t%llu\t%d\t%u\t%d\t%d\t%d\n",
++                                      (unsigned long long)sP11TickSeq,
++                                      (unsigned long long)now,
++                                      (unsigned long long)deadline,
++                                      (unsigned long long)sNextPresentNs,
++                                      (unsigned long long)sPresentCostEmaNs,
++                                      Port_PPU_VSyncEnabled() ? 1 : 0,
++                                      (unsigned)sVsyncOverloadHold,
++                                      p11Fits, p11Starve, p11Accept);
++                    }
+                     /* With VSync active the fit check must not apply: the
+                      * measured "cost" is mostly the blocking wait to the next
+                      * refresh boundary, which puts a 120-target on a 120 Hz
+@@ -1088,6 +1242,12 @@ void VBlankIntrWait(void) {
+                     }
+                     /* Present due but wouldn't fit before the deadline:
+                      * hold it for the next window, close this tick out. */
++                    Port_P11Trace("R\t%llu\t%llu\t%llu\t%llu\t%llu\n",
++                                  (unsigned long long)sP11TickSeq,
++                                  (unsigned long long)now,
++                                  (unsigned long long)deadline,
++                                  (unsigned long long)sNextPresentNs,
++                                  (unsigned long long)sPresentCostEmaNs);
+                     SDL_DelayPrecise(deadline - now);
+                     continue;
+                 }
+@@ -1097,6 +1257,16 @@ void VBlankIntrWait(void) {
+                         SDL_DelayPrecise(until - now);
+                 }
+             }
++            {
++                u64 p11Close = SDL_GetTicksNS();
++                u64 p11Late = p11Close > deadline ? p11Close - deadline : 0;
++                Port_P11Trace("X\t%llu\t%llu\t%llu\t%llu\t%llu\n",
++                              (unsigned long long)sP11TickSeq,
++                              (unsigned long long)p11Close,
++                              (unsigned long long)deadline,
++                              (unsigned long long)(sP11PresentSeq - p11PresentBase),
++                              (unsigned long long)p11Late);
++            }
+             lastFrameNs = deadline;
+         }
+ 
+@@ -1201,6 +1371,9 @@ void VBlankIntrWait(void) {
+     }
+ 
+     VBlankIntr();
++    Port_P11Trace("V\t%llu\t%llu\n",
++                  (unsigned long long)sP11TickSeq,
++                  (unsigned long long)SDL_GetTicksNS());
+ #endif
+ }
+ 

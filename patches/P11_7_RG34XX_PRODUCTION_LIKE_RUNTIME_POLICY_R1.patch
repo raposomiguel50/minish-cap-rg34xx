@@ -1,0 +1,29 @@
+diff --git a/port/port_bios.c b/port/port_bios.c
+index e745180..19ebb4e 100644
+--- a/port/port_bios.c
++++ b/port/port_bios.c
+@@ -896,7 +896,11 @@ void VBlankIntrWait(void) {
+          * Unknown refresh (headless/dummy) keeps the old 60 Hz assumption. */
+         unsigned refresh = Port_PPU_DisplayRefreshRate();
+         u32 vsyncCeiling = refresh > 0 ? (u32)refresh : 60;
+-        bool mustDisable = sFastForward || targetFps == 0 || targetFps > vsyncCeiling;
++        /* P11.7 production-like policy: preserve the P11.2 result without
++         * carrying P11.1 trace code. On the validated RG34XX seamless
++         * high-refresh path, let the deadline pacer own presentation timing. */
++        const bool rgHighRefreshNoVSync = Port_RG34XX_Seamless() && Port_RG34XX_HighRefresh2x();
++        bool mustDisable = sFastForward || targetFps == 0 || targetFps > vsyncCeiling || rgHighRefreshNoVSync;
+         Port_PPU_SetVSync(Port_Config_GetVSync() && !mustDisable);
+     }
+ 
+@@ -1006,7 +1010,10 @@ void VBlankIntrWait(void) {
+          * which intentionally also pins presentation to one-per-tick. */
+         renderPeriodNs = (targetFps != 0 && !sFastForward) ? Port_Config_FrameTimeNs() : 16666667ULL;
+         if (Port_RG34XX_Seamless() && Port_RG34XX_HighRefresh2x() && tickPeriodNs != 0) {
+-            renderPeriodNs = tickPeriodNs / 2;
++            /* P11.7 production-like policy: preserve the accepted P11.4
++             * one-application-present-per-logical-tick behaviour while the
++             * 119.455-Hz panel naturally scans the submitted frame twice. */
++            renderPeriodNs = tickPeriodNs;
+         }
+ 
+         now = entryNs;

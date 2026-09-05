@@ -1,0 +1,17 @@
+diff --git a/port/port_bios.c b/port/port_bios.c
+index c8494eb..017df41 100644
+--- a/port/port_bios.c
++++ b/port/port_bios.c
+@@ -1150,7 +1150,11 @@ void VBlankIntrWait(void) {
+          * which intentionally also pins presentation to one-per-tick. */
+         renderPeriodNs = (targetFps != 0 && !sFastForward) ? Port_Config_FrameTimeNs() : 16666667ULL;
+         if (Port_RG34XX_Seamless() && Port_RG34XX_HighRefresh2x() && tickPeriodNs != 0) {
+-            renderPeriodNs = tickPeriodNs / 2;
++            /* P11.4 RG34XX/Mali A/B: keep the panel at 119.455 Hz but submit
++             * one new application frame per 59.7275 Hz logical game tick.
++             * The display naturally scans that frame twice; do not spend a
++             * second backend swap on identical logical content. */
++            renderPeriodNs = tickPeriodNs;
+         }
+         Port_P11Trace("C\t%llu\t%llu\t%u\t%llu\t%llu\t%d\t%llu\t%llu\t%u\n",
+                       (unsigned long long)sP11TickSeq,

@@ -1,0 +1,15 @@
+diff --git a/port/port_main.c b/port/port_main.c
+index e6abec7..d1f4d40 100644
+--- a/port/port_main.c
++++ b/port/port_main.c
+@@ -951,5 +951,10 @@ int main(int argc, char* argv[]) {
+     RG_EXIT_DIAG_MARK("AFTER_SDL_QUIT");
+     RG_EXIT_DIAG_MARK("BEFORE_RETURN_0");
+ #undef RG_EXIT_DIAG_MARK
++    if (getenv("TMC_RG34XX_SEAMLESS")) {
++        fprintf(stderr, "[exitdiag] BEFORE_RG34XX__EXIT_0\\n");
++        fflush(NULL);
++        _Exit(0);
++    }
+     return 0;
+ }

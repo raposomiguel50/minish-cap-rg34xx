@@ -1,0 +1,119 @@
+diff --git a/port/port_bugreport.cpp b/port/port_bugreport.cpp
+index 1829871..1122937 100644
+--- a/port/port_bugreport.cpp
++++ b/port/port_bugreport.cpp
+@@ -608,9 +608,58 @@ const char* SignalName(int sig) {
+  * targets and small enough not to bloat .bss. */
+ alignas(16) uint8_t g_altstack[65536];
+ 
++static size_t ExitDiagAppendLiteral(char* out, size_t cap, size_t pos, const char* s) {
++    while (*s && pos < cap) {
++        out[pos++] = *s++;
++    }
++    return pos;
++}
++
++static size_t ExitDiagAppendHex(char* out, size_t cap, size_t pos, uintptr_t value) {
++    static const char hex[] = "0123456789abcdef";
++    pos = ExitDiagAppendLiteral(out, cap, pos, "0x");
++    for (int shift = (int)(sizeof(uintptr_t) * 8) - 4; shift >= 0 && pos < cap; shift -= 4) {
++        out[pos++] = hex[(value >> shift) & 0xFu];
++    }
++    return pos;
++}
++
++static size_t ExitDiagAppendDec(char* out, size_t cap, size_t pos, unsigned value) {
++    char tmp[16];
++    size_t n = 0;
++    do {
++        tmp[n++] = (char)('0' + (value % 10u));
++        value /= 10u;
++    } while (value && n < sizeof(tmp));
++    while (n && pos < cap) {
++        out[pos++] = tmp[--n];
++    }
++    return pos;
++}
++
++static void ExitDiagRawCrashMarker(int sig, void* fault_addr, const CrashRegs& regs) {
++    char out[256];
++    size_t pos = 0;
++    pos = ExitDiagAppendLiteral(out, sizeof(out), pos, "[exitdiag] RAW_CRASH sig=");
++    pos = ExitDiagAppendDec(out, sizeof(out), pos, (unsigned)sig);
++    pos = ExitDiagAppendLiteral(out, sizeof(out), pos, " fault=");
++    pos = ExitDiagAppendHex(out, sizeof(out), pos, (uintptr_t)fault_addr);
++    pos = ExitDiagAppendLiteral(out, sizeof(out), pos, " ip=");
++    pos = ExitDiagAppendHex(out, sizeof(out), pos, (uintptr_t)regs.ip);
++    pos = ExitDiagAppendLiteral(out, sizeof(out), pos, " sp=");
++    pos = ExitDiagAppendHex(out, sizeof(out), pos, (uintptr_t)regs.sp);
++    pos = ExitDiagAppendLiteral(out, sizeof(out), pos, " lr=");
++    pos = ExitDiagAppendHex(out, sizeof(out), pos, (uintptr_t)regs.lr);
++    if (pos < sizeof(out)) {
++        out[pos++] = '\n';
++    }
++    (void)write(STDERR_FILENO, out, pos);
++}
++
+ void CrashHandlerPosix(int sig, siginfo_t* info, void* ucontext) {
+     CrashRegs regs = ExtractCrashRegs(ucontext);
+     void* fault_addr = info ? info->si_addr : nullptr;
++    ExitDiagRawCrashMarker(sig, fault_addr, regs);
+ 
+     char reason[96];
+     std::snprintf(reason, sizeof(reason), "crash:%s@%p ip=%p", SignalName(sig), fault_addr, regs.ip);
+diff --git a/port/port_main.c b/port/port_main.c
+index ccf803e..e6abec7 100644
+--- a/port/port_main.c
++++ b/port/port_main.c
+@@ -905,14 +905,51 @@ int main(int argc, char* argv[]) {
+ 
+     AgbMain();
+ 
++    /* RG34XX diagnostic build only: locate an exit-time fault without changing
++     * shutdown ordering or semantics. stderr is redirected by the launcher. */
++    const char* rgExitDiag = getenv("TMC_RG34XX_EXIT_DIAG");
++    const bool rgExitDiagOn = rgExitDiag && *rgExitDiag && rgExitDiag[0] != '0';
++#define RG_EXIT_DIAG_MARK(phase)                                                                                         \
++    do {                                                                                                                 \
++        if (rgExitDiagOn) {                                                                                              \
++            fprintf(stderr, "[exitdiag] %s\\n", phase);                                                                \
++            fflush(stderr);                                                                                              \
++        }                                                                                                                \
++    } while (0)
++
++    RG_EXIT_DIAG_MARK("AGBMAIN_RETURNED");
++    RG_EXIT_DIAG_MARK("BEFORE_TTS_SHUTDOWN");
+     { Port_TTS_Shutdown(); }
++    RG_EXIT_DIAG_MARK("AFTER_TTS_SHUTDOWN");
++
++    RG_EXIT_DIAG_MARK("BEFORE_GPU_SHUTDOWN");
+     { Port_GPU_Shutdown(); }
++    RG_EXIT_DIAG_MARK("AFTER_GPU_SHUTDOWN");
+ 
++    RG_EXIT_DIAG_MARK("BEFORE_DISCORD_SHUTDOWN");
+     { Port_DiscordRpc_Shutdown(); }
++    RG_EXIT_DIAG_MARK("AFTER_DISCORD_SHUTDOWN");
++
++    RG_EXIT_DIAG_MARK("BEFORE_AUDIO_SHUTDOWN");
+     Port_Audio_Shutdown();
++    RG_EXIT_DIAG_MARK("AFTER_AUDIO_SHUTDOWN");
++
++    RG_EXIT_DIAG_MARK("BEFORE_PPU_SHUTDOWN");
+     Port_PPU_Shutdown();
++    RG_EXIT_DIAG_MARK("AFTER_PPU_SHUTDOWN");
++
++    RG_EXIT_DIAG_MARK("BEFORE_GAMEPAD_CLOSE");
+     Port_Config_CloseGamepads();
++    RG_EXIT_DIAG_MARK("AFTER_GAMEPAD_CLOSE");
++
++    RG_EXIT_DIAG_MARK("BEFORE_WINDOW_DESTROY");
+     SDL_DestroyWindow(window);
++    RG_EXIT_DIAG_MARK("AFTER_WINDOW_DESTROY");
++
++    RG_EXIT_DIAG_MARK("BEFORE_SDL_QUIT");
+     SDL_Quit();
++    RG_EXIT_DIAG_MARK("AFTER_SDL_QUIT");
++    RG_EXIT_DIAG_MARK("BEFORE_RETURN_0");
++#undef RG_EXIT_DIAG_MARK
+     return 0;
+ }

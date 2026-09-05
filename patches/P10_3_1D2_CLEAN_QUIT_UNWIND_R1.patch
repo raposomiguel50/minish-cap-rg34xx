@@ -1,0 +1,165 @@
+diff --git a/port/port_bios.c b/port/port_bios.c
+index 4e9f7ea..e745180 100644
+--- a/port/port_bios.c
++++ b/port/port_bios.c
+@@ -64,6 +64,11 @@ u64 DivAndModCombined(s32 num, s32 denom) {
+ #else
+ 
+ static bool gQuitRequested = false;
++
++int Port_QuitRequested(void) {
++    return gQuitRequested ? 1 : 0;
++}
++
+ static bool sFastForward = false;
+ static int sFrameNum = 0;
+ 
+@@ -338,8 +343,11 @@ static void Port_PumpEvents(void) {
+         /* Forward every event to ImGui so its window/keyboard tracking
+          * stays in sync. ImGui only consumes input when a widget is
+          * actively hovered/focused; game input passes through. */
+-        if (Port_RG34XX_HandleSystemEvent(&e))
++        if (Port_RG34XX_HandleSystemEvent(&e)) {
++            if (gQuitRequested)
++                return;
+             continue;
++        }
+         if (Port_ImGui_HandleRG34XXNav(&e))
+             continue;
+         Port_ImGui_HandleEvent(&e);
+@@ -866,7 +874,7 @@ void VBlankIntrWait(void) {
+         if (Port_ImGui_QuitConfirmed())
+             gQuitRequested = true;
+         if (gQuitRequested)
+-            exit(0);
++            return;
+         SDL_Delay(4); /* ~4ms: responsive UI without a busy spin */
+     }
+ 
+@@ -1161,10 +1169,13 @@ void VBlankIntrWait(void) {
+         gQuitRequested = true;
+ 
+     if (gQuitRequested) {
+-        exit(0);
++        return;
+     }
+ 
+     Port_PumpEvents();
++    if (gQuitRequested) {
++        return;
++    }
+     Port_UpdateInput();
+     Port_TestInputTick(gMain.ticks);
+ 
+diff --git a/src/interrupts.c b/src/interrupts.c
+index 73f76f3..51d77f7 100644
+--- a/src/interrupts.c
++++ b/src/interrupts.c
+@@ -17,6 +17,9 @@
+ 
+ #ifdef PC_PORT
+ #include "cpu/mode1.h"
++#if !defined(TMC_3DS)
++extern int Port_QuitRequested(void);
++#endif
+ #endif
+ 
+ extern void CreateSparkle(Entity* entity);
+@@ -218,6 +221,10 @@ void LoadResources(void) {
+ void WaitForNextFrame(void) {
+     gMain.interruptFlag = 0;
+     VBlankIntrWait();
++#if defined(PC_PORT) && !defined(TMC_3DS)
++    if (Port_QuitRequested())
++        return;
++#endif
+     do {
+         // Our VBlankIntr will set this flag
+     } while (gMain.interruptFlag == 0);
+diff --git a/src/main.c b/src/main.c
+index f32ce1f..f799ae6 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -18,6 +18,9 @@
+ #include "port_second_screen_state.h"
+ #include "port_widescreen.h"
+ #include <setjmp.h>
++#if !defined(TMC_3DS)
++extern int Port_QuitRequested(void);
++#endif
+ #endif
+ #ifdef TMC_3DS
+ #include "platform_3ds.h"
+@@ -93,6 +96,8 @@ void AgbMain(void) {
+     while (
+ #ifdef TMC_3DS
+         Platform3DS_IsRunning()
++#elif defined(PC_PORT)
++        !Port_QuitRequested()
+ #else
+         TRUE
+ #endif
+@@ -110,8 +115,16 @@ void AgbMain(void) {
+                 if (gMain.pauseFrames != 0) {
+                     do {
+                         VBlankIntrWait();
++#if defined(PC_PORT) && !defined(TMC_3DS)
++                        if (Port_QuitRequested())
++                            break;
++#endif
+                     } while (--gMain.pauseFrames);
+                 }
++#if defined(PC_PORT) && !defined(TMC_3DS)
++                if (Port_QuitRequested())
++                    break;
++#endif
+ 
+                 if (gMain.pauseCount != 0) {
+                     int cnt;
+@@ -119,8 +132,16 @@ void AgbMain(void) {
+                     cnt = gMain.pauseInterval;
+                     while (cnt-- > 0) {
+                         VBlankIntrWait();
++#if defined(PC_PORT) && !defined(TMC_3DS)
++                        if (Port_QuitRequested())
++                            break;
++#endif
+                     }
+                 }
++#if defined(PC_PORT) && !defined(TMC_3DS)
++                if (Port_QuitRequested())
++                    break;
++#endif
+ 
+                 gMain.ticks++;
+                 sTaskHandlers[gMain.task]();
+@@ -141,6 +162,10 @@ void AgbMain(void) {
+                 AudioMain();
+                 break;
+         }
++#if defined(PC_PORT) && !defined(TMC_3DS)
++        if (Port_QuitRequested())
++            break;
++#endif
+ #ifdef PC_PORT
+         Port_SecondScreenState_Publish();
+ #endif
+@@ -332,10 +357,18 @@ void SetSleepMode(void) {
+ 
+     do {
+         VBlankIntrWait();
++#if defined(PC_PORT) && !defined(TMC_3DS)
++        if (Port_QuitRequested())
++            return;
++#endif
+     } while (REG_KEYINPUT != 0x03FF);
+ 
+     do {
+         VBlankIntrWait();
++#if defined(PC_PORT) && !defined(TMC_3DS)
++        if (Port_QuitRequested())
++            return;
++#endif
+     } while (REG_KEYINPUT == 0x03FF);
+ 
+     main = &gMain;

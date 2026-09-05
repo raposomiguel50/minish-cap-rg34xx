@@ -1,0 +1,16 @@
+diff --git a/tools/src/assets_extractor/assets_extractor_main.cpp b/tools/src/assets_extractor/assets_extractor_main.cpp
+index c2b0cc5..2074e08 100644
+--- a/tools/src/assets_extractor/assets_extractor_main.cpp
++++ b/tools/src/assets_extractor/assets_extractor_main.cpp
+@@ -1,9 +1,9 @@
++#include <fmt/format.h>
++
+ #include "assets_extractor_api.hpp"
+ #include "port_asset_log.hpp"
+ #include "global.h"
+ 
+-#include <fmt/format.h>
+-
+ #include <cstddef>
+ #include <cstring>
+ #include <filesystem>

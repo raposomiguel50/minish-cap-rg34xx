@@ -1,0 +1,19 @@
+diff --git a/port/port_bios.c b/port/port_bios.c
+index 4b44c7e..2510825 100644
+--- a/port/port_bios.c
++++ b/port/port_bios.c
+@@ -1024,7 +1024,13 @@ void VBlankIntrWait(void) {
+          * Unknown refresh (headless/dummy) keeps the old 60 Hz assumption. */
+         unsigned refresh = Port_PPU_DisplayRefreshRate();
+         u32 vsyncCeiling = refresh > 0 ? (u32)refresh : 60;
+-        bool mustDisable = sFastForward || targetFps == 0 || targetFps > vsyncCeiling;
++        /* P11.2 RG34XX A/B: the P11.1 trace proved post-raster/present
++         * blocking dominates the 8.371-ms repeat-present budget. Force VSync
++         * off only for the validated RG34XX 119.455-Hz seamless profile so
++         * the existing deadline pacer, not SDL_RenderPresent blocking, owns
++         * the 2x cadence. No game-tick/audio/render-period policy changes. */
++        const bool rgHighRefreshNoVSync = Port_RG34XX_Seamless() && Port_RG34XX_HighRefresh2x();
++        bool mustDisable = sFastForward || targetFps == 0 || targetFps > vsyncCeiling || rgHighRefreshNoVSync;
+         Port_PPU_SetVSync(Port_Config_GetVSync() && !mustDisable);
+     }
+ 

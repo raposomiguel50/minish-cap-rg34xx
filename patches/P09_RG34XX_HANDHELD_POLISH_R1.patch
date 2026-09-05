@@ -1,0 +1,132 @@
+diff --git a/port/port_bios.c b/port/port_bios.c
+index c27cad6..cfa34dc 100644
+--- a/port/port_bios.c
++++ b/port/port_bios.c
+@@ -67,6 +67,14 @@ static bool gQuitRequested = false;
+ static bool sFastForward = false;
+ static int sFrameNum = 0;
+ 
++/* RG34XX-specific behavior is opt-in from the PortMaster launcher so the
++ * generic desktop/Android/other-handheld builds retain their existing input
++ * contract. muOS exposes the physical MENU key as SDL gamepad GUIDE. */
++static bool Port_IsRg34xxHandheld(void) {
++    const char* v = getenv("TMC_RG34XX_HANDHELD");
++    return v != NULL && v[0] == '1';
++}
++
+ /* Soft-reset re-entry. AgbMain arms this with setjmp() at the top of the
+  * game loop; SoftReset() longjmp()s back to re-run AgbMain's init (which
+  * RegisterRamResets everything except EWRAM, preserving save data) — the
+@@ -485,6 +493,17 @@ static void Port_PumpEvents(void) {
+             const bool is_down = (e.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN);
+             const bool is_up = (e.type == SDL_EVENT_GAMEPAD_BUTTON_UP);
+             if (is_down || is_up) {
++                /* RG34XX MENU -> direct application exit. The binary returns
++                 * normally to the PortMaster launcher, which then executes
++                 * pm_finish and restores muOS. This is deliberately gated by
++                 * TMC_RG34XX_HANDHELD so GUIDE keeps its generic behavior on
++                 * other targets. */
++                if (is_down && e.gbutton.button == SDL_GAMEPAD_BUTTON_GUIDE && Port_IsRg34xxHandheld()) {
++                    fprintf(stderr, "[rg34xx] MENU pressed: returning to muOS.\n");
++                    gQuitRequested = true;
++                    continue;
++                }
++
+                 if (e.gbutton.button == SDL_GAMEPAD_BUTTON_BACK)
+                     s_select_held = is_down;
+                 if (e.gbutton.button == SDL_GAMEPAD_BUTTON_START)
+diff --git a/port/port_imgui_menu.cpp b/port/port_imgui_menu.cpp
+index 6337673..2051f01 100644
+--- a/port/port_imgui_menu.cpp
++++ b/port/port_imgui_menu.cpp
+@@ -43,6 +43,7 @@ extern "C" int Port_GlslpRuntime_IsActive(void);
+ #include "item_ids.h"            /* ITEM_* / BOTTLE_CHARM_* enum ids (C++-safe split header) */
+ #include <cstring>               /* strcmp — group-header breaks in the item toggle list */
+ #include <cstdio>                /* snprintf — dungeon selector labels */
++#include <cstdlib>               /* getenv — handheld profile */
+ 
+ extern "C" u32* gTranslations[];
+ extern "C" void Port_ApplyLanguage(void);
+@@ -100,6 +101,11 @@ static bool sRibbonEnabled = true; /* Office-style ribbon at top */
+ static SDL_Window* sWindow = nullptr;
+ static SDL_Renderer* sRenderer = nullptr;
+ 
++static bool IsRg34xxHandheld() {
++    const char* v = std::getenv("TMC_RG34XX_HANDHELD");
++    return v != nullptr && v[0] == '1';
++}
++
+ extern "C" void Port_ImGui_Init(SDL_Window* window, SDL_Renderer* renderer) {
+     if (sImGuiInited)
+         return;
+@@ -1205,7 +1211,18 @@ static const char* InputLabel(int input) {
+ }
+ 
+ static void DrawRibbonControlsTab(void) {
+-    if (ImGui::CollapsingHeader("Keyboard shortcuts")) {
++    if (IsRg34xxHandheld()) {
++        if (ImGui::CollapsingHeader("RG34XX controls", ImGuiTreeNodeFlags_DefaultOpen)) {
++            ImGui::TextUnformatted("D-Pad        Move / navigate");
++            ImGui::TextUnformatted("A / B        GBA A / B");
++            ImGui::TextUnformatted("L / R        GBA L / R");
++            ImGui::TextUnformatted("START        GBA Start / pause");
++            ImGui::TextUnformatted("SELECT       GBA Select / map");
++            ImGui::TextUnformatted("X / Y / L2 / R2   Port soft slots");
++            ImGui::TextUnformatted("SELECT + START     Open / close settings");
++            ImGui::TextUnformatted("MENU               Return directly to muOS");
++        }
++    } else if (ImGui::CollapsingHeader("Keyboard shortcuts")) {
+         struct HotkeyRow {
+             const char* key;
+             const char* action;
+@@ -1338,9 +1355,9 @@ static void DrawRibbonControlsTab(void) {
+             ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+             if (ImGui::BeginPopupModal("Capture binding", nullptr,
+                                        ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove)) {
+-                ImGui::Text("Press a key or controller button for:");
++                ImGui::TextUnformatted(IsRg34xxHandheld() ? "Press a controller button for:" : "Press a key or controller button for:");
+                 ImGui::TextColored(ImVec4(1, 0.94f, 0.25f, 1), "%s", InputLabel(i));
+-                ImGui::Text("Esc cancels.");
++                ImGui::TextUnformatted(IsRg34xxHandheld() ? "Choose Cancel to stop binding." : "Esc cancels.");
+                 ImGui::Separator();
+                 if (ImGui::Button("Cancel") || !Port_Config_IsCapturingBinding()) {
+                     Port_Config_CancelCaptureBinding();
+@@ -3884,10 +3901,16 @@ static void DrawMenuPage(int depth) {
+ 
+         ImGui::Separator();
+         ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.6f, 0.6f, 0.6f, 1.0f));
+-        ImGui::TextUnformatted("Up/Dn move  Enter activate  L/R cycle  Esc back");
+-        ImGui::TextUnformatted("Double-click activate  Right-click cycle");
+-        if (depth == 0)
+-            ImGui::TextUnformatted("F5/F6 quicksave/load   F9 bug report   (Controls tab: all keys)");
++        if (IsRg34xxHandheld()) {
++            ImGui::TextUnformatted("D-Pad move/cycle   A activate   B back");
++            if (depth == 0)
++                ImGui::TextUnformatted("SELECT+START settings   MENU return to muOS");
++        } else {
++            ImGui::TextUnformatted("Up/Dn move  Enter activate  L/R cycle  Esc back");
++            ImGui::TextUnformatted("Double-click activate  Right-click cycle");
++            if (depth == 0)
++                ImGui::TextUnformatted("F5/F6 quicksave/load   F9 bug report   (Controls tab: all keys)");
++        }
+         ImGui::PopStyleColor();
+     }
+     ImGui::End();
+@@ -4164,7 +4187,7 @@ static void DrawRandoFileMenuModal(void) {
+                     if (ImGui::Button("Cancel", ImVec2(actionW, 0))) {
+                         Port_RandoFileMenu_Cancel();
+                     }
+-                    ImGui::TextDisabled("Enter starts   Esc / Gamepad B cancels");
++                    ImGui::TextDisabled(IsRg34xxHandheld() ? "A confirms   B cancels" : "Enter starts   Esc / Gamepad B cancels");
+                 } else {
+                     ImGui::TextDisabled("Options will apply to your next new save file.");
+                 }
+@@ -4310,7 +4333,7 @@ extern "C" bool Port_ImGui_Render(void) {
+                 ImGui::PopID();
+             }
+             ImGui::Separator();
+-            ImGui::TextDisabled("Up/Down pick   Left/Right cycle   Enter/Esc done");
++            ImGui::TextDisabled(IsRg34xxHandheld() ? "D-Pad pick/cycle   A confirm   B back" : "Up/Down pick   Left/Right cycle   Enter/Esc done");
+             if (ImGui::IsKeyPressed(ImGuiKey_Escape) || ImGui::IsKeyPressed(ImGuiKey_Enter)) {
+                 Port_SoftSlots_ConfigClose();
+             }

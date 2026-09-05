@@ -1,0 +1,25 @@
+# User-provided game data
+*.gba
+*.gb
+*.gbc
+*.rom
+*.iso
+*.chd
+
+# Saves / runtime state
+*.sav
+*.srm
+*.state
+*.state.*
+log.txt
+
+# Native executables / private builds
+tmc_pc
+tmc_pc.aarch64
+tmc_pc.x86_64
+
+# Common local artefacts
+.DS_Store
+Thumbs.db
+*~
+*.swp

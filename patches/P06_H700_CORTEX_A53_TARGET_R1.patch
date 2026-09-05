@@ -1,0 +1,20 @@
+diff --git a/xmake.lua b/xmake.lua
+index 68e5575..ee69a44 100644
+--- a/xmake.lua
++++ b/xmake.lua
+@@ -509,6 +509,15 @@ task_end()
+ -- PC Port Target
+ -- ====================
+ target("tmc_pc")
++    -- RG34XX/H700 compatibility profile: H700 is Cortex-A53 class.
++    -- Keep emitted instructions inside the ARMv8-A + SIMD baseline so this
++    -- binary can be validated on newer AArch64 hosts without accidentally
++    -- depending on Raspberry Pi 5 / Cortex-A76-only instructions.
++    if is_plat("linux") and not is_x86_target() then
++        add_cflags("-march=armv8-a+simd", "-mtune=cortex-a53", {force = true})
++        add_cxxflags("-march=armv8-a+simd", "-mtune=cortex-a53", {force = true})
++    end
++
+     if is_plat("android") then
+         -- Android: SDL's Java glue (SDLActivity) loads the game as a JNI
+         -- shared library named libmain.so and calls its SDL_main. Own

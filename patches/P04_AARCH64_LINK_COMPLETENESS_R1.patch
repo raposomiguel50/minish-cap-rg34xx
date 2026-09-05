@@ -1,0 +1,21 @@
+diff --git a/xmake.lua b/xmake.lua
+index 68e5575..713c636 100644
+--- a/xmake.lua
++++ b/xmake.lua
+@@ -791,6 +791,7 @@ target("tmc_pc")
+     add_files("port/port_repro_roll_macro.c") -- roll-attack macro e2e test (TMC_REPRO_ROLL_MACRO)
+     add_files("port/port_repro_npc_talk.c") -- NPC-talk e2e test (TMC_REPRO_NPC_TALK)
+     add_files("port/port_repro_itemget.c") -- item-get perf repro (TMC_REPRO_ITEMGET)
++    add_files("port/port_cloud_tops_fight.c") -- required by src/roomInit.c in the main tmc_pc link
+     -- Link the asset extractor implementation directly so tmc_pc can
+     -- run extraction in-process at startup (no shell-out) and share
+     -- the engine's already-loaded ROM buffer.
+@@ -1017,7 +1018,7 @@ target("tmc_pc")
+ 
+     -- GLES compute rasterizer backend (port_gpu_raster_gl.cpp) needs EGL + GLES
+     -- on Linux/Android; it's a no-op stub on Windows/macOS (Vulkan/Metal there).
+-    if has_config("gpu_renderer") and is_plat("linux", "android") then
++    if is_plat("linux", "android") then
+         add_syslinks("EGL", "GLESv2")
+         if is_plat("android") then
+             -- The compute entry points that backend calls (glDispatchCompute,

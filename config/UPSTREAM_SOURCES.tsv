@@ -1,0 +1,7 @@
+name	url	directory	ref	required	role
+picori-public-portable	https://github.com/EstebanPdN/zelda-tmc-3ds.git	picori-public-portable	e72663ca4059dabf9dbf7f03c36fc791d90b8db5	yes	primary-public-portable-native-port-base
+project-picori	https://github.com/MatheoVignaud/tmc.git	project-picori	52701ac4d1ae97622e65e5fe409adee07adbbd87	no	original-project-picori-study-reference-private-submodules
+zeldaret-tmc	https://github.com/zeldaret/tmc.git	zeldaret-tmc	5ab63f00e522ff69c5bc987e379f0163943f2833	yes	decomp-reference-and-parity-oracle
+gbarecomp	https://github.com/mstan/gbarecomp.git	gbarecomp	d3500bc5ec1fb16c4240d880abbae8cb630ceba1	no	static-recomp-comparison
+minishcaprecomp	https://github.com/mstan/MinishCapRecomp.git	minishcaprecomp	5c4079075ea36e5e45298086372e1d1d1046807b	no	static-recomp-comparison
+portmaster	https://github.com/PortsMaster/PortMaster-New.git	portmaster	36751b81746620f1ec50e24d59c0895e0c52b879	no	target-packaging-reference

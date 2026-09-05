@@ -1,0 +1,119 @@
+diff --git a/port/port_bios.c b/port/port_bios.c
+index 2510825..c8494eb 100644
+--- a/port/port_bios.c
++++ b/port/port_bios.c
+@@ -788,6 +788,16 @@ static void Port_P11TraceInputCommit(u16 keyinput) {
+                   (unsigned long long)sP11LastEventDequeueNs,
+                   (unsigned long long)sP11LastEventSdlNs);
+ }
++void Port_P11TracePpuPhase(const char* phase, uint64_t ns) {
++    if (!phase || !Port_P11TraceEnabled())
++        return;
++    Port_P11Trace("Q\t%llu\t%llu\t%s\t%llu\n",
++                  (unsigned long long)sP11PresentSeq,
++                  (unsigned long long)sP11TickSeq,
++                  phase,
++                  (unsigned long long)ns);
++}
++
+ 
+ int Port_Profile_Enabled(void); /* defined below */
+ 
+diff --git a/port/port_ppu.cpp b/port/port_ppu.cpp
+index add2651..9bd602e 100644
+--- a/port/port_ppu.cpp
++++ b/port/port_ppu.cpp
+@@ -43,6 +43,7 @@ extern "C" uint8_t gMain[]; // fix for MSVC (UWP PORT)
+ /* Phase-timer hooks (defined in port_bios.c, C linkage). */
+ extern "C" int Port_Profile_Enabled(void);
+ extern "C" uint64_t gPortProfileRenderNs;
++extern "C" void Port_P11TracePpuPhase(const char* phase, uint64_t ns);
+ /* Port_Widescreen_* lives in port_linked_stubs.c; include
+  * port_widescreen.h for the runtime WIP toggle gate. */
+ 
+@@ -1312,6 +1313,7 @@ extern "C" void Port_PPU_PresentFrame(void) {
+     if (sBackend == RenderBackend::None) {
+         return;
+     }
++    Port_P11TracePpuPhase("ENTRY", SDL_GetTicksNS());
+ #ifdef TMC_GPU_RENDERER
+     sSuperValid = false; /* set true only if TryGpuRaster renders the Sx buffer this frame */
+ #endif
+@@ -1384,6 +1386,7 @@ extern "C" void Port_PPU_PresentFrame(void) {
+         }
+     }
+ 
++    Port_P11TracePpuPhase("RASTER_DONE", SDL_GetTicksNS());
+     /* If TMC_PUBLISH_FRAMEBUFFER is on, re-render each main world BG
+      * (BG1 + BG2) separately into static buffers and ship them over
+      * shm so the RT scaffold can render them as distinct world-Z
+@@ -1463,17 +1466,20 @@ extern "C" void Port_PPU_PresentFrame(void) {
+         }
+     }
+ 
++    Port_P11TracePpuPhase("SHM_DONE", SDL_GetTicksNS());
+     /* GBA-LCD display transforms (colour correction + persistence) over the
+      * final composited frame, after any shm publish so published planes stay
+      * raw game data. No-ops when disabled. Operates on the native render extent
+      * (stride MODE1_GBA_WIDTH x MODE1_GBA_HEIGHT); present-side upscale/xBRZ run
+      * afterwards on the transformed pixels. */
+     Port_PPU_ApplyDisplayPostProcess(MODE1_GBA_WIDTH * MODE1_GBA_HEIGHT);
++    Port_P11TracePpuPhase("POST_DONE", SDL_GetTicksNS());
+ 
+     int presentW = 0;
+     int presentH = 0;
+     int presentPitchBytes = 0;
+     const uint32_t* presentFrame = Port_PPU_SelectPresentFrame(&presentW, &presentH, &presentPitchBytes);
++    Port_P11TracePpuPhase("SELECT_DONE", SDL_GetTicksNS());
+ 
+     /* Stage 2: SDL_GPU present path. Stretched 240x160 → swapchain via
+      * the passthrough shader. Internal-scale and xBRZ now route through
+@@ -1551,6 +1557,27 @@ extern "C" void Port_PPU_PresentFrame(void) {
+         Port_PPU_ComputeViewportRects(outW, outH, presentW, presentH, &sx, &sy, &sw_stage, &sh_stage, &x, &y, &w, &h);
+         SDL_FRect stage = { (float)sx, (float)sy, (float)sw_stage, (float)sh_stage };
+         SDL_FRect dst = { (float)x, (float)y, (float)w, (float)h };
++        {
++            static bool p11MetaLogged = false;
++            if (!p11MetaLogged) {
++                int actualVsync = -999;
++                const bool vsyncQueryOk = SDL_GetRenderVSync(sRenderer, &actualVsync);
++                const char* rname = SDL_GetRendererName(sRenderer);
++                std::fprintf(stderr,
++                             "[p11ppu] renderer=%s mode=%d internal=%d filter=%d bgfill=%d "
++                             "vsync_query_ok=%d vsync_actual=%d out=%dx%d frame=%dx%d\n",
++                             rname ? rname : "?",
++                             (int)sPresentMode,
++                             (int)Port_Config_InternalScale(),
++                             (int)sFilter,
++                             (int)Port_Config_BgFill(),
++                             vsyncQueryOk ? 1 : 0,
++                             actualVsync,
++                             outW, outH, presentW, presentH);
++                p11MetaLogged = true;
++            }
++        }
++        Port_P11TracePpuPhase("VIEWPORT_DONE", SDL_GetTicksNS());
+ 
+         SDL_Texture* tex = nullptr;
+         SDL_ScaleMode scale;
+@@ -1616,6 +1643,7 @@ extern "C" void Port_PPU_PresentFrame(void) {
+                 break;
+             }
+         }
++        Port_P11TracePpuPhase("PREP_DONE", SDL_GetTicksNS());
+         /* Clear-to-black covers anything outside the stage rect (the
+          * area honoring the user's aspect-ratio choice). Inside the
+          * stage, the chosen background-fill style applies; on top of
+@@ -1664,7 +1692,11 @@ extern "C" void Port_PPU_PresentFrame(void) {
+                 }
+             }
+         }
+-        if (!SDL_RenderPresent(sRenderer)) {
++        Port_P11TracePpuPhase("DRAW_DONE", SDL_GetTicksNS());
++        Port_P11TracePpuPhase("PRESENT_BEGIN", SDL_GetTicksNS());
++        const bool p11PresentOk = SDL_RenderPresent(sRenderer);
++        Port_P11TracePpuPhase("PRESENT_END", SDL_GetTicksNS());
++        if (!p11PresentOk) {
+             /* Log throttled: a failing present on Android (EGL surface loss
+              * after lifecycle churn) otherwise dies silently and the screen
+              * freezes on the last good frame. */
