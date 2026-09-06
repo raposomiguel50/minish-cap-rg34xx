@@ -1,18 +1,18 @@
 # Reconstruction and reproducibility status
 
-This document explains what another developer can reproduce from the public material **today**, what remains incomplete, and what evidence would be required before making stronger claims.
+This document defines the current reconstruction status of the public RG34XX/H700 integration and the evidence required for stronger reproducibility claims.
 
-## Three different claims
+## Evidence levels
 
-The project deliberately separates:
+The project distinguishes three levels:
 
-1. **Historical auditability** — the public record explains what was tried, why decisions were made and which evidence supported them.
-2. **Functional reconstruction** — a new build can be produced from documented inputs and behaves acceptably on the target.
+1. **Historical auditability** — decisions, experiments and supporting evidence can be traced.
+2. **Functional reconstruction** — a new build can be produced from documented inputs and validated on the target.
 3. **Bit-for-bit reproducibility** — the documented source, toolchain, dependencies and build procedure recreate an identical binary artifact.
 
-The public project currently provides the strongest support for **historical auditability**.
+The current public material provides the strongest support for **historical auditability**.
 
-It does **not** currently claim that the retained private V1 can be rebuilt bit-for-bit from this repository.
+Bit-for-bit reproduction of the retained private V1 is not currently claimed.
 
 ## Authoritative public baseline
 
@@ -29,7 +29,7 @@ The public integration repository provides:
 - upstream/reference pins;
 - provenance and legal-status documentation;
 - patch-history classification;
-- engineering knowledge base.
+- engineering documentation.
 
 See:
 
@@ -45,51 +45,44 @@ The validated private V1 executable is identified by SHA-256:
 
 `787ba3cb8c297ea44a0605745347fe5a6e792094f0be755b51a8200c1eadc710`
 
-This hash is useful for identifying the retained artifact.
+The hash identifies the retained artifact. It does not establish that another environment can reproduce identical bytes.
 
-It is **not** evidence by itself that another developer can rebuild the same bytes.
+## Preserved source material
 
-## Source material preserved from later work
-
-The project review found four hash-verified source snapshots from P13.1:
+Four P13.1 source snapshots were retained and hash-verified in the private engineering record:
 
 - `port/port_ppu.cpp`
 - `port/port_gpu_renderer.cpp`
 - `port/port_main.c`
 - `xmake.lua`
 
-They were preserved in the private engineering record and matched their source-authority manifest during review.
+These files improve historical traceability but are not presented as a complete final source tree or build environment.
 
-Their existence improves historical recoverability, but they are not automatically equivalent to a complete final source tree or build environment.
+A complete reconstruction would also need to account for:
 
-A complete reconstruction must still account for:
-
-- exact upstream/source ancestry;
+- exact source ancestry;
 - all accepted source changes;
 - dependency revisions;
-- toolchain/compiler identity;
+- compiler/toolchain identity;
 - build flags;
 - link inputs;
 - strip/post-processing steps;
 - launcher/runtime policy;
-- any generated files that affect the output.
+- generated files that affect the output.
 
-## Licensing blocks public binary reproduction/distribution
+## Licensing boundary
 
-The validated private V1 incorporated VirtuaAPU.
+The retained private V1 incorporated VirtuaAPU.
 
-At the audited revision, VirtuaAPU did not contain an explicit published licence file. Therefore this repository does not redistribute:
+At the audited revision, VirtuaAPU did not provide an explicit published licence file. The public repository therefore does not redistribute VirtuaAPU source or the V1 executable incorporating it.
 
-- VirtuaAPU source;
-- the retained V1 executable incorporating it.
-
-This is a redistribution boundary, not evidence that the private V1 is technically invalid.
+This is a redistribution limitation and is separate from the technical identity of the retained private artifact.
 
 See `docs/LEGAL_STATUS.md` and `THIRD_PARTY_NOTICES.md`.
 
-## Safe reconstruction starting point
+## Public reconstruction starting point
 
-A developer studying the project can begin by obtaining the exact public upstream revision:
+A developer can begin from the exact public upstream revision:
 
 ```bash
 git clone https://github.com/EstebanPdN/zelda-tmc-3ds.git
@@ -99,14 +92,14 @@ git checkout --detach e72663ca4059dabf9dbf7f03c36fc791d90b8db5
 
 Then:
 
-1. inspect `docs/PATCH_SERIES.md` before applying anything;
-2. begin with the Foundation patches only;
+1. review `docs/PATCH_SERIES.md`;
+2. begin with Foundation patches;
 3. verify each patch against the pinned source revision;
-4. keep instrumentation/A-B patches out of a production candidate unless you are reproducing the experiment they were designed for;
-5. record every dependency/toolchain choice;
+4. keep instrumentation and A/B patches separate unless reproducing those experiments;
+5. record dependency and toolchain choices;
 6. validate host-build success separately from H700 target behaviour.
 
-This repository intentionally does **not** provide a blind `apply-all` command because the public patch directory includes historical and diagnostic material.
+No single `apply-all` procedure is provided because the published patch directory contains both stable-direction work and historical/diagnostic material.
 
 ## Target validation reference
 
@@ -116,37 +109,35 @@ Validated reference environment:
 - Allwinner H700
 - Cortex-A53 / AArch64
 - muOS
-- original 720x480 display
+- 720x480 display
 
-Important retained behaviour/decision evidence includes:
+Retained behaviour and configuration evidence includes:
 
-- original-style 240x160 -> 720x480 integer 3x presentation;
+- 240x160 -> 720x480 integer 3x presentation;
 - logical cadence around ~59.7275 Hz;
 - panel around ~119.455 Hz;
-- one explicit presentation per logical tick in the accepted high-refresh direction;
-- retained later runtime evidence: CPU ceiling 936 MHz, GPU 420 MHz, audio 1600, `TMC_RENDER_THREADS=3`;
+- one explicit presentation per logical tick in the accepted timing direction;
+- CPU ceiling 936 MHz, GPU 420 MHz, audio 1600, `TMC_RENDER_THREADS=3`;
 - clean-exit/lifecycle work;
 - target audio QA.
 
-These values are engineering evidence for the validated line, not universal recommendations for every H700 device or CFW.
+These values apply to the documented reference line and are not presented as universal settings for every H700 device or CFW.
 
-## What would qualify as a supported functional reconstruction
+## Requirements for functional reconstruction
 
-Before this repository should advertise a supported reconstruction procedure, the following should be demonstrated in a **new clean directory**:
+A supported functional reconstruction should be demonstrated from a new clean directory with:
 
-1. exact upstream clone at the documented revision;
-2. deterministic dependency acquisition or explicit dependency pins;
-3. a documented, minimal accepted patch sequence;
-4. successful AArch64 build without relying on hidden local files/caches;
-5. binary architecture/link checks;
-6. launch on the target through a normal CFW/Ports context;
+1. the documented upstream revision;
+2. explicit dependency/toolchain pins;
+3. a defined accepted patch sequence;
+4. successful AArch64 build without hidden local inputs;
+5. architecture/link checks;
+6. launch through a normal target CFW/Ports context;
 7. visual, input, audio and exit QA;
 8. recorded hashes and toolchain versions;
-9. clear statement of any unavoidable difference from the retained V1.
+9. documented differences from the retained V1, if any.
 
-Only after that should the procedure be called a **validated functional reconstruction**.
-
-## What would qualify as bit-for-bit reproducibility
+## Requirements for bit-for-bit reproducibility
 
 A stronger claim would additionally require:
 
@@ -158,12 +149,8 @@ A stronger claim would additionally require:
 - identical post-processing/strip steps;
 - identical resulting SHA-256.
 
-No such claim is made today.
+These requirements have not yet been demonstrated for the retained V1.
 
-## Why publish an incomplete reconstruction path?
+## Current position
 
-Because uncertainty is itself useful engineering information when it is documented precisely.
-
-The goal is not to pretend the project is more reproducible than the evidence shows. The goal is to leave enough provenance, decisions and technical structure that the next developer can continue from a known boundary instead of starting from folklore or an unexplained binary.
-
-That is consistent with the project's wider philosophy: **preserve what is known, contain what is uncertain, and improve the record incrementally.**
+The public repository provides a traceable baseline, source-side integration history and clear reconstruction boundaries. Future reconstruction work can build on that record without overstating the evidence currently available.
