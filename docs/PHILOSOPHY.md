@@ -18,9 +18,7 @@ Running the project natively removes the need to emulate the original GBA CPU, g
 
 This is not bare-metal execution, but it gives the project more direct control over timing, presentation, audio, threading, input and lifecycle behaviour than an emulator-based path would normally provide.
 
-For the preservation baseline, that extra margin is used to improve integration and reliability without changing the original game's identity.
-
-It also creates a separate experimental opportunity: to study how the same design language might develop under fewer hardware constraints or with additional optimisation time. This is treated as an interpretive engineering exercise, not as a claim about undocumented intentions of the original developers. Any such work remains clearly separated from the preservation baseline.
+That additional hardware margin also makes it possible to imagine and explore what the original developers could have achieved with more optimisation time and more room in the hardware to express their vision and creativity. Native execution therefore serves both as a practical optimisation path and as a way to study possibilities that were constrained by the original GBA hardware.
 
 ## Preservation
 
