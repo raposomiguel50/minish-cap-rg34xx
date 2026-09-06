@@ -12,6 +12,16 @@ I grew up mainly with PCs and PC games. The Game Boy Advance was the first conso
 
 The technical fit supports the same direction: the RG34XX-H display is **720x480**, so the GBA's original **240x160** image can be presented at an exact **3x integer scale** without changing its proportions. The H700 and muOS also provide a constrained ARM/Linux platform suitable for practical native-port work.
 
+## Why native execution matters
+
+Running the project natively removes the need to emulate the original GBA CPU, graphics, audio and timing environment. The game instead executes as AArch64 software within Linux/muOS and can use the RG34XX-H platform resources through the native runtime.
+
+This is not bare-metal execution, but it gives the project more direct control over timing, presentation, audio, threading, input and lifecycle behaviour than an emulator-based path would normally provide.
+
+For the preservation baseline, that extra margin is used to improve integration and reliability without changing the original game's identity.
+
+It also creates a separate experimental opportunity: to study how the same design language might develop under fewer hardware constraints or with additional optimisation time. This is treated as an interpretive engineering exercise, not as a claim about undocumented intentions of the original developers. Any such work remains clearly separated from the preservation baseline.
+
 ## Preservation
 
 The original game remains the reference for presentation, art, music, sound effects, interface behaviour, cadence and controls.
@@ -49,7 +59,7 @@ Examples include:
 - retaining the original logical cadence while adapting presentation to the RG34XX-H display;
 - retaining original assets instead of introducing replacement graphics;
 - retaining the original control identity while reserving device-specific combinations for port functions;
-- adapting build, audio, timing and lifecycle behaviour to H700/muOS without changing the game’s core presentation.
+- adapting build, audio, timing and lifecycle behaviour to H700/muOS without changing the game's core presentation.
 
 ## Minimalism
 
@@ -69,7 +79,7 @@ This approach makes it easier to identify which change produced a result and to 
 
 Priorities are set by the preservation objective, target-platform constraints and available evidence.
 
-Feature count, technical novelty or newer technology are not goals by themselves. A change is adopted when it contributes clearly to the project’s purpose and can be supported by appropriate validation.
+Feature count, technical novelty or newer technology are not goals by themselves. A change is adopted when it contributes clearly to the project's purpose and can be supported by appropriate validation.
 
 ## Evidence and claims
 
