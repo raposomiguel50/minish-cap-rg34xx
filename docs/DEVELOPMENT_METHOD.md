@@ -1,228 +1,155 @@
-# Development method, attribution and AI assistance
+# Development method and AI assistance
 
 ## Human-directed, AI-assisted
 
-This project is part of **Miguel's Game Dev Lab** and is developed using a human-directed, AI-assisted workflow.
+This project is part of **Miguel's Game Dev Lab** and follows a human-directed, AI-assisted workflow.
 
-I define the project purpose, preservation philosophy, target hardware, scope, constraints, priorities, acceptance criteria and final decisions. I perform or judge the real-device observations that determine whether a result is actually acceptable.
+I define the project purpose, target hardware, scope, preservation criteria, acceptance criteria and final decisions. I also perform or evaluate the real-device observations used to accept changes.
 
-ChatGPT provides substantial assistance with calculations, code drafting and modification, debugging support, PowerShell/shell/build automation, technical comparisons, evidence analysis, documentation and repetitive repository work.
+ChatGPT assists with calculations, programming, debugging, automation, technical analysis, documentation and repetitive repository work.
 
-The distinction matters because the project is not simply the sum of generated code. Its direction depends on choices about **what not to change**, which experiments to reject, which measurements to trust, when a result is sufficient and which claims the evidence does or does not support.
+AI-assisted output is reviewed against the project requirements and available evidence before adoption.
 
-## The project philosophy shapes the engineering method
+## Engineering principles
 
-The Minish Cap RG34XX work is guided by five connected principles:
+The workflow follows the same principles used throughout the project:
 
-- **preservation** — keep the original game identity authoritative;
-- **containment** — solve the demonstrated problem inside the smallest practical boundary;
-- **focus** — do not let every possible enhancement become required scope;
-- **restoration** — adapt behaviour to the target without replacing the original experience;
-- **minimalism** — prefer smaller justified interventions over larger fashionable redesigns.
-
-Minimalism applies to intervention, not to explanation. The public record should be detailed enough that another developer can understand and reuse the reasoning.
+- **preservation** — retain the original game identity as the reference;
+- **containment** — address each problem within the smallest practical boundary;
+- **focus** — keep stable scope separate from optional research;
+- **restoration** — adapt behaviour to the target without unnecessarily redefining the experience;
+- **minimalism** — prefer smaller, justified interventions where they are sufficient.
 
 See [`PHILOSOPHY.md`](PHILOSOPHY.md).
 
-## Why the workflow is structured this way
+## Evidence-based validation
 
-Long-running AI-assisted development has predictable failure modes:
+Different claims require different evidence. Depending on the task, the project uses:
 
-- context can be lost between sessions;
-- an assistant can infer a goal that was never approved;
-- a technically plausible solution can conflict with the preservation intent;
-- repeated automation can become more complex than the task;
-- a successful command can be mistaken for a successful artifact;
-- a local candidate can be mistaken for a production deployment;
-- previously rejected experiments can be proposed again after context loss;
-- physical-device behaviour cannot be judged purely from logs.
-
-The workflow is deliberately designed around those risks rather than assuming they will not occur.
-
-## 1. Explicit human checkpoints
-
-Important design and quality decisions are explicit.
-
-A technically possible change does not become part of the stable line automatically. I can reject it because it changes the visual identity, creates unnecessary scope, weakens evidence quality or solves a problem that the project does not actually have.
-
-Examples from this project include:
-
-- rejecting the implication that a ~119/120 Hz panel means the game should run its logic at 120 FPS;
-- rejecting an experimental GPU renderer after failure rather than repeatedly reinserting it;
-- not promoting a fullscreen-clear experiment merely because it existed;
-- retaining original-style presentation instead of turning the port into an unsolicited remaster.
-
-## 2. Evidence before confidence
-
-A process exit code is not enough.
-
-Where possible, the project uses distinct evidence for distinct claims:
-
-- upstream revisions;
+- exact upstream revisions;
 - file and binary hashes;
-- build/link evidence;
+- build and link evidence;
 - architecture checks;
 - timing traces;
 - runtime measurements;
 - target-device observations;
-- human audio/visual QA;
-- publication/deployment verification.
+- visual/audio QA;
+- publication and deployment verification.
 
-This is particularly important when an AI assistant sounds confident about a result that has not yet been observed on the target.
+A successful command is treated as process evidence, not as proof of every property of the resulting artifact.
 
-## 3. Keep claims proportional to evidence
+## Proportional claims
 
-The project avoids converting one measured variable into a stronger marketing claim.
+Measurements are reported within the limits of what they demonstrate.
 
 Examples:
 
-- reducing CPU ceiling by ~33.9% is not evidence of ~33.9% battery savings;
-- a display running around ~119.455 Hz does not mean game logic runs at 119/120 FPS;
-- a heuristic callback/underrun counter is not a literal audible-defect count;
-- a binary SHA-256 identifies an artifact but does not prove bit-for-bit reproducibility;
-- validation on RG34XX-H + muOS is not a claim of compatibility with every H700 device and CFW.
+- CPU-frequency reduction is not converted directly into a battery-life percentage;
+- panel refresh rate is kept separate from game-logic cadence;
+- heuristic audio counters are not treated as direct perceptual measurements;
+- a binary SHA-256 identifies an artifact but does not prove reproducibility;
+- validation on RG34XX-H + muOS is not presented as universal H700 compatibility.
 
-Negative and mixed results remain in the record because they constrain future claims.
+## Controlled experiments
 
-## 4. One experiment should answer one question
+Where practical, experiments change one relevant variable at a time and keep the surrounding conditions stable.
 
-Contain variables whenever practical.
+Timing work separates simulation cadence, presentation calls and physical refresh. Audio work combines timing evidence with listening. Runtime-policy comparisons restore CPU/GPU state between variants.
 
-If investigating presentation, separate simulation cadence from presentation calls and panel refresh. If investigating audio cost, change the relevant audio parameter while keeping the rest of the context stable. If investigating runtime policy, restore CPU/GPU state between variants.
+This improves interpretability and reduces attribution errors.
 
-This makes a result easier to interpret and reduces the temptation to attribute improvement to the wrong change.
+## Representative benchmark context
 
-## 5. Benchmark the real usage context
+Benchmark conditions are reviewed before their results are accepted.
 
-The project explicitly rejected early AutoLab measurements taken through a context that did not represent normal use.
+Early AutoLab measurements obtained through direct SSH were rejected because the surrounding frontend/background state did not represent a normal Ports launch. Later comparisons used a normal Ports-session context, deterministic replay and state restoration.
 
-Direct-SSH measurements were treated as contaminated by frontend/background state. Later variants were run through a normal Ports-session context with deterministic replay and state restoration.
+## Automation
 
-The lesson is general: **prove the benchmark context before optimising the benchmark number**.
+Automation is used for deterministic and repetitive work such as:
 
-## 6. Automate repetition, not judgment
-
-Automation is useful when it removes deterministic grind:
-
-- repeated configuration setup;
+- configuration setup;
 - build commands;
 - hashing;
 - evidence collection;
-- variant execution;
+- repeated variant execution;
 - state restoration;
 - repository maintenance.
 
-Automation should not replace the decisions that require intent or perception.
+Perceptual and design decisions remain separate from automated checks. Final visual/audio acceptance is performed on the target context.
 
-Final visual/audio acceptance remains human. The purpose of automation is to free time for judgment, not to simulate judgment.
+## Real hardware
 
-## 7. Real hardware remains an independent authority
+Host builds are useful for development and diagnostics, but they do not replace target validation.
 
-The RG34XX-H/H700 target is not treated as an abstract Linux/ARM64 label.
+The RG34XX-H/H700 environment remains the reference for timing, audio, controls, CFW lifecycle and clean return-to-frontend behaviour.
 
-A host build can answer build questions. It cannot prove target timing, audio quality, control feel, CFW lifecycle or clean return-to-frontend behaviour.
+## Negative results
 
-Physical-device validation remains a distinct gate.
-
-## 8. Preserve negative results
-
-Failed approaches and assistant mistakes are not automatically erased.
-
-If they reveal a reusable rule, they belong in the engineering history.
+Rejected experiments are retained when they clarify a technical boundary or prevent unnecessary repetition.
 
 Examples include:
 
-- failed experimental rendering work;
-- invalid benchmark context;
-- high-refresh hypotheses contradicted by instrumentation;
-- publication automation that became more complicated than the underlying task;
-- a local music fix that had passed QA but had not yet been published to production;
-- asking for files to be reacquired before checking whether they already existed.
+- an experimental GPU renderer that was not promoted;
+- a fullscreen-clear experiment that was not adopted;
+- an early benchmark context that was invalidated;
+- high-refresh hypotheses revised after instrumentation.
 
 See [`KNOWLEDGE_BASE.md`](KNOWLEDGE_BASE.md).
 
-## 9. The project state must survive the conversation
+## Project continuity
 
-Chat history is not treated as the sole project database.
+Durable project state is kept outside the conversation through source control, hashes, handovers, evidence files and explicit task status where appropriate.
 
-The working method uses source control, versioned handovers, hashes, local durable state, evidence bundles and explicit START/PASS/FAIL records where appropriate.
+Handovers distinguish:
 
-A useful handover distinguishes:
+- confirmed facts from open hypotheses;
+- stable decisions from experiments;
+- current baselines from historical work;
+- completed gates from pending work;
+- public material from private or non-redistributable material.
 
-- confirmed facts from hypotheses;
-- approved decisions from experiments;
-- current baseline from historical branches;
-- completed gates from pending gates;
-- private/proprietary material from public material;
-- exact next step from optional future research.
+This supports continuity across development sessions and reduces reliance on conversational context.
 
-This exists partly because an AI assistant can otherwise reconstruct the project incorrectly after context loss.
+## Publication boundary
 
-## 10. Publication is part of engineering
+Public release work is treated as a separate engineering gate.
 
-Publication has its own correctness boundary.
+The repository excludes proprietary game data, save/runtime state, private builds, device backups and third-party components without a clear redistribution path.
 
-A safe public project should exclude:
+Technical documentation is reviewed separately from binary/content redistribution so that safe engineering knowledge can remain public even when a component cannot be distributed.
 
-- ROMs;
-- extracted proprietary Nintendo assets;
-- saves/private runtime state;
-- private builds and device backups;
-- third-party components without a clear redistribution path.
+## Publication verification
 
-But sanitisation must not erase safe technical knowledge.
+Local QA, repository publication, deployment and live verification are separate states.
 
-The initial Minish Cap publication was too narrow editorially: it correctly withheld restricted/private material but also under-published decisions, failures and lessons. That was corrected by expanding the public philosophy, knowledge base, patch history, validation and reconstruction documentation.
+A public change is considered complete only after the relevant production artifact has been published and verified in its intended environment.
 
-**Public safety and public teaching are compatible.**
+## Workflow size
 
-## 11. Separate local QA, publication and production verification
+Tooling should remain proportionate to the task.
 
-These are different gates:
-
-1. candidate exists;
-2. candidate passes local tests;
-3. change is committed/published;
-4. deployment completes;
-5. live behaviour is verified.
-
-The music-player repair exposed this distinction directly: local QA succeeded before the live site had actually changed.
-
-This lesson now applies to every public-site or release change.
-
-## 12. Prefer the smallest workflow that preserves safety
-
-Tooling is subordinate to the task.
-
-A large automation framework is not automatically safer than a direct operation. During publication work, oversized PowerShell runners introduced parser errors, automatic-variable collisions and unnecessary repeated investigation.
-
-The corrected principle is:
-
-> use the smallest operation that preserves the required evidence, recovery path and safety boundary.
-
-Automation earns its place when it reduces repeated work or risk; otherwise it becomes another source of failure.
+Automation is useful when it reduces repetition or risk. For small, well-defined operations, direct and auditable steps are preferred over unnecessary infrastructure.
 
 ## Responsibility by area
 
 | Area | Primary responsibility |
 | --- | --- |
-| Project purpose and preservation philosophy | I define and approve it |
+| Project purpose and preservation criteria | I define and approve them |
 | Scope and priorities | I define them |
 | Target hardware | I select it |
-| Visual/interaction preservation decisions | I make the final decision |
+| Presentation and interaction decisions | I make the final decisions |
 | Acceptance/rejection of experiments | I decide |
-| Real-device observations and final QA | I perform/judge them |
+| Real-device observations and final QA | I perform or evaluate them |
 | Calculations and repetitive analysis | ChatGPT assists |
 | Code drafting/modification | ChatGPT assists under my direction |
 | Build/repository automation | ChatGPT assists under my direction |
-| Evidence comparison | ChatGPT assists; claims remain evidence-bound |
-| Documentation drafting/structuring | ChatGPT assists; I define the intended meaning and final scope |
+| Evidence comparison | ChatGPT assists; conclusions remain evidence-bound |
+| Documentation drafting/structuring | ChatGPT assists; final meaning and scope remain under my direction |
 
-## Attribution principle
+## Attribution
 
-The concise attribution used throughout the project is:
-
-> **Human-directed, AI-assisted.** I retain responsibility for the project purpose, preservation philosophy, design direction, decisions, critical evaluation and final approval. ChatGPT provides substantial assistance with calculations, programming, automation, analysis, documentation and repetitive technical work.
+> **Human-directed, AI-assisted.** I retain responsibility for the project purpose, preservation criteria, design direction, decisions, critical evaluation and final approval. ChatGPT provides substantial assistance with calculations, programming, automation, analysis, documentation and repetitive technical work.
 
 ## Related documents
 
