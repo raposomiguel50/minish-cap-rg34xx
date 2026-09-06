@@ -223,17 +223,17 @@ Three separate claims are therefore maintained:
 
 **Reusable lesson:** Check the known local state before creating unnecessary repeat work.
 
-## KB-MC-021 - Native execution creates headroom, not historical certainty
+## KB-MC-021 - Native execution opens more of the target hardware
 
 **Context:** Choosing a native AArch64 port rather than running the game through GBA emulation on the RG34XX-H.
 
-**Finding:** Native execution avoids spending part of the system's resources reproducing the original GBA CPU, graphics, audio and timing environment. It also gives the port more direct control over timing, presentation, audio, threading, input and lifecycle behaviour within Linux/muOS.
+**Finding:** Native execution avoids spending part of the target's resources reproducing the original GBA CPU, graphics, audio and timing environment. It also gives the port more direct control over timing, presentation, audio, threading, input and lifecycle behaviour within Linux/muOS.
 
-**Decision:** Use that additional margin conservatively in the preservation baseline, while keeping broader visual or gameplay exploration in a separate experimental scope.
+**Decision:** Use that margin to explore the RG34XX-H more directly and to examine what becomes possible when the original GBA hardware constraints are relaxed.
 
-**Evidence boundary:** Additional hardware headroom can support counterfactual design experiments, but it cannot establish what the original developers would have intended or implemented under different constraints.
+**Project perspective:** This creates a useful thought exercise: imagine and explore what the original developers could have achieved with more optimisation time and more hardware headroom to express their vision and creativity.
 
-**Reusable lesson:** Native ports can support both preservation and creative exploration, provided the preserved baseline and the interpretive branch remain clearly separated.
+**Reusable lesson:** Native ports can be used not only to improve platform integration, but also to study how additional hardware margin changes the creative and technical possibilities available to a game.
 
 ## Template for future entries
 
