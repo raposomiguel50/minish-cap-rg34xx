@@ -4,6 +4,14 @@ This project uses **preservation, containment, focus, restoration and minimalism
 
 The objective is to adapt the game reliably to the target platform while preserving its identity and documenting the decisions well enough to support future work.
 
+## Why this hardware matters
+
+The RG34XX-H was a deliberate choice. Its horizontal form and overall design closely recall the original Game Boy Advance, which makes it a particularly appropriate physical context for this project.
+
+I grew up mainly with PCs and PC games. The Game Boy Advance was the first console I owned, given to me by my father. That personal link is part of why preserving the character of the original handheld experience matters here.
+
+The technical fit supports the same direction: the RG34XX-H display is **720x480**, so the GBA's original **240x160** image can be presented at an exact **3x integer scale** without changing its proportions. The H700 and muOS also provide a constrained ARM/Linux platform suitable for practical native-port work.
+
 ## Preservation
 
 The original game remains the reference for presentation, art, music, sound effects, interface behaviour, cadence and controls.
