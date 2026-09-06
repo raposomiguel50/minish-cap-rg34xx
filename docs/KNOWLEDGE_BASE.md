@@ -223,6 +223,18 @@ Three separate claims are therefore maintained:
 
 **Reusable lesson:** Check the known local state before creating unnecessary repeat work.
 
+## KB-MC-021 - Native execution creates headroom, not historical certainty
+
+**Context:** Choosing a native AArch64 port rather than running the game through GBA emulation on the RG34XX-H.
+
+**Finding:** Native execution avoids spending part of the system's resources reproducing the original GBA CPU, graphics, audio and timing environment. It also gives the port more direct control over timing, presentation, audio, threading, input and lifecycle behaviour within Linux/muOS.
+
+**Decision:** Use that additional margin conservatively in the preservation baseline, while keeping broader visual or gameplay exploration in a separate experimental scope.
+
+**Evidence boundary:** Additional hardware headroom can support counterfactual design experiments, but it cannot establish what the original developers would have intended or implemented under different constraints.
+
+**Reusable lesson:** Native ports can support both preservation and creative exploration, provided the preserved baseline and the interpretive branch remain clearly separated.
+
 ## Template for future entries
 
 When adding a new lesson, prefer:
