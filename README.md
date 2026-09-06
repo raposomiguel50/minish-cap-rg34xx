@@ -14,6 +14,16 @@ That connection is important to this project. I grew up mainly with PCs and PC g
 
 The technical characteristics reinforce that choice. The RG34XX-H display is **720x480**, allowing the GBA's original **240x160** image to scale exactly at **3x** without changing its aspect ratio. The H700 and muOS also provide a constrained ARM/Linux target that is useful for native-port engineering and optimisation.
 
+## Why native execution
+
+The project also removes the GBA emulation layer. Instead of spending part of the system's resources reproducing the original console's CPU, graphics, audio and timing environment, the game runs as native AArch64 software within the RG34XX-H Linux/muOS environment.
+
+This is not bare-metal execution, but it provides substantially more control over the software/hardware boundary: build configuration, timing, presentation, audio, threading, input and lifecycle behaviour can be adapted directly to the target platform.
+
+For the preservation baseline, that additional headroom is used conservatively. The objective is to improve integration and reliability while retaining the original game's visual, audio and gameplay identity.
+
+Native execution also creates a separate experimental path. It becomes possible to explore how the same design language might develop with fewer hardware constraints or additional optimisation time. Such work is treated as a clearly identified interpretation, not as a claim about undocumented intentions of the original developers, and remains separate from the preservation baseline.
+
 ## Start here
 
 - **[Project philosophy](docs/PHILOSOPHY.md)** — design and preservation principles.
