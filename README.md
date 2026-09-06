@@ -6,6 +6,14 @@ This project is part of **[Miguel's Game Dev Lab](https://raposomiguel50.github.
 
 The engineering approach is guided by five principles: **preservation, containment, focus, restoration and minimalism**. The aim is to preserve the original experience while making targeted, evidence-based adaptations for the H700 platform.
 
+## Why the RG34XX-H
+
+I chose the RG34XX-H primarily because its horizontal form and overall design closely recall the original Game Boy Advance. For me, it is the modern handheld that most closely evokes the GBA as a physical device.
+
+That connection is important to this project. I grew up mainly with PCs and PC games; the Game Boy Advance was the first console I owned, given to me by my father. Using hardware that recalls the original GBA therefore supports the preservation objective at both a practical and personal level.
+
+The technical characteristics reinforce that choice. The RG34XX-H display is **720x480**, allowing the GBA's original **240x160** image to scale exactly at **3x** without changing its aspect ratio. The H700 and muOS also provide a constrained ARM/Linux target that is useful for native-port engineering and optimisation.
+
 ## Start here
 
 - **[Project philosophy](docs/PHILOSOPHY.md)** — design and preservation principles.
