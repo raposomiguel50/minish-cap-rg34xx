@@ -20,9 +20,7 @@ The project also removes the GBA emulation layer. Instead of spending part of th
 
 This is not bare-metal execution, but it provides substantially more control over the software/hardware boundary: build configuration, timing, presentation, audio, threading, input and lifecycle behaviour can be adapted directly to the target platform.
 
-For the preservation baseline, that additional headroom is used conservatively. The objective is to improve integration and reliability while retaining the original game's visual, audio and gameplay identity.
-
-Native execution also creates a separate experimental path. It becomes possible to explore how the same design language might develop with fewer hardware constraints or additional optimisation time. Such work is treated as a clearly identified interpretation, not as a claim about undocumented intentions of the original developers, and remains separate from the preservation baseline.
+That additional hardware margin also makes it possible to imagine and explore what the original developers could have achieved with more optimisation time and more room in the hardware to express their vision and creativity. The native port therefore provides a practical way to study both the original constraints and the possibilities opened by removing them.
 
 ## Start here
 
