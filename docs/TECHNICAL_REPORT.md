@@ -1,12 +1,15 @@
-# Technical report and supporting audit
+# Technical report and supporting evidence
 
-The canonical report is **[H700 integration: implementation, measurements and evidence limits](EVIDENCE_AUDIT.md)**. It separates source changes, archived observations, recalculation and approved policy, with measurement definitions and APA-style references.
+Start with **[H700 integration: implementation, measurements and evidence limits](EVIDENCE_AUDIT.md)**. The report distinguishes source changes, archived observations, recalculated statistics and approved policy. It includes measurement definitions, sample counts, limitations and APA-style author–date references.
 
-The **[configuration and log supplement](AUDIT_SUPPLEMENT_2026-09-07.md)** records additional limits on audio-buffer, save-state and whole-system-restoration statements. These are documentary observations, not newly established runtime bugs.
+Read it together with the **[configuration and log supplement](AUDIT_SUPPLEMENT_2026-09-07.md)**. The supplement identifies discrepancies between the requested audio-buffer size and a printed launcher marker, and between the Console-Parity banner and later autosave messages. It also distinguishes restored clock limits from complete restoration of every system setting. These observations do not, by themselves, diagnose new runtime faults.
 
-Supporting sources are retained in two fixed evidence snapshots:
+## Fixed source snapshots
 
-- [Primary results, explicit source index and selected log excerpts](https://github.com/raposomiguel50/minish-cap-rg34xx/tree/e0f8c056bb94e8112a4b142b6addce78c9deb53b/docs/evidence/2026-09-07).
-- [Dated P12/P13.1 workflow notes and their provenance](https://github.com/raposomiguel50/minish-cap-rg34xx/tree/5c306562615b1595ed49c7388dc768c8348b1296/docs/evidence/2026-09-07).
+- [Recalculated timing statistics, original machine summaries, acceptance records, selected diagnostic lines and the analysis script](https://github.com/raposomiguel50/minish-cap-rg34xx/tree/ede6e9090e7ca78c6c3a8c3d324d8c1de881f8b3/docs/evidence/2026-09-07).
+- [Additional source index, menu/exit verdict and unambiguous log excerpts](https://github.com/raposomiguel50/minish-cap-rg34xx/tree/e0f8c056bb94e8112a4b142b6addce78c9deb53b/docs/evidence/2026-09-07).
+- [Dated P12/P13.1 workflow notes and provenance](https://github.com/raposomiguel50/minish-cap-rg34xx/tree/5c306562615b1595ed49c7388dc768c8348b1296/docs/evidence/2026-09-07).
 
-The newer audit already on the main branch was preserved rather than replaced by a competing editorial draft. This index and supplement add source-specific clarification without changing the existing launcher, patches, configuration, game executable or private installation.
+## Scope
+
+This is an audit of existing development evidence, not a new hardware test, a reconstructed executable or an independently peer-reviewed study. The private installation, executable, launcher, source patches and runtime configuration were not changed by the documentation audit. Full raw traces remain in the owner-held archive; the public extracts alone do not permit recalculation of every reported statistic.
