@@ -4,7 +4,7 @@ An unofficial RG34XX/H700 native-port integration of [Project Picori](https://gi
 
 This project is part of **[Miguel's Game Dev Lab](https://raposomiguel50.github.io/)**, where ports are used to study platform constraints, improve practical compatibility and document reusable engineering knowledge.
 
-The engineering approach is guided by five principles: **preservation, containment, focus, restoration and minimalism**. The aim is to preserve the original experience while making targeted, evidence-based adaptations for the H700 platform.
+The engineering approach is guided by **preservation, containment, focus, restoration, minimalism and curation**. The objective is not to redesign or expand the game, but to present the original creative work reliably on the target hardware while removing avoidable technical obstacles where the evidence supports doing so.
 
 ## Why the RG34XX-H
 
@@ -16,15 +16,39 @@ The technical characteristics reinforce that choice. The RG34XX-H display is **7
 
 ## Why native execution
 
-The project also removes the GBA emulation layer. Instead of spending part of the system's resources reproducing the original console's CPU, graphics, audio and timing environment, the game runs as native AArch64 software within the RG34XX-H Linux/muOS environment.
+The project removes the GBA emulation layer. Instead of spending part of the system's resources reproducing the original console's CPU, graphics, audio and timing environment, the game runs as native AArch64 software within the RG34XX-H Linux/muOS environment.
 
-This is not bare-metal execution, but it provides substantially more control over the software/hardware boundary: build configuration, timing, presentation, audio, threading, input and lifecycle behaviour can be adapted directly to the target platform.
+This is not bare-metal execution, but it provides more direct control over build configuration, timing, presentation, audio, threading, input and lifecycle behaviour.
 
-That additional hardware margin also makes it possible to imagine and explore what the original developers could have achieved with more optimisation time and more room in the hardware to express their vision and creativity. The native port therefore provides a practical way to study both the original constraints and the possibilities opened by removing them.
+The additional margin is treated as a means, not an end. The priority is to use it to reduce avoidable technical compromises while preserving the same creative work. As a restoration premise, I ask what technical limitations could be removed if the same game had more optimisation time and more hardware margin available to express what is already present in the finished work. This is not a historical claim about undocumented developer intentions; the published game remains the primary evidence for the work being preserved.
+
+Once fidelity and stability are satisfied, unused performance margin is not treated as something that must be spent. It can instead support lower clocks, lower resource demand and a larger stability reserve.
+
+## Technical restoration and curation
+
+The project treats preservation more like restoration of a painting than reproduction of every defect in its physical condition.
+
+A painting conservator does not add new details or repaint the artist's work. At the same time, familiar degradation such as discoloured varnish does not become part of the original painting merely because viewers have become accustomed to it. The same distinction is applied here between the creative work and technical defects or limitations affecting its presentation.
+
+Known technical bugs, crashes, save problems, avoidable slowdowns, stutter and other implementation defects may therefore be corrected when the correction preserves the game's content, mechanics, visual identity, sound, structure and deliberate cadence. If the evidence does not establish whether a behaviour is a technical defect or a creative decision, the default is to preserve it.
+
+Observable divergences from the original behaviour are documented so that restoration and historical reference remain distinguishable.
+
+Curation is equally important. The project provides a deliberately selected reference configuration rather than requiring the player to assemble the intended experience from many small settings.
+
+For the preservation reference:
+
+- the original **240x160** image is presented at exact **3x integer scale** to **720x480**;
+- smoothing, shaders and presentation overlays that alter the original image are not part of the default presentation;
+- Project Picori's menu functions remain accessible through shortcuts, while its instructional overlays are disabled by default so they do not cover the game image;
+- the original GBA control identity remains reserved for the game, while port functions use device-specific combinations that do not replace the original controls;
+- inherited Project Picori options may remain accessible, but changing them can move the configuration outside the project's validated preservation reference.
+
+The project does not add new creative content, mechanics or presentation effects as part of restoration.
 
 ## Start here
 
-- **[Project philosophy](docs/PHILOSOPHY.md)** — design and preservation principles.
+- **[Project philosophy](docs/PHILOSOPHY.md)** — preservation, restoration and curation principles.
 - **[Engineering knowledge base](docs/KNOWLEDGE_BASE.md)** — findings, decisions and reusable lessons.
 - **[Patch history](docs/PATCH_SERIES.md)** — purpose and status of the published patches.
 - **[Validation](docs/VALIDATION.md)** — measurements, observations and evidence limits.
@@ -38,10 +62,11 @@ The original game remains the reference for:
 - art and visual identity;
 - music and sound effects;
 - interface behaviour;
-- game cadence;
+- game cadence and deliberate timing;
+- mechanics, structure and progression;
 - GBA control identity.
 
-Port-specific work is limited to the platform integration required for a reliable experience on the target device. Experimental rendering, remastering and broader feature work remain separate unless they demonstrate a clear benefit within that scope.
+Port-specific work is limited to reliable platform integration, technical restoration and validated efficiency work. New creative content or reinterpretation is outside the preservation scope.
 
 ## Publication status
 
@@ -85,7 +110,7 @@ Early AutoLab measurements obtained through direct SSH were rejected because the
 
 Later comparisons used a normal Ports-session context, deterministic replay and CPU/GPU restoration between variants.
 
-### Retained runtime configuration
+### Retained runtime configuration and efficiency intent
 
 Later retained evidence includes:
 
@@ -94,11 +119,13 @@ Later retained evidence includes:
 - audio **1600**;
 - `TMC_RENDER_THREADS=3`.
 
-The CPU ceiling reduction from 1416 MHz to 936 MHz is reported as a frequency change only. No proportional battery-life claim is made from that figure.
+The reduced clock configuration reflects the project's priority order: first satisfy fidelity and stability, then avoid using more hardware resources than the validated experience requires. The underclock was adopted with the objective of reducing unnecessary power and thermal demand while retaining the accepted experience.
 
-### Experimental work
+The CPU ceiling reduction from 1416 MHz to 936 MHz is reported as a frequency change only. No proportional battery-life, power-consumption or temperature reduction is inferred from that percentage without direct measurements.
 
-An experimental GPU-renderer path failed and was not promoted. A fullscreen-clear experiment was also not adopted. These results remain documented because they help define the tested boundaries of the project.
+### Rejected technical experiments
+
+An experimental GPU-renderer path failed and was not promoted. A fullscreen-clear experiment was also not adopted. These results remain documented because they help define the tested boundaries of the project; they are engineering experiments, not an alternative creative direction for the game.
 
 More detail is available in [docs/KNOWLEDGE_BASE.md](docs/KNOWLEDGE_BASE.md).
 
