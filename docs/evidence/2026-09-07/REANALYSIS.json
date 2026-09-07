@@ -1,0 +1,70 @@
+{
+  "method": "Offline reanalysis of archived records; quantiles use linear interpolation with rank (N-1)*p. No observations excluded. Ticks/monitor rows are within-session samples, not independent experiments.",
+  "new_game_or_device_tests": false,
+  "p11_comparison": [
+    {
+      "path": "reports/20260830-173723_P11_3_DEPLOY_HOST_PROVEN_BINARY_PHASE_CAPTURE_R1_1/P11_3_TRACE.tsv",
+      "sha256": "a2f60210bc523cbf89354862c01e00995eafda1b6556433b2ba3f389221b6c96",
+      "size": 7934430,
+      "tick_records": 10203,
+      "present_call_pairs": 10187,
+      "late_ms_p95": 5.790786499999999,
+      "late_ms_max": 70.186618,
+      "present_call_ms_p50": 7.469125,
+      "present_call_ms_max": 46.450584,
+      "zero_present_ticks": 798,
+      "one_present_ticks": 8625,
+      "two_present_ticks": 778,
+      "mean_presents_per_tick": 0.99843183377438,
+      "elapsed_trace_seconds": 172.180106999,
+      "period_pairs_ns": [
+        {"tick_ns": 16742706, "render_ns": 8371353, "count": 10203}
+      ],
+      "unmatched_present_begins": 0,
+      "matches_archived_summary": true
+    },
+    {
+      "path": "reports/20260830-210141_P11_4_SINGLE_PRESENT_119HZ_AB_R1_1/P11_4_TRACE.tsv",
+      "sha256": "2b8b727584df19a5955bc8f942bf929b4a74ec9db0effa0c1f2718aa2ffb635a",
+      "size": 7239276,
+      "tick_records": 10449,
+      "present_call_pairs": 10426,
+      "late_ms_p95": 0.027887200000000004,
+      "late_ms_max": 64.134375,
+      "present_call_ms_p50": 0.5694165,
+      "present_call_ms_max": 60.91725,
+      "zero_present_ticks": 63,
+      "one_present_ticks": 10346,
+      "two_present_ticks": 40,
+      "mean_presents_per_tick": 0.9977988324241555,
+      "elapsed_trace_seconds": 176.394675251,
+      "period_pairs_ns": [
+        {"tick_ns": 16742706, "render_ns": 16742706, "count": 10449}
+      ],
+      "unmatched_present_begins": 0,
+      "matches_archived_summary": true
+    }
+  ],
+  "p13_1_monitor": {
+    "path": "reports/20260905-123332_P13_1_RC1_FINAL_MANUAL_AV_QA_R1/EXTERNAL_MONITOR.txt",
+    "sha256": "eb3a852491e7b5ce5c9295ec948d378e2c99d472cce6e3d3da3e9b8bb847a4e6",
+    "samples": 874,
+    "temperature_max_c": 52.6,
+    "reported_display_hz": ["119.455"],
+    "cpu_max_khz": ["936000"],
+    "cpu_current_khz": {"936000": 866, "720000": 2, "480000": 6},
+    "gpu_max_hz": ["420000000"],
+    "governors": {"ondemand": 868, "powersave": 6},
+    "state_markers": [
+      "PRE_HZ=60.005",
+      "PRE_CPU_MAX=1512000",
+      "PRE_CPU_GOV=powersave",
+      "PRE_GPU_MAX=0",
+      "POST_CPU_MAX=1512000",
+      "POST_CPU_GOV=ondemand",
+      "POST_GPU_MAX=0",
+      "FINAL_HZ=60.005",
+      "GAME_EXIT_OBSERVED=YES"
+    ]
+  }
+}

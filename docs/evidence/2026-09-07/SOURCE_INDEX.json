@@ -1,0 +1,19 @@
+{
+  "audit_date": "2026-09-07",
+  "archive": "RG34XX_PORT_MINISH_CAP_HANDOVER_V0.1.0_20260906_123500.zip",
+  "archive_sha256": "07ae7e1be8aed80dc9494c084d3ac5bfb5b60be186f6778344bec8fb7393ca10",
+  "sources": [
+    {"original_path":"ports/minish-cap/project/reports/20260830-210141_P11_4_SINGLE_PRESENT_119HZ_AB_R1_1/AB_SUMMARY.json","bytes":4265,"sha256":"4c23ba8731cb950c6da0b00cbd3e3cab4f359599df1ac504e222638ab147efa8","public_copy":"P11_4_AB_SUMMARY.json"},
+    {"original_path":"ports/minish-cap/project/reports/20260829-111946_P10_3_2_AUTOPILOT_INTEGRATE_UI_AND_QA_R1_3/P1032_QA_VERDICT.txt","bytes":317,"sha256":"ad74594c63cd45b63ea34c67209867dfd1773b2b222c36e7f68b8765e5c5795c","public_copy":"P10_3_2_QA_VERDICT.txt"},
+    {"original_path":"ports/minish-cap/project/autolab/P13/P13_AUTOLAB2_STAGE_A_WINNER.json","bytes":1345,"sha256":"0ac15f32b870cf9c5cfd6c6d1198174f0a1a0bc3ffbae3a2ebaa2388808e5406","public_copy":"P13_STAGE_A_WINNER.json"},
+    {"original_path":"ports/minish-cap/project/autolab/P13_1/P13_1_WINNER.json","bytes":851,"sha256":"7152455ae0b1123f34254e2b8b8052f7eda92101a83158758270436d96a94e96","public_copy":"P13_1_WINNER.json"},
+    {"original_path":"ports/minish-cap/project/autolab/P13_1/P13_1_RC1_FINAL_AV_QA_ACCEPTED.json","bytes":1489,"sha256":"5ab87e6939daa05b7464539dfb5d181e3e84a8432db714678397dc681ccd7a14","public_copy":"P13_1_ACCEPTANCE.json"},
+    {"original_path":"ports/minish-cap/project/reports/20260905-123332_P13_1_RC1_FINAL_MANUAL_AV_QA_R1/MACHINE_SUMMARY.json","bytes":722,"sha256":"90ea7a57ed66f074c5b3ab185d263db3543f895ca140fed3296afe665cc110ab","public_copy":"P13_1_MACHINE_SUMMARY.json"},
+    {"original_path":"ports/minish-cap/project/reports/20260830-173723_P11_3_DEPLOY_HOST_PROVEN_BINARY_PHASE_CAPTURE_R1_1/P11_3_TRACE.tsv","bytes":7934430,"sha256":"a2f60210bc523cbf89354862c01e00995eafda1b6556433b2ba3f389221b6c96","public_copy":null},
+    {"original_path":"ports/minish-cap/project/reports/20260830-210141_P11_4_SINGLE_PRESENT_119HZ_AB_R1_1/P11_4_TRACE.tsv","bytes":7239276,"sha256":"2b8b727584df19a5955bc8f942bf929b4a74ec9db0effa0c1f2718aa2ffb635a","public_copy":null},
+    {"original_path":"ports/minish-cap/project/reports/20260905-123332_P13_1_RC1_FINAL_MANUAL_AV_QA_R1/EXTERNAL_MONITOR.txt","bytes":82564,"sha256":"eb3a852491e7b5ce5c9295ec948d378e2c99d472cce6e3d3da3e9b8bb847a4e6","public_copy":null},
+    {"original_path":"ports/minish-cap/project/reports/20260905-123332_P13_1_RC1_FINAL_MANUAL_AV_QA_R1/POST_LOG.txt","bytes":5839,"sha256":"95788da67efe6e39f1853a07c5e249f1aacfc113c7b1a06157ff3d46c181468a","public_excerpt":"P13_1_LOG_EXCERPTS.txt","original_line_numbers":[1,2,3,7,8,9,10,11,14,18,22,23,28,29,81,94,95,101,102,103,104,131,132,133,134,135]}
+  ],
+  "new_runtime_tests": false,
+  "access_boundary": "Public files contain unchanged archived summaries, explicitly selected log excerpts and an offline recalculation report. Full timing traces and monitor rows are included in the audit delivery, not in this repository snapshot. Hashes identify these files; they do not make absent raw files retrievable."
+}

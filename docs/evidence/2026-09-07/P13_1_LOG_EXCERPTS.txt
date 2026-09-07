@@ -1,0 +1,30 @@
+Archived P13.1 POST_LOG.txt excerpts. Numbers are original source line numbers.
+Original file SHA-256: 95788da67efe6e39f1853a07c5e249f1aacfc113c7b1a06157ff3d46c181468a
+Selection retains configuration, contradictory messages, warnings and exit evidence. No game-data bytes, saves or credentials are included.
+
+L1: RG34XX_AUDIO_RESAMPLER=LINEAR_A53_POLICY
+L2: RG34XX_AUDIO_BUFFER_FRAMES=1920
+L3: RG34XX_PROFILE=P13.1.RC1_PROFILE_DRIVEN_CLEAN_CPUCAP936_GPU420_AUDIO1600_RT3_119HZ
+L7: RG34XX_FILESELECT_LEGACY_L_SETTINGS=DISABLED
+L8: RG34XX_GAME_TPS=59.7275
+L9: RG34XX_DISPLAY_TARGET_HZ=119.455
+L10: RG34XX_OS_EXIT=MENU+L2
+L11: RG34XX_SETTINGS=MENU+R2
+L14: RG34XX_CPU_CAP_APPLIED_KHZ=936000
+L18: RG34XX_GPU_CAP_APPLIED_HZ=420000000
+L22: Console-Parity mode ON: edge-cache off, save-states inert, widescreen off, pacing locked to 59.7275 Hz.
+L23: SDL video driver: sdl2
+L28: [render] OpenMP scanline threads = 3 (of 4 cores)
+L29: PPU: SDL_Renderer driver = opengles2
+L81: done  asset extraction complete in 102799ms
+L94: [quicksave] slot 5 saved (409418 bytes)
+L95: [autosave] saved to ring slot 5 (area-change)
+L101: [quicksave] slot 6 saved (409418 bytes)
+L102: [autosave] saved to ring slot 6 (area-change)
+L103: ResolveRomPtr: address 0x80034678 is outside ROM
+L104: ResolveRomPtr: address 0x8003C28C is outside ROM
+L131: [rg34xx] MENU+L2: returning to muOS.
+L132: RG34XX_GPU_MAX_RESTORE=PASS:0
+L133: RG34XX_GPU_POLICY_RESTORE=PASS
+L134: RG34XX_CPU_MAX_RESTORE=PASS:1512000
+L135: RG34XX_GAME_EXIT_RC=0

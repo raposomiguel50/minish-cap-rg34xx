@@ -1,0 +1,30 @@
+{
+  "backend": "SDL_RENDERER",
+  "clean_binary_sha256": "787ba3cb8c297ea44a0605745347fe5a6e792094f0be755b51a8200c1eadc710",
+  "clean_binary_size": 8858736,
+  "comparison": {
+    "process_cpu_p50_ratio": 0.9949652250732423,
+    "rss_p50_ratio": 1.0034970042727902,
+    "temp_max_delta_c": 5.299999999999997
+  },
+  "fullscreen_clear_skip": false,
+  "manual_qa_required": true,
+  "public_state_change": false,
+  "runtime_env": {
+    "MALLOC_ARENA_MAX": null,
+    "OMP_NUM_THREADS": null,
+    "OMP_PLACES": null,
+    "OMP_PROC_BIND": null,
+    "OMP_WAIT_POLICY": null,
+    "TMC_RENDER_THREADS": "3"
+  },
+  "schema": "P13_1_PROFILE_DRIVEN_RENDER_AUTOLAB_WINNER_R2_CRASH_RESUME",
+  "soak_runs": 2,
+  "stable_promotion": false,
+  "stage_a_reference": {
+    "audio_frames": 1600,
+    "cpu_cap_khz": 936000,
+    "gpu_cap_hz": 420000000,
+    "strip": true
+  }
+}
