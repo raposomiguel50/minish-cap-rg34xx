@@ -1,6 +1,6 @@
 # Technical report and supporting evidence
 
-Start with **[H700 integration: implementation, measurements and evidence limits](EVIDENCE_AUDIT.md)**. The report distinguishes source changes, archived observations, recalculated statistics and approved policy. It includes measurement definitions, sample counts, limitations and APA-style author–date references.
+Start with **[H700 integration: implementation, measurements and evidence limits](EVIDENCE_AUDIT.md)**. The report distinguishes source changes, archived observations, recalculated statistics and approved policy. It includes measurement definitions, sample counts and limitations. Internal results link directly to their supporting files; APA-style author–date references identify external works.
 
 Read it together with the **[configuration and log supplement](AUDIT_SUPPLEMENT_2026-09-07.md)**. The supplement identifies discrepancies between the requested audio-buffer size and a printed launcher marker, and between the Console-Parity banner and later autosave messages. It also distinguishes restored clock limits from complete restoration of every system setting. These observations do not, by themselves, diagnose new runtime faults.
 
