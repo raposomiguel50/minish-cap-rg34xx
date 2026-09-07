@@ -38,9 +38,9 @@ The player should not need dozens of adjustments to reach the intended experienc
 
 The reference policy is simple: original imagery at integer scale, original controls, and no smoothing, shaders or instructional messages over gameplay.
 
-The current source provides concrete examples. It hides the legacy `L Settings` hint, retains settings through `MENU+R2`, and assigns exit to `MENU+L2`.
+The reference keeps port instructions off the game image. Settings remain available through `MENU+R2`; `MENU+L2` returns to muOS.
 
-The GBA control set remains reserved for the game. Additional port functions use the device-specific shortcuts.
+The GBA control set remains reserved for the game. Additional port functions use the device-specific shortcuts. This separates platform controls from the game itself.
 
 Useful inherited Project Picori options can remain accessible. Changing them may move the setup outside the validated reference.
 

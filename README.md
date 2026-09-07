@@ -25,15 +25,21 @@ Its 720 × 480 screen also fits the game's 240 × 160 image at exactly 3× scale
 
 Archived project records call the device **RG34XX-H**. This documentation uses the product name **RG34XX**.
 
-## What changed?
+## The handheld reference
 
-**Build support.** P04 adjusts source inclusion, library linking and header order. P06 adds ARMv8-A and Cortex-A53 compiler targeting.
+**Presentation.** The reference uses the original image at 3× integer scale. Port instructions stay off the game image; settings remain available through `MENU+R2`.
 
-**Menus and exit.** The integration hides the legacy `L Settings` hint. Settings remain available through `MENU+R2`; `MENU+L2` exits. A later recorded session ended with exit code 0.
+**Controls.** GBA buttons remain assigned to gameplay. `MENU+R2` opens port settings and `MENU+L2` exits to muOS.
+
+These are integration choices for a handheld. They do not create new game content or correct an original GBA interface defect.
 
 **Presentation timing.** P11.4 changes when the port presents frames. Two archived captures show lower p95 tick lateness, but some delays remain.
 
 **Runtime settings.** The accepted record uses CPU/GPU ceilings of 936/420 MHz and three rendering threads. These settings do not establish battery savings.
+
+## For developers
+
+The build changes target the H700. Shutdown work addresses a failure in the host port; it is not a fix to the original GBA game.
 
 The [patch map](docs/PATCH_SERIES.md) shows the code changes. The [results](docs/VALIDATION.md) explain the tests and their limits.
 

@@ -18,7 +18,7 @@ A guide to the problems, decisions and evidence behind the RG34XX integration.
 | Can I rebuild or distribute it? | [Reconstruction](#kb-mc-015) · [Distribution](#kb-mc-016) |
 | How do preservation decisions work? | [Principles](#kb-mc-021) |
 
-**Reading key:** source = code inspection; record = archived observation; policy = a decision rule. A policy is not a completed feature.
+**Reading key:** source = code inspection; record = archived observation; policy = a decision rule. A policy is not a completed feature. Website-maintenance notes are grouped separately at the end.
 
 [Glossary](GLOSSARY.md) · [Full results](VALIDATION.md) · [Open log questions](AUDIT_SUPPLEMENT_2026-09-07.md)
 
@@ -50,13 +50,15 @@ These are platform-integration choices, not proof of compatibility with every fi
 **Use the lesson:** inspect the runtime around the executable. [Pinned launcher](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/launcher/The%20Minish%20Cap.sh).
 
 <a id="kb-mc-004"></a>
-## KB-MC-004 — Can menus remain accessible without overlay hints?
+## KB-MC-004 — How can port controls stay separate from the game?
 
-**Type: source and record.** Yes. The integration hides the legacy `L Settings` hint and its old L-button action. Settings remain accessible through `MENU+R2`; `MENU+L2` exits.
+**Type: integration choice with source and session evidence.** The reference keeps port instructions off the game image. The existing settings menu remains available through `MENU+R2`.
 
-The launcher selects Console-Parity and 3× scale.
+`MENU+L2` exits to muOS. These shortcuts use controls beyond the GBA set, leaving the original buttons assigned to gameplay.
 
-**Use the lesson:** distinguish a visible prompt from the function it opens. [Patch map](PATCH_SERIES.md) · [Session excerpts](evidence/2026-09-07/log_excerpts.json).
+The launcher selects Console-Parity and 3× scale. These choices adapt the host interface; they do not repair the original game's interface.
+
+**Use the lesson:** document where players find the function, why it is separate from gameplay and how that access was checked. [Patch map](PATCH_SERIES.md) · [Session excerpts](evidence/2026-09-07/log_excerpts.json).
 
 <a id="kb-mc-005"></a>
 ## KB-MC-005 — Why separate game speed from screen refresh?
@@ -175,27 +177,6 @@ The complete private archive is not automatically safe to publish.
 
 **Use the lesson:** review documentation and binary distribution separately. [Available material](REPRODUCTION.md#what-is-available).
 
-<a id="kb-mc-018"></a>
-## KB-MC-018 — Does local website QA mean the live site is fixed?
-
-**Type: website-maintenance lesson, not a game test.** No. Candidate testing, repository publication, deployment and live verification are separate steps.
-
-**Use the lesson:** verify the published artifact before closing a live issue.
-
-<a id="kb-mc-019"></a>
-## KB-MC-019 — When is automation useful?
-
-**Type: workflow policy.** Use it for repeatable work or a clear reduction in risk. A small operation may be safer as a direct, auditable step.
-
-**Use the lesson:** test the tool before asking someone to run it. Do not make the tool more complex than the task.
-
-<a id="kb-mc-020"></a>
-## KB-MC-020 — Should a missing result trigger another download or test?
-
-**Type: workflow policy.** First inspect known local files and earlier results. The required artifact may already exist.
-
-**Use the lesson:** verify and reuse existing evidence before repeating work. The site's music recovery is not game-performance evidence.
-
 <a id="kb-mc-021"></a>
 ## KB-MC-021 — What is native execution for?
 
@@ -219,7 +200,7 @@ This is a decision rule. The reviewed records do not establish an original-GBA g
 
 **Type: policy with source examples.** A reference configuration gives the player an intentional starting point.
 
-Shortcut access and hint suppression are documented examples. They do not prove every upstream setting was audited.
+The reference separates port settings from gameplay and provides device-specific shortcuts. This does not establish that every inherited setting was audited.
 
 **Use the lesson:** keep useful options accessible without requiring them to assemble the intended experience. [Current control changes](#kb-mc-004).
 
@@ -240,6 +221,31 @@ The accepted record uses CPU/GPU ceilings of **936/420 MHz**. Lower power and he
 This does not claim that such a mode has been implemented.
 
 **Use the lesson:** preserve useful evidence without overwhelming the player with settings.
+
+## Website and workflow maintenance
+
+These three entries concern the publication workflow, not features or performance of the game.
+
+<a id="kb-mc-018"></a>
+## KB-MC-018 — Does local website QA mean the live site is fixed?
+
+**Type: website-maintenance lesson, not a game test.** No. Candidate testing, repository publication, deployment and live verification are separate steps.
+
+**Use the lesson:** verify the published artifact before closing a live issue.
+
+<a id="kb-mc-019"></a>
+## KB-MC-019 — When is automation useful?
+
+**Type: workflow policy.** Use it for repeatable work or a clear reduction in risk. A small operation may be safer as a direct, auditable step.
+
+**Use the lesson:** test the tool before asking someone to run it. Do not make the tool more complex than the task.
+
+<a id="kb-mc-020"></a>
+## KB-MC-020 — Should a missing result trigger another download or test?
+
+**Type: workflow policy.** First inspect known local files and earlier results. The required artifact may already exist.
+
+**Use the lesson:** verify and reuse existing evidence before repeating work. The site's music recovery is not game-performance evidence.
 
 ## Improve an article
 

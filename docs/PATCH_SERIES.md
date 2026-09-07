@@ -12,6 +12,16 @@ All patch links below use the fixed revision `90fd77a82d579de9460f2de1167a95ec26
 
 The archive is not a complete final build recipe. Start with [Reconstruction](REPRODUCTION.md) before attempting a new executable.
 
+## Interface provenance
+
+The pinned upstream includes a [keyboard settings prompt](https://github.com/EstebanPdN/zelda-tmc-3ds/blob/e72663ca4059dabf9dbf7f03c36fc791d90b8db5/port/port_runtime_config.h#L284-L287): `Press F8 for settings`.
+
+It also contains a separate [file-selection settings hint](https://github.com/EstebanPdN/zelda-tmc-3ds/blob/e72663ca4059dabf9dbf7f03c36fc791d90b8db5/src/fileselect.c#L1245-L1263), `L Settings`. These are different host-port interface paths, not elements of the original GBA game.
+
+P09 and P10 record intermediate interface work. Their labels and bindings are historical, not recommended controls for the reference configuration.
+
+For normal use, the relevant outcome is an unobstructed game image with settings available through `MENU+R2`. Prompt edits are not original-game bug fixes.
+
 ## Build support
 
 ### P04_AARCH64_LINK_COMPLETENESS_R1
@@ -49,7 +59,7 @@ Adds MENU+L2/R2 routes and seamless UI. Its initial double-rate timing is histor
 
 ### P10_3_2_RG34XX_CLEAN_EXIT_FILESELECT_UI_R3
 
-Combines quit handling, conditional post-shutdown _Exit and suppression of the legacy hint/L action.
+Combines quit handling, conditional post-shutdown _Exit and suppression of the host-port file-selection hint/L action.
 
 [Inspect this patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P10_3_2_RG34XX_CLEAN_EXIT_FILESELECT_UI_R3.patch)
 

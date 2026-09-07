@@ -22,6 +22,20 @@ Use stable article IDs, descriptive headings and ordinary search terms. Explain 
 
 Keep filenames and revision IDs in evidence links. Do not make the reader decode them before learning what the topic means.
 
+## Check relevance and origin
+
+Before publishing a claim, identify its layer: the released GBA game, inherited port software, an intermediate development step or the accepted handheld configuration.
+
+Lead with what the reader can use or learn. An accurate patch description is not automatically a useful project headline.
+
+Describe the final behaviour and its purpose. Keep provisional labels, discarded bindings and debugging steps in the patch history when they aid maintenance.
+
+Do not present removing development scaffolding as repairing the original game. Do not attribute an inherited interface or fix to this integration.
+
+Keep website-maintenance lessons separate from game results. Preserve their evidence without making them the public story of the port.
+
+For each summary, ask: what question does this answer, which baseline supports it, and where can the reader check it?
+
 ## Capture the lesson during the work
 
 Record the question, affected platform, source revision and observed symptom.

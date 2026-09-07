@@ -99,7 +99,11 @@ It does not prove that all crashes were removed or that the GBA ROM had this def
 
 P10.3 introduces `MENU+R2` for settings and `MENU+L2` for exit. The final session reports those mappings.
 
-P10.3.2 hides `L Settings` and disables its old L-button sidebar action in the seamless profile. The settings implementation remains available.
+P10.3.2 suppresses a host-port file-selection hint and its L-button sidebar action in the seamless profile. The settings implementation remains available through the handheld shortcut.
+
+The [patch map](PATCH_SERIES.md#interface-provenance) distinguishes the upstream keyboard prompt from that separate file-selection path. Neither belongs to the original GBA interface.
+
+These details establish source provenance. The user-facing result is access to port settings without instructional messages over the game, not restoration of a missing original feature.
 
 The launcher selects `--window_scale=3 --console-parity`. The final log reports widescreen disabled, pacing at 59.7275 Hz and three OpenMP scanline threads.
 
