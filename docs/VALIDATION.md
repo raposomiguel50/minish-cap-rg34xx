@@ -23,9 +23,15 @@ SHA-256:
 
 This identifies the retained private executable used as the stable project artifact. The executable itself is not distributed publicly.
 
-## Presentation
+## Preservation reference presentation
 
-The project preserves the original 240x160 presentation and uses integer 3x scaling to the RG34XX-H 720x480 display.
+The project preserves the original **240x160** presentation and uses exact **3x integer scaling** to the RG34XX-H **720x480** display.
+
+The preservation reference does not use smoothing, shaders or instructional overlays over the game image.
+
+Project Picori menu functions remain accessible through shortcuts while the instructional overlays are disabled by default. Port-specific shortcuts do not replace controls used by the original GBA control scheme.
+
+These choices describe the curated preservation reference. Other inherited Project Picori options may remain accessible, but changing them can move the resulting configuration outside the validated reference.
 
 ## Timing/high-refresh evidence
 
@@ -74,15 +80,27 @@ Retained P13/P13.1 configuration evidence:
 
 The CPU ceiling changed from 1416 MHz to 936 MHz, approximately 33.9%.
 
+The reduced clock configuration was retained after fidelity and stability requirements were satisfied, with the objective of avoiding unnecessary resource use and reducing power and thermal demand where possible.
+
 ### Evidence boundary
 
-That figure describes CPU-frequency reduction only. It is not used as an equivalent energy-savings or battery-life percentage.
+The 33.9% figure describes CPU-frequency reduction only. It is not used as an equivalent energy-savings, battery-life, power-consumption or temperature percentage.
 
 The project record also includes mixed results, including a comparison with a higher recorded maximum temperature and slightly higher RSS.
 
 A retained acceptance note recorded 874 samples and a maximum temperature of approximately **52.6 C** under that test context.
 
-This does not establish a full-playthrough thermal guarantee, leak-free execution or universal H700 behaviour.
+This does not establish a full-playthrough thermal guarantee, leak-free execution, a quantified power saving or universal H700 behaviour.
+
+The engineering priority is therefore stated as an objective and decision rule rather than as an unmeasured result: fidelity and stability first; efficiency only within the remaining safe margin.
+
+## Restoration evidence boundary
+
+The project distinguishes technical restoration from creative reinterpretation.
+
+Known technical bugs, crashes, save problems, avoidable slowdowns, stutter or similar implementation defects can be candidates for correction when the creative work remains intact. If the evidence does not establish whether a behaviour is a defect or a deliberate design choice, preservation is the default.
+
+Any restored behaviour that intentionally differs from the historical original should be documented with the reason and supporting evidence. Historical behaviour may still be retained for comparison or investigation without becoming the normal preservation reference.
 
 ## Rejected and negative results
 
@@ -93,7 +111,7 @@ Relevant negative evidence includes:
 - early direct-SSH AutoLab measurements that were invalidated because the test context did not represent a normal Ports launch;
 - high-refresh hypotheses revised after instrumentation.
 
-These results remain documented because they clarify the tested boundaries of the project.
+These results remain documented because they clarify the tested technical boundaries of the project. They are not treated as a separate creative direction.
 
 ## AutoLab methodology
 
@@ -141,12 +159,14 @@ Examples consistent with the current evidence:
 - "the retained private V1 has SHA-256 ...";
 - "the accepted timing direction retained ~59.7275 Hz logical cadence on a ~119.455 Hz panel";
 - "the recorded comparison improved tick-lateness p95 under the tested conditions";
-- "later retained runtime evidence used CPU 936 MHz, GPU 420 MHz, audio 1600 and three render threads".
+- "later retained runtime evidence used CPU 936 MHz, GPU 420 MHz, audio 1600 and three render threads";
+- "the reduced clocks were selected after fidelity and stability requirements were satisfied, with the objective of avoiding unnecessary resource use".
 
 Claims not currently supported include:
 
 - 120 FPS game logic;
-- a proportional battery/power reduction derived from CPU frequency alone;
+- a proportional battery, power or temperature reduction derived from CPU frequency alone;
 - compatibility with all H700 devices;
 - bit-for-bit reproducibility of the retained V1;
-- unrestricted redistribution of the private executable.
+- unrestricted redistribution of the private executable;
+- undocumented claims about what the original developers intended beyond the finished work and available evidence.
