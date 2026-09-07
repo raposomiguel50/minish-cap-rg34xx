@@ -1,207 +1,67 @@
-# The Minish Cap - RG34XX
+# The Minish Cap — RG34XX
 
-An unofficial RG34XX/H700 native-port integration of [Project Picori](https://github.com/EstebanPdN/zelda-tmc-3ds), developed and validated on the **ANBERNIC RG34XX-H** running **muOS**.
+An unofficial H700/Linux integration of EstebanPdN's Project Picori-derived Minish Cap port. The pinned source is `zelda-tmc-3ds` at `e72663ca4059dabf9dbf7f03c36fc791d90b8db5`; its README credits the Android port, Project Picori and the zeldaret decompilation (EstebanPdN, 2026; Raposo, 2026d).
 
-This project is part of **[Miguel's Game Dev Lab](https://raposomiguel50.github.io/)**, where ports are used to study platform constraints, improve practical compatibility and document reusable engineering knowledge.
+## What this repository documents
 
-The engineering approach is guided by **preservation, containment, focus, restoration, minimalism and curation**. The objective is not to redesign or expand the game, but to present the original creative work reliably on the target hardware while removing avoidable technical obstacles where the evidence supports doing so.
+The public material contains 15 integration patches and a launcher. The patches address AArch64 build/link configuration, handheld controls and menu hints, quit propagation, a post-shutdown exit workaround, audio configuration and timing instrumentation/policy. They are historical stages, **not** one validated linear patch series (Raposo, 2026b, 2026c).
 
-## Why the RG34XX-H
+The recorded target is the RG34XX with muOS. Historical project records use the label **RG34XX-H**; ANBERNIC markets the GBA-style device as **RG34XX**. Its 720 × 480 display accommodates the game's 240 × 160 image at integer scale 3× (ANBERNIC, n.d.; Raposo, 2026a).
 
-I chose the RG34XX-H primarily because its horizontal form and overall design closely recall the original Game Boy Advance. For me, it is the modern handheld that most closely evokes the GBA as a physical device.
+## Why this project
 
-That connection is important to this project. I grew up mainly with PCs and PC games; the Game Boy Advance was the first console I owned, given to me by my father. Using hardware that recalls the original GBA therefore supports the preservation objective at both a practical and personal level.
+I grew up with PC games. My father gave me my first console, a Game Boy Advance. I chose the RG34XX for its close physical resemblance to that handheld.
 
-The technical characteristics reinforce that choice. The RG34XX-H display is **720x480**, allowing the GBA's original **240x160** image to scale exactly at **3x** without changing its aspect ratio. The H700 and muOS also provide a constrained ARM/Linux target that is useful for native-port engineering and optimisation.
+**Project principles:** preserve the existing creative work, make justified technical interventions and provide a curated reference configuration. The premise of additional optimisation time and hardware margin concerns execution of the same work, not new content or an imagined expanded edition. These are decision criteria; they are not claims that every possible defect has been corrected. See [Philosophy](docs/PHILOSOPHY.md).
 
-## Why native execution
+## Implemented changes and recorded results
 
-The project removes the GBA emulation layer. Instead of spending part of the system's resources reproducing the original console's CPU, graphics, audio and timing environment, the game runs as native AArch64 software within the RG34XX-H Linux/muOS environment.
+| Area | Specific evidence | Limit |
+| --- | --- | --- |
+| Build | Source inclusion/link changes; `fmt` header order; ARMv8-A/SIMD and Cortex-A53 tuning flags | Build changes are not gameplay-bug fixes |
+| Exit | Quit requests propagate through loops; `_Exit(0)` follows explicit shutdown in the target profile; a later session logs exit code 0 | Exact failing finalizer not identified |
+| Controls/UI | MENU+R2 settings; MENU+L2 exit; suppression of the legacy `L Settings` hint | Settings remain accessible |
+| Timing | Historical p95 tick lateness: 5.790787 → 0.027887 ms, from 10,203 and 10,449 ticks | One capture per variant; maxima and unmatched conditions matter |
+| Runtime | Accepted record: CPU ceiling 936 MHz, GPU ceiling 420 MHz, audio 1,600 frames, three render threads | Not measured energy savings |
 
-This is not bare-metal execution, but it provides more direct control over build configuration, timing, presentation, audio, threading, input and lifecycle behaviour.
+Sources: patches/launcher and archived records (Raposo, 2026a, 2026b, 2026c). The full [evidence audit](docs/EVIDENCE_AUDIT.md) includes measurement definitions, adverse results and traceability.
 
-The additional margin is treated as a means, not an end. The priority is to use it to reduce avoidable technical compromises while preserving the same creative work. As a restoration premise, I ask what technical limitations could be removed if the same game had more optimisation time and more hardware margin available to express what is already present in the finished work. This is not a historical claim about undocumented developer intentions; the published game remains the primary evidence for the work being preserved.
+The audio record is mixed: the earlier 1,600-frame machine test was labelled `AUDIO1600_MACHINE_AUDIO_REGRESSION`; the later operator acceptance records audio `OK`. No correction of an **original GBA gameplay bug/glitch** is established by the reviewed material. A policy permitting such corrections must not be read as a completed result (Raposo, 2026a).
 
-Once fidelity and stability are satisfied, unused performance margin is not treated as something that must be spent. It can instead support lower clocks, lower resource demand and a larger stability reserve.
+## Native execution and efficiency
 
-## Technical restoration and curation
+The game logic is built for the host platform. The port still uses Linux, SDL integration and software models of GBA presentation/audio behaviour; it is not bare-metal execution or removal of every emulated subsystem. No native-versus-emulator benchmark is claimed. Lower clock limits were selected to reduce unnecessary resource demand, but the archived records do not establish measured battery-life or thermal savings (Raposo, 2026a, 2026b, 2026c).
 
-The project treats preservation more like restoration of a painting than reproduction of every defect in its physical condition.
+## Reading order
 
-A painting conservator does not add new details or repaint the artist's work. At the same time, familiar degradation such as discoloured varnish does not become part of the original painting merely because viewers have become accustomed to it. The same distinction is applied here between the creative work and technical defects or limitations affecting its presentation.
+[Evidence audit](docs/EVIDENCE_AUDIT.md) · [Validation](docs/VALIDATION.md) · [Patch map](docs/PATCH_SERIES.md) · [Knowledge base](docs/KNOWLEDGE_BASE.md) · [Reconstruction](docs/REPRODUCTION.md) · [Philosophy](docs/PHILOSOPHY.md) · [Development method](docs/DEVELOPMENT_METHOD.md)
 
-Known technical bugs, crashes, save problems, avoidable slowdowns, stutter and other implementation defects may therefore be corrected when the correction preserves the game's content, mechanics, visual identity, sound, structure and deliberate cadence. If the evidence does not establish whether a behaviour is a technical defect or a creative decision, the default is to preserve it.
+## Private V1 and public boundaries
 
-Observable divergences from the original behaviour are documented so that restoration and historical reference remain distinguishable.
-
-Curation is equally important. The project provides a deliberately selected reference configuration rather than requiring the player to assemble the intended experience from many small settings.
-
-For the preservation reference:
-
-- the original **240x160** image is presented at exact **3x integer scale** to **720x480**;
-- smoothing, shaders and presentation overlays that alter the original image are not part of the default presentation;
-- Project Picori's menu functions remain accessible through shortcuts, while its instructional overlays are disabled by default so they do not cover the game image;
-- the original GBA control identity remains reserved for the game, while port functions use device-specific combinations that do not replace the original controls;
-- inherited Project Picori options may remain accessible, but changing them can move the configuration outside the project's validated preservation reference.
-
-The project does not add new creative content, mechanics or presentation effects as part of restoration.
-
-## Start here
-
-- **[Project philosophy](docs/PHILOSOPHY.md)** — preservation, restoration and curation principles.
-- **[Engineering knowledge base](docs/KNOWLEDGE_BASE.md)** — findings, decisions and reusable lessons.
-- **[Patch history](docs/PATCH_SERIES.md)** — purpose and status of the published patches.
-- **[Validation](docs/VALIDATION.md)** — measurements, observations and evidence limits.
-- **[Reconstruction and reproducibility](docs/REPRODUCTION.md)** — current reconstruction status and open requirements.
-- **[Development method](docs/DEVELOPMENT_METHOD.md)** — workflow, validation and AI assistance.
-
-## Project scope
-
-The original game remains the reference for:
-
-- art and visual identity;
-- music and sound effects;
-- interface behaviour;
-- game cadence and deliberate timing;
-- mechanics, structure and progression;
-- GBA control identity.
-
-Port-specific work is limited to reliable platform integration, technical restoration and validated efficiency work. New creative content or reinterpretation is outside the preservation scope.
-
-## Publication status
-
-This repository publishes **source-side integration work, launcher material and engineering documentation**. It does not distribute a public game executable.
-
-- **Upstream Project Picori revision:** `e72663ca4059dabf9dbf7f03c36fc791d90b8db5`
-- **Private validated V1 SHA-256:** `787ba3cb8c297ea44a0605745347fe5a6e792094f0be755b51a8200c1eadc710`
-- **Commercial/proprietary game data included:** **No**
-- **Public V1 binary included:** **No**
-
-The public repository excludes GBA ROMs, extracted Nintendo assets, save data, private builds, device backups and the validated V1 executable.
-
-The retained private V1 used VirtuaAPU. At the audited revision, VirtuaAPU did not provide an explicit published licence file, so neither that component nor the executable incorporating it is redistributed here.
-
-See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and [docs/LEGAL_STATUS.md](docs/LEGAL_STATUS.md).
-
-## Validated reference target
-
-- Device: **ANBERNIC RG34XX-H**
-- SoC: **Allwinner H700**
-- CPU class: **Cortex-A53**
-- Architecture: **AArch64**
-- CFW: **muOS**
-- Display: **720x480**
-
-Other H700 devices or custom firmware may be compatible, but they are not presented as validated without independent testing.
-
-## Selected engineering findings
-
-### High-refresh presentation
-
-The accepted timing direction keeps game logic around **59.7275 Hz**, uses the panel around **119.455 Hz**, and performs **one explicit presentation per logical tick**.
-
-In the recorded comparison, tick-lateness p95 improved from approximately **5.791 ms** to **0.028 ms** under the tested conditions.
-
-This is a presentation/timing result; it is not described as 120 FPS game logic.
-
-### Benchmark context
-
-Early AutoLab measurements obtained through direct SSH were rejected because the surrounding frontend/background state did not represent a normal Ports launch.
-
-Later comparisons used a normal Ports-session context, deterministic replay and CPU/GPU restoration between variants.
-
-### Retained runtime configuration and efficiency intent
-
-Later retained evidence includes:
-
-- CPU ceiling **936 MHz**;
-- GPU **420 MHz**;
-- audio **1600**;
-- `TMC_RENDER_THREADS=3`.
-
-The reduced clock configuration reflects the project's priority order: first satisfy fidelity and stability, then avoid using more hardware resources than the validated experience requires. The underclock was adopted with the objective of reducing unnecessary power and thermal demand while retaining the accepted experience.
-
-The CPU ceiling reduction from 1416 MHz to 936 MHz is reported as a frequency change only. No proportional battery-life, power-consumption or temperature reduction is inferred from that percentage without direct measurements.
-
-### Rejected technical experiments
-
-An experimental GPU-renderer path failed and was not promoted. A fullscreen-clear experiment was also not adopted. These results remain documented because they help define the tested boundaries of the project; they are engineering experiments, not an alternative creative direction for the game.
-
-More detail is available in [docs/KNOWLEDGE_BASE.md](docs/KNOWLEDGE_BASE.md).
-
-## Private V1 identity and reconstruction status
-
-The retained private V1 executable is identified by:
+The archived acceptance record identifies private V1 by SHA-256:
 
 `787ba3cb8c297ea44a0605745347fe5a6e792094f0be755b51a8200c1eadc710`
 
-The hash identifies the validated artifact; it does not establish bit-for-bit reproducibility.
+That hash is an identity reference, not proof of a bit-for-bit reproducible build. The public tree does not contain the game ROM, extracted Nintendo assets, saves or the V1 executable. It is a source-side integration and evidence publication, not a downloadable game release (Raposo, 2026a, 2026d).
 
-Four P13.1 source snapshots were also preserved and hash-verified in the private engineering record. They improve historical traceability but are not presented as a complete final build tree.
+The recorded VirtuaAPU licensing boundary remains unresolved for binary distribution. See [Third-party notices](THIRD_PARTY_NOTICES.md), [Legal status](docs/LEGAL_STATUS.md), [Provenance](docs/PROVENANCE.md) and [PortMaster status](docs/PORTMASTER_STATUS.md). This editorial audit does not change licences or publish a binary.
 
-See [docs/REPRODUCTION.md](docs/REPRODUCTION.md), [docs/PROVENANCE.md](docs/PROVENANCE.md) and [SOURCE_BASELINE.json](SOURCE_BASELINE.json).
+## Authorship and assistance
 
-## Upstream
+I define the scope, preservation criteria and acceptance decisions. ChatGPT assists with code, analysis and documentation; its output is not evidence of successful execution. The audit distinguishes archived device observations from the analysis performed on those records.
 
-Principal upstream foundation:
+Original integration work is published under the repository's GPL-3.0-or-later terms; upstream components retain their own notices. See [LICENSE](LICENSE), [COPYING.txt](COPYING.txt) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
-https://github.com/EstebanPdN/zelda-tmc-3ds
+## References
 
-Reference revision:
+ANBERNIC. (n.d.). *ANBERNIC RG 34XX*. Retrieved September 7, 2026, from https://anbernic.com/en-fr/products/rg34xx
 
-`e72663ca4059dabf9dbf7f03c36fc791d90b8db5`
+EstebanPdN. (2026). *The Minish Cap 3DS* (Commit `e72663ca4059dabf9dbf7f03c36fc791d90b8db5`) [Source code]. GitHub. https://github.com/EstebanPdN/zelda-tmc-3ds/tree/e72663ca4059dabf9dbf7f03c36fc791d90b8db5
 
-The complete upstream source tree is not vendored in this repository.
+Raposo, M. (2026a). *Archived development records for The Minish Cap—RG34XX (27 August–5 September 2026)* (Evidence extract 1.0) [Data set]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/tree/ede6e9090e7ca78c6c3a8c3d324d8c1de881f8b3/docs/evidence/2026-09-07
 
-## Repository contents
+Raposo, M. (2026b). *H700 integration patches for The Minish Cap—RG34XX* (Commit `90fd77a82d579de9460f2de1167a95ec264e57c3`) [Source code]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/tree/90fd77a82d579de9460f2de1167a95ec264e57c3/patches
 
-- `patches/` — RG34XX/H700 integration, instrumentation and historical experiments.
-- `launcher/` — launcher/runtime integration cleared for publication.
-- `config/` — upstream pins and reference hashes.
-- `docs/PHILOSOPHY.md` — project principles.
-- `docs/KNOWLEDGE_BASE.md` — engineering findings and lessons.
-- `docs/PATCH_SERIES.md` — patch classification and reading order.
-- `docs/VALIDATION.md` — evidence and claim boundaries.
-- `docs/REPRODUCTION.md` — reconstruction and reproducibility status.
-- `docs/DEVELOPMENT_METHOD.md` — development workflow and AI assistance.
-- `docs/PROVENANCE.md` / `docs/LEGAL_STATUS.md` — source and redistribution boundaries.
-- `SOURCE_BASELINE.json` — machine-readable source/provenance baseline.
+Raposo, M. (2026c). *Reference launcher for The Minish Cap—RG34XX* (Commit `90fd77a82d579de9460f2de1167a95ec264e57c3`) [Source code]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/launcher/The%20Minish%20Cap.sh
 
-Historical patches are retained for reference and should not be treated as one linear patch series.
-
-## PortMaster status
-
-There is currently **no PortMaster release** from this repository.
-
-A future submission requires:
-
-1. a clear redistribution/licensing path for all bundled components;
-2. appropriate licence coverage for the final package;
-3. broader CFW/device validation beyond the current RG34XX-H + muOS reference;
-4. final packaging aligned with PortMaster conventions.
-
-See [docs/PORTMASTER_STATUS.md](docs/PORTMASTER_STATUS.md).
-
-## Development attribution and AI assistance
-
-This project is **human-directed and AI-assisted**.
-
-I define the project goals, scope, target hardware, preservation criteria, acceptance criteria and final decisions. I also perform or evaluate the real-device validation used to accept changes.
-
-ChatGPT assists with calculations, programming, automation, debugging, technical analysis, documentation and repetitive repository work. AI-assisted output is reviewed against the project requirements and available evidence before adoption.
-
-See [docs/DEVELOPMENT_METHOD.md](docs/DEVELOPMENT_METHOD.md) and the [Miguel's Game Dev Lab development method](https://raposomiguel50.github.io/method/).
-
-## Licence
-
-Original integration work in this repository is distributed under the GNU General Public License v3.0 or later, consistent with the audited Project Picori upstream licence.
-
-See:
-
-- [LICENSE](LICENSE)
-- [COPYING.txt](COPYING.txt)
-- [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
-
-Upstream and third-party components retain their respective copyright and licensing terms.
-
-No Nintendo proprietary game data is distributed by this repository.
+Raposo, M. (2026d). *Source baseline for The Minish Cap—RG34XX* (Commit `90fd77a82d579de9460f2de1167a95ec264e57c3`) [Project metadata]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/SOURCE_BASELINE.json

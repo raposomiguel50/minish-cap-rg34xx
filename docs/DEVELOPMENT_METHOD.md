@@ -1,203 +1,41 @@
-# Development method and AI assistance
+# Development and reporting method
 
-## Human-directed, AI-assisted
+## Responsibility
 
-This project is part of **Miguel's Game Dev Lab** and follows a human-directed, AI-assisted workflow.
+I define the project purpose, target platform, preservation criteria and acceptance decisions. ChatGPT assists with code, automation, analysis and documentation. An AI-generated statement, script or expected-output template is not evidence that a command ran successfully.
 
-I define the project purpose, target hardware, scope, preservation criteria, acceptance criteria and final decisions. I also perform or evaluate the real-device observations used to accept changes.
+## Source-to-claim reporting
 
-ChatGPT assists with calculations, programming, debugging, automation, technical analysis, documentation and repetitive repository work.
+Every factual result should identify the source path/revision, relevant configuration, observation and limit. Keep five categories separate: source implementation, recorded observation, reanalysis, approved policy and unsupported claim. Use author–date citations and an APA-style reference list; use immutable revisions for code and versioned extracts for data.
 
-AI-assisted output is reviewed against the project requirements and available evidence before adoption.
+For this audit, 15 historical patches were inspected, two timing traces were recalculated and selected final-session telemetry was checked. There were **no new hardware runs**. Hash agreement checks artifact identity; it does not establish the historical authenticity or completeness of a test (Raposo, 2026a, 2026b).
 
-## Engineering principles
+## Experiments and statistics
 
-The workflow follows the same principles used throughout the project:
+Define the variable before reporting its value. Tick lateness, a presentation-call duration, panel refresh and perceptual latency are different quantities. Repeated ticks within a session are not independent experiments. Report adverse maxima and negative verdicts alongside improved percentiles. Do not imply randomised or matched-scene testing when the record does not establish it.
 
-- **preservation** — retain the original creative work as the authority;
-- **containment** — address each problem within the smallest practical boundary;
-- **focus** — keep accepted scope separate from optional technical research;
-- **restoration** — correct justified technical defects without adding or repainting creative content;
-- **minimalism** — prefer smaller, justified interventions where they are sufficient;
-- **curation** — define and validate a coherent reference experience rather than require the player to assemble one from many micro-settings.
+The earlier audio-machine verdict and later operator acceptance are both retained. CPU-frequency reduction is not converted into energy or thermal savings. See [Validation](VALIDATION.md) and [Evidence audit](EVIDENCE_AUDIT.md) for the concrete records (Raposo, 2026a).
 
-The finished game is the primary evidence for what is being preserved. When the distinction between a technical defect and a creative decision is uncertain, preservation is the default.
+## Preservation policy is not a completed feature
 
-See [`PHILOSOPHY.md`](PHILOSOPHY.md).
+[PHILOSOPHY.md](PHILOSOPHY.md) contains approved decision criteria. Any proposed original-game bug correction requires a reproducible symptom, defect/design assessment, source change, build identity and test result before appearing as completed work. No such original-GBA gameplay-bug correction is claimed by this audit.
 
-## Restoration decisions
+## Controlled intervention
 
-Technical restoration and historical reproduction are treated as different questions.
+Work on an isolated copy, retain the prior state and change the smallest justified scope. A technical experiment can be useful even when rejected. The historical GPU-renderer and fullscreen-clear directions were not selected in the recorded winner; their existence must not become a claim of a new renderer shipped in V1 (Raposo, 2026a).
 
-A known bug, crash, save problem, avoidable slowdown, stutter or similar implementation defect may be corrected when the correction preserves content, mechanics, visual identity, sound, structure and deliberate cadence.
+## Continuity and publication
 
-A familiar defect is not automatically treated as part of the work merely because players have become accustomed to it. Conversely, a limitation that has become part of the deliberate visual, audio or gameplay language is not automatically treated as something to remove.
+Persist executed actions, outcomes, failures and evidence independently of the conversation. Keep local state, repository publication, deployment and live verification distinct. Do not say the Honor project record has been synchronised without an actual local write and verification. Public evidence is selected to exclude ROMs, private binaries and personal runtime data.
 
-When restoration changes observable behaviour, the difference, rationale and supporting evidence are documented. Historical behaviour may be retained for A/B testing, investigation or reference without becoming the default user-facing mode.
+A small read-only analysis of thousands of trace rows is appropriate automation. Repeatedly generating large untested publication runners is not. Questions should resolve a real ambiguity, one at a time, rather than repeatedly reconfirm an approved decision.
 
-## Curated reference configuration
+## Reusable contribution
 
-The project validates one preservation reference rather than treating every upstream option combination as equally representative.
+The reusable material is the source change, configuration, measurement definition, result, alternative and limitation. Publishing a principle does not demonstrate its fulfilment; publishing a number without its context does not establish a performance improvement.
 
-The reference direction includes:
+## References
 
-- original 240x160 presentation at exact 3x integer scale to 720x480;
-- no smoothing, shaders or instructional overlays as part of the default game image;
-- Project Picori menu functions accessible through shortcuts while their instructional overlays remain disabled by default;
-- original GBA controls reserved for gameplay;
-- port functions assigned to device-specific combinations that do not replace the original controls.
+Raposo, M. (2026a). *Archived development records for The Minish Cap—RG34XX (27 August–5 September 2026)* (Evidence extract 1.0) [Data set]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/tree/ede6e9090e7ca78c6c3a8c3d324d8c1de881f8b3/docs/evidence/2026-09-07
 
-Inherited Project Picori options may remain accessible where useful, but changing them can move the configuration outside the validated preservation reference.
-
-## Evidence-based validation
-
-Different claims require different evidence. Depending on the task, the project uses:
-
-- exact upstream revisions;
-- file and binary hashes;
-- build and link evidence;
-- architecture checks;
-- timing traces;
-- runtime measurements;
-- target-device observations;
-- visual/audio QA;
-- publication and deployment verification.
-
-A successful command is treated as process evidence, not as proof of every property of the resulting artifact.
-
-## Proportional claims
-
-Measurements are reported within the limits of what they demonstrate.
-
-Examples:
-
-- CPU-frequency reduction is not converted directly into a battery-life, power or temperature percentage;
-- panel refresh rate is kept separate from game-logic cadence;
-- heuristic audio counters are not treated as direct perceptual measurements;
-- a binary SHA-256 identifies an artifact but does not prove reproducibility;
-- validation on RG34XX-H + muOS is not presented as universal H700 compatibility.
-
-## Efficiency after fidelity
-
-The optimisation order is deliberate:
-
-1. preserve the work faithfully;
-2. maintain stable execution;
-3. remove justified technical obstacles;
-4. reduce unnecessary resource use once the first three requirements are satisfied.
-
-The retained V1 configuration uses CPU ceiling 936 MHz and GPU 420 MHz rather than simply maximising clocks. The reduced clocks were selected with the objective of avoiding unnecessary power and thermal demand while keeping the accepted experience intact.
-
-That objective is not presented as a measured percentage unless direct power or thermal evidence supports one.
-
-## Controlled experiments
-
-Where practical, experiments change one relevant variable at a time and keep the surrounding conditions stable.
-
-Timing work separates simulation cadence, presentation calls and physical refresh. Audio work combines timing evidence with listening. Runtime-policy comparisons restore CPU/GPU state between variants.
-
-This improves interpretability and reduces attribution errors.
-
-## Representative benchmark context
-
-Benchmark conditions are reviewed before their results are accepted.
-
-Early AutoLab measurements obtained through direct SSH were rejected because the surrounding frontend/background state did not represent a normal Ports launch. Later comparisons used a normal Ports-session context, deterministic replay and state restoration.
-
-## Automation
-
-Automation is used for deterministic and repetitive work such as:
-
-- configuration setup;
-- build commands;
-- hashing;
-- evidence collection;
-- repeated variant execution;
-- state restoration;
-- repository maintenance.
-
-Perceptual and design decisions remain separate from automated checks. Final visual/audio acceptance is performed on the target context.
-
-## Real hardware
-
-Host builds are useful for development and diagnostics, but they do not replace target validation.
-
-The RG34XX-H/H700 environment remains the reference for timing, audio, controls, CFW lifecycle and clean return-to-frontend behaviour.
-
-## Negative results
-
-Rejected experiments are retained when they clarify a technical boundary or prevent unnecessary repetition.
-
-Examples include:
-
-- an experimental GPU renderer that was not promoted;
-- a fullscreen-clear experiment that was not adopted;
-- an early benchmark context that was invalidated;
-- high-refresh hypotheses revised after instrumentation.
-
-These are technical investigations, not an alternative creative direction for the game.
-
-See [`KNOWLEDGE_BASE.md`](KNOWLEDGE_BASE.md).
-
-## Project continuity
-
-Durable project state is kept outside the conversation through source control, hashes, handovers, evidence files and explicit task status where appropriate.
-
-Handovers distinguish:
-
-- confirmed facts from open hypotheses;
-- stable decisions from experiments;
-- current baselines from historical work;
-- completed gates from pending work;
-- public material from private or non-redistributable material.
-
-This supports continuity across development sessions and reduces reliance on conversational context.
-
-## Publication boundary
-
-Public release work is treated as a separate engineering gate.
-
-The repository excludes proprietary game data, save/runtime state, private builds, device backups and third-party components without a clear redistribution path.
-
-Technical documentation is reviewed separately from binary/content redistribution so that safe engineering knowledge can remain public even when a component cannot be distributed.
-
-## Publication verification
-
-Local QA, repository publication, deployment and live verification are separate states.
-
-A public change is considered complete only after the relevant production artifact has been published and verified in its intended environment.
-
-## Workflow size
-
-Tooling should remain proportionate to the task.
-
-Automation is useful when it reduces repetition or risk. For small, well-defined operations, direct and auditable steps are preferred over unnecessary infrastructure.
-
-## Responsibility by area
-
-| Area | Primary responsibility |
-| --- | --- |
-| Project purpose and preservation criteria | I define and approve them |
-| Scope and priorities | I define them |
-| Target hardware | I select it |
-| Presentation, restoration and curation decisions | I make the final decisions |
-| Acceptance/rejection of experiments | I decide |
-| Real-device observations and final QA | I perform or evaluate them |
-| Calculations and repetitive analysis | ChatGPT assists |
-| Code drafting/modification | ChatGPT assists under my direction |
-| Build/repository automation | ChatGPT assists under my direction |
-| Evidence comparison | ChatGPT assists; conclusions remain evidence-bound |
-| Documentation drafting/structuring | ChatGPT assists; final meaning and scope remain under my direction |
-
-## Attribution
-
-> **Human-directed, AI-assisted.** I retain responsibility for the project purpose, preservation criteria, design direction, decisions, critical evaluation and final approval. ChatGPT provides substantial assistance with calculations, programming, automation, analysis, documentation and repetitive technical work.
-
-## Related documents
-
-- [`PHILOSOPHY.md`](PHILOSOPHY.md)
-- [`KNOWLEDGE_BASE.md`](KNOWLEDGE_BASE.md)
-- [`PATCH_SERIES.md`](PATCH_SERIES.md)
-- [`REPRODUCTION.md`](REPRODUCTION.md)
-- [`VALIDATION.md`](VALIDATION.md)
-- [Miguel's Game Dev Lab development method](https://raposomiguel50.github.io/method/)
+Raposo, M. (2026b). *H700 integration patches for The Minish Cap—RG34XX* (Commit `90fd77a82d579de9460f2de1167a95ec264e57c3`) [Source code]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/tree/90fd77a82d579de9460f2de1167a95ec264e57c3/patches

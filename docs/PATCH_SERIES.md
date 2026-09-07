@@ -1,157 +1,37 @@
-# Patch history and application intent
+# Patch map and evidence
 
-The files under `patches/` document different stages of the RG34XX/H700 integration. They include foundation work, instrumentation, A/B experiments, accepted directions and historical approaches.
+This map inventories **15 public patches at commit `90fd77a82d579de9460f2de1167a95ec264e57c3`**. It describes source changes, not a guaranteed linear application order or a reconstructed V1. All links below are to that immutable revision (Raposo, 2026b).
 
-They should be read by role rather than as one linear patch sequence.
+| Patch | Role | What the source changes |
+| --- | --- | --- |
+| [P04_AARCH64_LINK_COMPLETENESS_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P04_AARCH64_LINK_COMPLETENESS_R1.patch) | Build | Adds a required source file and Linux/Android EGL/GLES links. |
+| [P04_FMT_PACKED_COLLISION_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P04_FMT_PACKED_COLLISION_R1.patch) | Build | Moves fmt header before project headers. |
+| [P06_H700_CORTEX_A53_TARGET_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P06_H700_CORTEX_A53_TARGET_R1.patch) | Build | Adds ARMv8-A/SIMD and Cortex-A53 tuning flags in its platform condition. |
+| [P09_RG34XX_HANDHELD_POLISH_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P09_RG34XX_HANDHELD_POLISH_R1.patch) | Historical integration | Handheld input/menu labelling; later superseded in parts by P10.3. |
+| [P10_3_1D2_CLEAN_QUIT_UNWIND_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P10_3_1D2_CLEAN_QUIT_UNWIND_R1.patch) | Exit handling | Propagates quit requests through main loops and waits. |
+| [P10_3_1D3_RG34XX_POST_SHUTDOWN_EXIT_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P10_3_1D3_RG34XX_POST_SHUTDOWN_EXIT_R1.patch) | Historical workaround | Calls _Exit after shutdown on target profile; see refined P10.3.2. |
+| [P10_3_1_EXIT_DIAG_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P10_3_1_EXIT_DIAG_R1.patch) | Instrumentation | Adds exit-path/crash markers; diagnostic code is not itself a fix. |
+| [P10_3_1_RG34XX_A53_AUDIO_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P10_3_1_RG34XX_A53_AUDIO_R1.patch) | Audio configuration | Selects linear in one enhanced-audio branch; gbaAccurate remains nearest. |
+| [P10_3_2_RG34XX_CLEAN_EXIT_FILESELECT_UI_R3.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P10_3_2_RG34XX_CLEAN_EXIT_FILESELECT_UI_R3.patch) | Later integration | Combines quit handling, conditional post-shutdown _Exit and legacy hint/L-action suppression. |
+| [P10_3_RG34XX_SEAMLESS_HIGH_REFRESH_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P10_3_RG34XX_SEAMLESS_HIGH_REFRESH_R1.patch) | Historical integration | Adds MENU+L2/R2 routes and seamless UI; initial double-rate timing is historical. |
+| [P11_1_RG34XX_TIMING_INPUT_PRESENT_TRACE_R3.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P11_1_RG34XX_TIMING_INPUT_PRESENT_TRACE_R3.patch) | Instrumentation | Defines tick/input/presentation trace rows. |
+| [P11_2_RG34XX_HIGH_REFRESH_VSYNC_OFF_AB_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P11_2_RG34XX_HIGH_REFRESH_VSYNC_OFF_AB_R1.patch) | Timing experiment | Changes selected high-refresh VSync policy. |
+| [P11_3_RG34XX_PPU_PHASE_SPLIT_TRACE_R3.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P11_3_RG34XX_PPU_PHASE_SPLIT_TRACE_R3.patch) | Instrumentation | Adds presentation-phase markers used in the reanalysis. |
+| [P11_4_RG34XX_SINGLE_PRESENT_119HZ_AB_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P11_4_RG34XX_SINGLE_PRESENT_119HZ_AB_R1.patch) | Timing policy | Changes presentation period to the logical period in the selected path. |
+| [P11_7_RG34XX_PRODUCTION_LIKE_RUNTIME_POLICY_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P11_7_RG34XX_PRODUCTION_LIKE_RUNTIME_POLICY_R1.patch) | Runtime policy | Separates production-like settings from diagnostic pacing behaviour. |
 
-## Status vocabulary
+## What this proves—and what it does not
 
-- **Foundation** — required or broadly useful work that enabled the target path.
-- **Accepted direction** — work whose underlying decision was retained in the stable line.
-- **Instrumentation** — diagnostic or measurement code.
-- **A/B experiment** — a controlled alternative used to test a hypothesis.
-- **Historical / superseded** — retained for reference but not intended as the current final implementation.
+The patches show which instructions/configuration paths were changed. Exit diagnostics and later session output provide additional execution evidence. A build-source filename containing a room name is not evidence of an original gameplay-bug fix. Instrumentation and experimental patches must not be presented as released features merely because they are stored here (Raposo, 2026a, 2026b).
 
-The complete isolated P13.1 worktree used around the retained V1 was not preserved. This classification describes the engineering role of each published patch; it does not establish that applying all accepted patches recreates the private V1 bit-for-bit.
+The P11.4 captured result is quantified in [Validation](VALIDATION.md). The audio comparison retained a machine regression verdict. The final accepted configuration is identified separately by executable hash and runtime settings. The exact final source environment has not been reconstructed by this audit.
 
-## Foundation
+## Reconstruction use
 
-### `P04_AARCH64_LINK_COMPLETENESS_R1.patch`
+Use the pinned upstream, review a patch's preimage and purpose, apply only a compatible conceptual change in a separate worktree, then build and validate the target. Do not apply these files blindly in filename order: some overlap, supersede earlier changes or add diagnostics. See [REPRODUCTION.md](REPRODUCTION.md).
 
-**Role:** AArch64 build/link completeness.
+## References
 
-Resolves architecture-specific build/link requirements needed for the target path.
+Raposo, M. (2026a). *Archived development records for The Minish Cap—RG34XX (27 August–5 September 2026)* (Evidence extract 1.0) [Data set]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/tree/ede6e9090e7ca78c6c3a8c3d324d8c1de881f8b3/docs/evidence/2026-09-07
 
-**Reusable lesson:** Cross-build completeness is part of the port, not a packaging detail.
-
-### `P04_FMT_PACKED_COLLISION_R1.patch`
-
-**Role:** build compatibility / packed-format collision resolution.
-
-**Reusable lesson:** Compiler/ABI compatibility issues are easier to validate when fixed within a narrow scope.
-
-### `P06_H700_CORTEX_A53_TARGET_R1.patch`
-
-**Role:** explicit H700 / Cortex-A53 targeting.
-
-**Reusable lesson:** Target-specific optimisation begins with an explicit hardware baseline rather than a generic ARM64 assumption.
-
-## Handheld integration
-
-### `P09_RG34XX_HANDHELD_POLISH_R1.patch`
-
-**Role:** RG34XX-specific handheld integration and presentation work.
-
-**Status:** accepted direction / historical integration evidence.
-
-## Exit and lifecycle
-
-### `P10_3_1_EXIT_DIAG_R1.patch`
-
-**Role:** exit-path diagnostics.
-
-**Status:** instrumentation.
-
-### `P10_3_1D2_CLEAN_QUIT_UNWIND_R1.patch`
-
-**Role:** clean-quit/unwind work.
-
-**Status:** accepted direction with later lifecycle refinements.
-
-### `P10_3_1D3_RG34XX_POST_SHUTDOWN_EXIT_R1.patch`
-
-**Role:** post-shutdown process-exit behaviour.
-
-**Status:** accepted direction / later lifecycle refinement.
-
-### `P10_3_2_RG34XX_CLEAN_EXIT_FILESELECT_UI_R3.patch`
-
-**Role:** clean-exit behaviour around file-select/UI flow.
-
-**Status:** later lifecycle integration evidence.
-
-**Reusable lesson for this group:** Startup, gameplay and shutdown are all part of the target integration boundary.
-
-## High-refresh / presentation
-
-### `P10_3_RG34XX_SEAMLESS_HIGH_REFRESH_R1.patch`
-
-**Role:** early high-refresh presentation experiment.
-
-**Status:** historical / experimental foundation for later measurement.
-
-### `P11_1_RG34XX_TIMING_INPUT_PRESENT_TRACE_R3.patch`
-
-**Role:** timing/input/presentation instrumentation.
-
-**Status:** instrumentation.
-
-### `P11_2_RG34XX_HIGH_REFRESH_VSYNC_OFF_AB_R1.patch`
-
-**Role:** VSync-off A/B experiment.
-
-**Status:** A/B experiment.
-
-### `P11_3_RG34XX_PPU_PHASE_SPLIT_TRACE_R3.patch`
-
-**Role:** PPU/presentation-phase trace instrumentation.
-
-**Status:** instrumentation.
-
-### `P11_4_RG34XX_SINGLE_PRESENT_119HZ_AB_R1.patch`
-
-**Role:** single-present policy on a ~119.455 Hz panel while retaining ~59.7275 Hz logical cadence.
-
-**Status:** accepted direction.
-
-The preserved comparison recorded tick-lateness p95 improving from approximately 5.791 ms to 0.028 ms under the tested conditions.
-
-**Evidence boundary:** This does not mean the game simulation runs at 119/120 FPS.
-
-## Audio
-
-### `P10_3_1_RG34XX_A53_AUDIO_R1.patch`
-
-**Role:** Cortex-A53/H700 audio-path work.
-
-**Status:** accepted direction / historical input to later audio tuning.
-
-Later retained configuration evidence uses an audio value of 1600. See the audio entries in `docs/KNOWLEDGE_BASE.md` and `docs/VALIDATION.md` for timing and QA context.
-
-## Production-like runtime policy
-
-### `P11_7_RG34XX_PRODUCTION_LIKE_RUNTIME_POLICY_R1.patch`
-
-**Role:** transition from instrumentation-heavy experimentation toward a production-like runtime policy.
-
-**Status:** accepted direction.
-
-Diagnostic and experimental settings are kept separate from the stable runtime unless they remain necessary.
-
-## Later private engineering evidence
-
-The private project record also contains P12/P13/P13.1 AutoLab and optimisation evidence. Not every source snapshot or private build artifact from those phases is redistributed here.
-
-Retained V1 evidence includes:
-
-- CPU ceiling: **936 MHz**
-- GPU: **420 MHz**
-- audio: **1600**
-- `TMC_RENDER_THREADS=3`
-
-The experimental GPU backend was not adopted. A fullscreen-clear experiment was also not promoted into the retained V1 line.
-
-## How to use this directory
-
-For study or reconstruction:
-
-1. start from the pinned Project Picori revision in `SOURCE_BASELINE.json`;
-2. review `docs/PHILOSOPHY.md` and `docs/KNOWLEDGE_BASE.md`;
-3. separate Foundation patches from instrumentation and A/B experiments;
-4. apply one conceptual change at a time;
-5. verify each patch against the source revision;
-6. build and test after each accepted layer;
-7. keep diagnostic/historical patches separate unless reproducing those experiments;
-8. validate target behaviour separately from host-build success.
-
-A future validated reconstruction procedure can reduce this historical map to a smaller supported patch/build sequence.
+Raposo, M. (2026b). *H700 integration patches for The Minish Cap—RG34XX* (Commit `90fd77a82d579de9460f2de1167a95ec264e57c3`) [Source code]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/tree/90fd77a82d579de9460f2de1167a95ec264e57c3/patches

@@ -1,172 +1,59 @@
-# Validation evidence and limits
+# Validation: archived observations and current evidence limits
 
-This document records the validation evidence available for the RG34XX/H700 integration and the limits of the conclusions that can be drawn from it.
+**Audit date: 7 September 2026. New hardware sessions in this audit: 0.** The values below come from archived development outputs, with timing and selected monitor statistics recalculated from the original numerical rows. See [EVIDENCE_AUDIT.md](EVIDENCE_AUDIT.md) for the complete method and interpretation (Raposo, 2026a).
 
-## Reference target
+## Build identity and acceptance scope
 
-Validated reference configuration:
+The final acceptance JSON dated 5 September identifies executable SHA-256 `787ba3cb8c297ea44a0605745347fe5a6e792094f0be755b51a8200c1eadc710`. The winner record gives size 8,858,736 bytes, backend `SDL_RENDERER`, no fullscreen-clear skip, and `TMC_RENDER_THREADS=3`. It records two automated soaks. The final acceptance separately records **one manual session**, operator visual `OK`, audio `OK` and machine QA `PASS`. These records do not establish a complete playthrough, independent multi-operator replication or leak-free execution (Raposo, 2026a).
 
-- Device: **ANBERNIC RG34XX-H**
-- SoC: **Allwinner H700**
-- CPU class: **Cortex-A53**
-- Architecture: **AArch64**
-- CFW: **muOS**
-- Display: **720x480**
+## Timing comparison — 30 August 2026
 
-Other H700 devices or custom firmware may be compatible, but they are not presented as validated without independent testing.
+**Table 1**  
+*Recalculated capture statistics*
 
-## Retained private V1 identity
+| Measure | P11.3 | P11.4 |
+| --- | ---: | ---: |
+| Ticks, n | 10,203 | 10,449 |
+| Tick-lateness median, ms | 0.015637 | 0.002659 |
+| Tick-lateness p95, ms | 5.790787 | 0.027887 |
+| Tick-lateness maximum, ms | 70.186618 | 64.134375 |
+| Presentation-call maximum, ms | 46.450584 | 60.917250 |
+| Exactly one present per tick, % | 84.534 | 99.014 |
 
-SHA-256:
+*Note.* Source: Raposo (2026a). Tick lateness is closure minus scheduled deadline, bounded at zero. Quantiles use linear interpolation at `(n − 1)q`; all rows are retained. There is one historical capture per variant, not n independent test runs. Identical gameplay sequences and randomisation were not established. The 1,920-frame audio setting in these captures differs from the later retained 1,600-frame setting.
 
-`787ba3cb8c297ea44a0605745347fe5a6e792094f0be755b51a8200c1eadc710`
+The P11.4 patch changes the presentation scheduling period to the logical period. The capture supports a higher proportion of one-present ticks, not an invariant of one presentation on every tick. The reported 119.455 Hz panel mode is distinct from 59.7275 Hz game logic. No input-to-photon latency or complete stutter-removal result is claimed (Raposo, 2026a, 2026b).
 
-This identifies the retained private executable used as the stable project artifact. The executable itself is not distributed publicly.
+## Audio comparison — 30 August 2026
 
-## Preservation reference presentation
+The earlier P11.5 summary says **`AUDIO1600_MACHINE_AUDIO_REGRESSION`**. At 48 kHz, nominal buffer intervals changed from 40.000 ms (1,920 frames) to 33.333 ms (1,600 frames). The p95 of window-maximum work changed from 30.79 to 26.53 ms, while the maximum callback gap changed from 62.2 to 168.8 ms; logging windows numbered 172 and 228 respectively (Raposo, 2026a).
 
-The project preserves the original **240x160** presentation and uses exact **3x integer scaling** to the RG34XX-H **720x480** display.
+Heuristic event counts are not a count of audible defects. The later operator audio `OK` is reported alongside, not in place of, the earlier regression. Nominal buffer duration is not measured end-to-end audio latency.
 
-The preservation reference does not use smoothing, shaders or instructional overlays over the game image.
+## Runtime and temperature — final manual session, 5 September 2026
 
-Project Picori menu functions remain accessible through shortcuts while the instructional overlays are disabled by default. Port-specific shortcuts do not replace controls used by the original GBA control scheme.
+The selected ceilings are CPU 936 MHz and GPU 420 MHz. Reanalysis of **874 monitor samples** reproduced maximum temperature **52.6 °C** and confirmed matching CPU/GPU ceilings and reported 119.455 Hz in those samples. This is a session-specific maximum, not a temperature limit valid for all gameplay (Raposo, 2026a).
 
-These choices describe the curated preservation reference. Other inherited Project Picori options may remain accessible, but changing them can move the resulting configuration outside the validated reference.
+The post-session display was reported at 60.005 Hz. CPU/GPU maximum restoration markers passed; the CPU governor changed from pre-session `powersave` to post-session `ondemand`, so not every captured state variable was restored identically. The session logged game exit code 0 (Raposo, 2026a).
 
-## Timing/high-refresh evidence
+## Efficiency: objective versus measurement
 
-The accepted direction separates:
+The 1,416 → 936 MHz comparison is a **33.9% frequency-ceiling reduction**, not a power or battery-life percentage. The launcher's stock-maximum guard of 1,512 MHz is a different baseline. The Stage A record marks energy measurement ineligible and stores energy as null. A P13.1 comparison reports maximum temperature **+5.3 °C** and median RSS ratio **1.003497**. These data do not substantiate a general thermal or energy improvement (Raposo, 2026a, 2026c).
 
-- game/simulation cadence;
-- explicit presentation calls;
-- physical display refresh.
+## Exit workaround and presentation scope
 
-Recorded values for the tested configuration:
+The archived D2 log ends with signal 11 after explicit subsystem shutdown. D3 reaches the `_Exit(0)` marker, and the later final session records exit code 0. The patched route is specific to the port's seamless target profile; the exact failed finalizer was not isolated (Raposo, 2026a, 2026b).
 
-- logical cadence: approximately **59.7275 Hz**;
-- panel: approximately **119.455 Hz**;
-- accepted direction: **one explicit presentation per logical tick**.
+Source evidence documents menu shortcuts, hint suppression and quit handling. The launcher and final-session log document selected configuration. They are not substitutes for exhaustive perceptual conformance or a demonstration that an original GBA gameplay bug was fixed.
 
-Recorded comparison:
+## What remains unestablished
 
-- tick-lateness p95 before the accepted single-present direction: approximately **5.791 ms**;
-- tick-lateness p95 in the recorded accepted comparison: approximately **0.028 ms**.
+No original-ROM gameplay-bug correction was identified in the reviewed material. There is no new device replication in this audit, universal device/CFW guarantee, measured native-versus-emulator advantage, measured battery saving or bit-for-bit rebuild of private V1. The source material, private executable, policy approvals and historical acceptance are separate authorities.
 
-### Evidence boundary
+## References
 
-This result concerns presentation timing while retaining the original logical cadence. It is not a 119/120 FPS game-logic claim.
+Raposo, M. (2026a). *Archived development records for The Minish Cap—RG34XX (27 August–5 September 2026)* (Evidence extract 1.0) [Data set]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/tree/ede6e9090e7ca78c6c3a8c3d324d8c1de881f8b3/docs/evidence/2026-09-07
 
-## Audio evidence
+Raposo, M. (2026b). *H700 integration patches for The Minish Cap—RG34XX* (Commit `90fd77a82d579de9460f2de1167a95ec264e57c3`) [Source code]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/tree/90fd77a82d579de9460f2de1167a95ec264e57c3/patches
 
-Preserved later configuration evidence includes:
-
-- audio value: **1600**;
-- nominal interval discussed in the project record: approximately 33.333 ms;
-- human listening QA: accepted for the retained direction;
-- a callback-gap/outlier warning retained in the record.
-
-### Evidence boundary
-
-A heuristic callback/underrun counter is not treated as a direct count of audible defects. Timing instrumentation and listening provide complementary evidence.
-
-## Runtime/optimisation evidence
-
-Retained P13/P13.1 configuration evidence:
-
-- CPU ceiling: **936 MHz**;
-- GPU: **420 MHz**;
-- audio: **1600**;
-- `TMC_RENDER_THREADS=3`.
-
-The CPU ceiling changed from 1416 MHz to 936 MHz, approximately 33.9%.
-
-The reduced clock configuration was retained after fidelity and stability requirements were satisfied, with the objective of avoiding unnecessary resource use and reducing power and thermal demand where possible.
-
-### Evidence boundary
-
-The 33.9% figure describes CPU-frequency reduction only. It is not used as an equivalent energy-savings, battery-life, power-consumption or temperature percentage.
-
-The project record also includes mixed results, including a comparison with a higher recorded maximum temperature and slightly higher RSS.
-
-A retained acceptance note recorded 874 samples and a maximum temperature of approximately **52.6 C** under that test context.
-
-This does not establish a full-playthrough thermal guarantee, leak-free execution, a quantified power saving or universal H700 behaviour.
-
-The engineering priority is therefore stated as an objective and decision rule rather than as an unmeasured result: fidelity and stability first; efficiency only within the remaining safe margin.
-
-## Restoration evidence boundary
-
-The project distinguishes technical restoration from creative reinterpretation.
-
-Known technical bugs, crashes, save problems, avoidable slowdowns, stutter or similar implementation defects can be candidates for correction when the creative work remains intact. If the evidence does not establish whether a behaviour is a defect or a deliberate design choice, preservation is the default.
-
-Any restored behaviour that intentionally differs from the historical original should be documented with the reason and supporting evidence. Historical behaviour may still be retained for comparison or investigation without becoming the normal preservation reference.
-
-## Rejected and negative results
-
-Relevant negative evidence includes:
-
-- an experimental GPU-renderer path that failed and was not promoted;
-- a fullscreen-clear experiment that was not adopted;
-- early direct-SSH AutoLab measurements that were invalidated because the test context did not represent a normal Ports launch;
-- high-refresh hypotheses revised after instrumentation.
-
-These results remain documented because they clarify the tested technical boundaries of the project. They are not treated as a separate creative direction.
-
-## AutoLab methodology
-
-Later comparison work used automation to reduce repeated manual setup across variants.
-
-Early direct-SSH measurements were not accepted as authoritative optimisation evidence because the surrounding frontend/background state differed from a normal Ports launch.
-
-The revised approach used a normal Ports-session context, deterministic replay and CPU/GPU restoration between variants. Final visual/audio acceptance remained human.
-
-## Exit/lifecycle evidence
-
-Public patch history includes dedicated work on:
-
-- exit diagnostics;
-- clean-quit unwind;
-- post-shutdown exit;
-- file-select/UI clean-exit behaviour.
-
-Clean return to the handheld/frontend is treated as part of target integration.
-
-## Public source and private-binary validation
-
-The public repository is a source/patch/launcher record. The retained private V1 is a separate artifact.
-
-These remain distinct questions:
-
-- Is the public source material documented and attributable?
-- Can a new build be reconstructed from it?
-- Does a new build behave like the retained V1 on RG34XX-H?
-- Does it reproduce the V1 bit-for-bit?
-
-The current public publication addresses the first directly. Functional reconstruction remains a separate validation task, and bit-for-bit reproduction is not currently claimed.
-
-## Licensing boundary
-
-The retained private V1 used VirtuaAPU. At the audited revision, VirtuaAPU did not provide an explicit published licence file.
-
-Validation of the private executable therefore remains separate from permission to redistribute it.
-
-## Supported wording
-
-Examples consistent with the current evidence:
-
-- "validated on ANBERNIC RG34XX-H with muOS";
-- "the retained private V1 has SHA-256 ...";
-- "the accepted timing direction retained ~59.7275 Hz logical cadence on a ~119.455 Hz panel";
-- "the recorded comparison improved tick-lateness p95 under the tested conditions";
-- "later retained runtime evidence used CPU 936 MHz, GPU 420 MHz, audio 1600 and three render threads";
-- "the reduced clocks were selected after fidelity and stability requirements were satisfied, with the objective of avoiding unnecessary resource use".
-
-Claims not currently supported include:
-
-- 120 FPS game logic;
-- a proportional battery, power or temperature reduction derived from CPU frequency alone;
-- compatibility with all H700 devices;
-- bit-for-bit reproducibility of the retained V1;
-- unrestricted redistribution of the private executable;
-- undocumented claims about what the original developers intended beyond the finished work and available evidence.
+Raposo, M. (2026c). *Reference launcher for The Minish Cap—RG34XX* (Commit `90fd77a82d579de9460f2de1167a95ec264e57c3`) [Source code]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/launcher/The%20Minish%20Cap.sh

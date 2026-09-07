@@ -1,298 +1,169 @@
 # Engineering knowledge base
 
-This knowledge base records findings from the RG34XX/H700 integration that may be useful beyond this project.
+Each entry identifies its evidence category. **Approved policies and website-maintenance lessons are not game-port test results.** Full methods, statistics, source paths and limits are in [EVIDENCE_AUDIT.md](EVIDENCE_AUDIT.md).
 
-Entries follow a consistent structure: **context -> finding/problem -> decision -> evidence boundary -> reusable lesson**.
+## KB-MC-001 — Foundation and attribution
 
-Historical experiments remain documented when they clarify a technical boundary or support future work.
+**Status:** Source provenance.
 
-## KB-MC-001 - Upstream selection includes dependency auditability
+The pinned foundation is EstebanPdN's Project Picori-derived fork, not an independently created engine. Its README identifies the Android, Project Picori and zeldaret antecedents (EstebanPdN, 2026; Raposo, 2026d).
 
-**Context:** Selecting a practical public foundation for an H700 native port.
+## KB-MC-002 — Host and target evidence
 
-**Finding:** Source quality alone is not sufficient if important dependencies are inaccessible, unpublished or difficult to reproduce.
+**Status:** Methodological rule.
 
-**Decision:** Project Picori became the principal integration foundation while zeldaret remained an important reference.
+A host build does not establish target timing or runtime behaviour. The archived manual-session record supplies separate target observations; this audit did not repeat them (Raposo, 2026a).
 
-**Reusable lesson:** Evaluate the complete build and dependency boundary, not only the core source tree.
+## KB-MC-003 — CFW runtime boundary
 
-## KB-MC-002 - Host success and target success are separate
+**Status:** Source inspection.
 
-**Context:** Development on stronger host hardware while targeting Allwinner H700 / Cortex-A53.
+The launcher loads PortMaster control helpers, selects an SDL2-backed shim path when applicable, and sets renderer preference opengles2/software. These settings are not proof of all-CFW compatibility (Raposo, 2026c).
 
-**Finding:** A host build does not establish ABI compatibility, timing quality or runtime behaviour on the target.
+## KB-MC-004 — Presentation and controls
 
-**Decision:** Host work is used for development and diagnostics; target validation remains a separate gate.
+**Status:** Source plus session record.
 
-**Reusable lesson:** Keep host evidence and target-runtime evidence distinct.
+MENU+R2 accesses settings; MENU+L2 exits. The seamless-profile patch suppresses the L Settings hint and its legacy L action, not the settings implementation. Console-Parity and 3× scale are selected by the launcher (Raposo, 2026a, 2026b, 2026c).
 
-## KB-MC-003 - Respect the CFW runtime boundary
+## KB-MC-005 — Simulation and panel clocks
 
-**Context:** Native integration with muOS.
+**Status:** Recalculated observation.
 
-**Risk:** Replacing or bundling platform libraries can introduce ABI, lifecycle or update conflicts.
+P11.3/P11.4 capture p95 tick lateness was 5.790787/0.027887 ms. Their maxima were 70.186618/64.134375 ms; exactly-one-present ticks were 84.534%/99.014%. Panel 119.455 Hz is not 120 FPS logic (Raposo, 2026a, 2026b).
 
-**Decision:** Prefer the existing CFW runtime boundary unless a replacement is clearly required and validated.
+## KB-MC-006 — Single-present scheduling
 
-**Reusable lesson:** Platform compatibility is part of the port architecture.
+**Status:** Source plus observation.
 
-## KB-MC-004 - Preserve the original presentation and control identity
+P11.4 changes renderPeriodNs to tickPeriodNs in the selected path. The data still contain zero- and two-present ticks. Describe a scheduling policy, not an invariant absent from the data (Raposo, 2026a, 2026b).
 
-**Context:** RG34XX-H presentation and handheld integration.
+## KB-MC-007 — Audio has mixed evidence
 
-**Decision:** Preserve the game's art, music, sound effects, UI and GBA control identity. Port-specific diagnostics remain outside the game image, and device-specific combinations are reserved for port functions.
+**Status:** Archived machine result and later operator report.
 
-Reference presentation: original 240x160 image scaled to 720x480 using integer 3x scaling, without smoothing, shaders or overlays as part of the preservation reference.
+The P11.5 machine verdict is AUDIO1600_MACHINE_AUDIO_REGRESSION; maximum callback gap rose from 62.2 to 168.8 ms. The later final-session record reports audio OK. Neither observation replaces the other (Raposo, 2026a).
 
-Project Picori menu functions remain accessible through shortcuts while instructional overlays are disabled by default so they do not cover the game image. The port shortcuts do not replace buttons used by the original GBA control scheme.
+## KB-MC-008 — Benchmark context
 
-**Reusable lesson:** Platform adaptation can remain technically substantial while preserving the original presentation and controls.
+**Status:** Methodological limit.
 
-## KB-MC-005 - Display refresh and game cadence are different clocks
+The historical AutoLab account distinguishes direct-SSH and normal Ports launch contexts. The two timing captures audited here were not established as randomised, matched-scene replications. State the actual context before inferring causation (Raposo, 2026a).
 
-**Context:** High-refresh presentation on the RG34XX-H.
+## KB-MC-009 — Automation and human QA
 
-**Finding:** A high-refresh display does not imply that the game logic should run at the same frequency.
+**Status:** Recorded acceptance.
 
-**Decision:** Retain game logic around **59.7275 Hz**, use the panel around **119.455 Hz**, and perform **one explicit presentation per logical tick**.
+The final acceptance reports two automated soaks and one manual gameplay session, with visual/audio OK. These are different tests and are not three independent full playthroughs (Raposo, 2026a).
 
-In the recorded comparison, tick-lateness p95 improved from approximately **5.791 ms** to **0.028 ms** under the tested configuration.
+## KB-MC-010 — Clock reduction and energy
 
-**Evidence boundary:** This is not a 120 FPS game-logic claim.
+**Status:** Source plus archived result.
 
-**Reusable lesson:** Separate simulation cadence, presentation calls and panel refresh before interpreting high-refresh behaviour.
+The 1,416-to-936 MHz comparison is a 33.9% CPU-ceiling change. GPU ceiling 420 MHz was retained. Stage A energy fields are null/ineligible; do not claim 33.9% energy savings (Raposo, 2026a, 2026c).
 
-## KB-MC-006 - Instrumentation can revise the initial plan
+## KB-MC-011 — Adverse observations remain visible
 
-**Context:** High-refresh investigation.
+**Status:** Archived result.
 
-**Finding:** The initial two-present-per-tick hypothesis was not supported by the instrumentation.
+The P13.1 winner record includes maximum-temperature delta +5.3 °C and median RSS ratio 1.003497 in that comparison. They do not support a general claim of lower temperatures or memory use (Raposo, 2026a).
 
-**Decision:** Adopt the measured single-present policy instead.
+## KB-MC-012 — Rejected renderer work
 
-**Reusable lesson:** Experimental design should allow the evidence to change the proposed solution.
+**Status:** Recorded selection.
 
-## KB-MC-007 - Audio validation needs timing evidence and listening
+The retained winner says backend SDL_RENDERER and fullscreen_clear_skip=false. Historical GPU-renderer experiments are not evidence that a new GPU backend shipped (Raposo, 2026a).
 
-**Context:** Audio cost on Cortex-A53/H700.
+## KB-MC-013 — Exit is an integration boundary
 
-**Finding:** A later 1600-frame test reduced the nominal interval from roughly 40 ms to 33.333 ms while retaining a callback-gap warning/outlier in the instrumentation.
+**Status:** Patch plus diagnostic observation.
 
-**Validation:** Human audio QA was acceptable for the adopted configuration.
+D2 records signal 11 after shutdown markers. D3 reaches the profile-specific _Exit path; the later session reports exit code 0. This is a targeted workaround, not identification of the faulty destructor or an original-ROM bug fix (Raposo, 2026a, 2026b).
 
-**Evidence boundary:** A heuristic underrun/callback counter is not a direct count of audible defects.
+## KB-MC-014 — Executable identity
 
-**Reusable lesson:** Instrumentation and listening answer different audio-quality questions and should be used together.
+**Status:** Recorded metadata.
 
-## KB-MC-008 - Benchmark context must represent normal use
+The acceptance identifies SHA-256 787ba3cb8c297ea44a0605745347fe5a6e792094f0be755b51a8200c1eadc710. A hash is not proof of a successful reconstruction (Raposo, 2026a, 2026d).
 
-**Context:** AutoLab configuration comparison.
+## KB-MC-015 — Reconstruction claims
 
-**Finding:** Early direct-SSH measurements were affected by frontend/background conditions that did not represent a normal Ports launch.
+**Status:** Publication limit.
 
-**Decision:** Later variants used a normal Ports-session context, deterministic replay and CPU/GPU restoration between variants.
+A historical patch set, a runnable new build and a bit-for-bit rebuilt V1 are different deliverables. This editorial audit supplies neither a new executable nor a new build validation (Raposo, 2026a, 2026b, 2026d).
 
-**Reusable lesson:** Validate the benchmark environment before relying on the result.
+## KB-MC-016 — Release eligibility
 
-## KB-MC-009 - Automate repeatable work, retain human QA
+**Status:** Recorded project boundary.
 
-**Context:** AutoLab comparisons across multiple runtime variants.
+Private acceptance is separate from permission to redistribute dependencies. The recorded VirtuaAPU boundary remains unchanged; see LEGAL_STATUS.md. This audit does not resolve a licence (Raposo, 2026d).
 
-**Decision:** Automate deterministic setup, replay, measurement and restoration while keeping final visual/audio acceptance separate.
+## KB-MC-017 — Documentation and binary scope
 
-**Reusable lesson:** Automation is most useful when it removes repetition without replacing perceptual judgment.
+**Status:** Publication rule.
 
-## KB-MC-010 - Clock reduction is not a battery-life percentage
+A binary restriction need not prevent publishing cleared patches, measurement definitions and selected evidence. It does not justify disclosing the complete private archive (Raposo, 2026a, 2026b).
 
-**Context:** P13/P13.1 optimisation work.
+## KB-MC-018 — Local QA versus live deployment
 
-**Retained configuration evidence:** CPU ceiling 936 MHz, GPU 420 MHz, audio 1600, `TMC_RENDER_THREADS=3`.
+**Status:** Website-maintenance lesson; not game-test evidence.
 
-The CPU ceiling changed from 1416 MHz to 936 MHz, approximately 33.9%.
+Candidate QA, repository publication, deployment and live verification are separate states. This operational lesson from lab-site maintenance is not a Minish Cap performance result.
 
-**Decision:** After fidelity and stability requirements were satisfied, reduced clocks were retained to avoid unnecessary resource use and with the objective of reducing power and thermal demand.
+## KB-MC-019 — Proportionate tooling
 
-**Evidence boundary:** The 33.9% figure describes frequency reduction only. It is not used as a battery-life, power-consumption or temperature percentage. The comparison record also retains less favourable observations, including higher maximum temperature in one comparison and slightly higher RSS.
+**Status:** Workflow policy; not a measured result.
 
-**Reusable lesson:** Optimise efficiency only after fidelity and stability are protected, and report the variable that was actually measured.
+Use direct, auditable operations for small changes and automation for real repetition. Parse and test a tool before asking the operator to run it.
 
-## KB-MC-011 - Mixed results improve the record
+## KB-MC-020 — Reuse existing artifacts
 
-**Context:** Optimisation and candidate selection.
+**Status:** Workflow policy; not game-test evidence.
 
-**Decision:** Retain relevant negative and neutral observations alongside improvements.
+Inventory and verify known local artifacts before asking for another download, copy or test. Music-source recovery is separate from game-port evidence.
 
-**Reusable lesson:** A useful engineering record preserves context and trade-offs, not only favourable values.
+## KB-MC-021 — Native execution
 
-## KB-MC-012 - Rejected technical experiments define useful boundaries
+**Status:** Technical scope and policy.
 
-**Context:** Experimental GPU-renderer work during P13.1.
+Native game logic still uses Linux, SDL and software models of original presentation/audio behaviour. No native-versus-emulator speed or energy comparison is established here. The policy is to use available control for faithful execution (Raposo, 2026a, 2026b, 2026c).
 
-**Finding:** The investigated GPU backend failed and was not promoted. A fullscreen-clear experiment was also not adopted.
+## KB-MC-022 — Original bugs and restoration
 
-**Decision:** Keep these results available as technical evidence and revisit them only if new evidence or requirements justify it.
+**Status:** Approved policy, not an implemented bug-fix list.
 
-**Evidence boundary:** These were engineering experiments, not a separate creative or expanded direction for the game.
+A demonstrated original technical bug may be corrected when compatible with the creative work. This is an eligibility rule. The reviewed material does not establish an original-GBA gameplay-bug correction.
 
-**Reusable lesson:** Documenting rejected approaches reduces unnecessary repetition without confusing technical research with project scope.
+## KB-MC-023 — Curatorial defaults
 
-## KB-MC-013 - Clean exit is part of platform integration
+**Status:** Approved policy with specific source examples.
 
-**Context:** Handheld/CFW lifecycle behaviour.
+Select a coherent reference rather than requiring many manual adjustments. Shortcut access and hint suppression are evidenced; this does not prove every upstream option was individually audited (Raposo, 2026b, 2026c).
 
-**Work preserved:** Clean-quit unwind, post-shutdown exit and file-select UI/exit diagnostic work are part of the public patch history.
+## KB-MC-024 — Efficiency after fidelity
 
-**Reusable lesson:** Startup, gameplay and shutdown all belong to the integration boundary.
+**Status:** Approved priority plus recorded settings.
 
-## KB-MC-014 - Build evidence should match the claim
+CPU 936 MHz/GPU 420 MHz are recorded ceilings. Reducing power or thermal demand was the objective; actual savings are not established by those settings (Raposo, 2026a, 2026c).
 
-**Context:** Cross-build work and the retained private V1.
+## KB-MC-025 — Historical reference
 
-The retained private V1 is identified by SHA-256:
+**Status:** Approved policy.
 
-`787ba3cb8c297ea44a0605745347fe5a6e792094f0be755b51a8200c1eadc710`
+Retain uncorrected historical behaviour when useful for comparison or investigation, without a requirement to expose a normal user mode. This is not a claim that such a mode was implemented.
 
-**Evidence boundary:** The hash identifies the artifact; it does not establish that the public repository reproduces identical bytes.
+## Entry template
 
-**Reusable lesson:** Use the evidence that directly supports the property being claimed.
+State the category, exact symptom or decision, source revision/path, implementation if any, test configuration, observed result and limitation. No generic “improved”, “fixed” or “validated” statement without the supporting case.
 
-## KB-MC-015 - Auditability, reconstruction and reproducibility are distinct
+## References
 
-**Context:** P13.1 source-authority material and publication review.
+EstebanPdN. (2026). *The Minish Cap 3DS* (Commit `e72663ca4059dabf9dbf7f03c36fc791d90b8db5`) [Source code]. GitHub. https://github.com/EstebanPdN/zelda-tmc-3ds/tree/e72663ca4059dabf9dbf7f03c36fc791d90b8db5
 
-Four source snapshots were retained and hash-verified:
+Raposo, M. (2026a). *Archived development records for The Minish Cap—RG34XX (27 August–5 September 2026)* (Evidence extract 1.0) [Data set]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/tree/ede6e9090e7ca78c6c3a8c3d324d8c1de881f8b3/docs/evidence/2026-09-07
 
-- `port/port_ppu.cpp`
-- `port/port_gpu_renderer.cpp`
-- `port/port_main.c`
-- `xmake.lua`
+Raposo, M. (2026b). *H700 integration patches for The Minish Cap—RG34XX* (Commit `90fd77a82d579de9460f2de1167a95ec264e57c3`) [Source code]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/tree/90fd77a82d579de9460f2de1167a95ec264e57c3/patches
 
-**Evidence boundary:** These files improve historical traceability but do not establish that the complete final build environment was preserved.
+Raposo, M. (2026c). *Reference launcher for The Minish Cap—RG34XX* (Commit `90fd77a82d579de9460f2de1167a95ec264e57c3`) [Source code]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/launcher/The%20Minish%20Cap.sh
 
-Three separate claims are therefore maintained:
-
-1. **Historical auditability** — decisions and evidence can be traced.
-2. **Functional reconstruction** — a new build can be produced and validated.
-3. **Bit-for-bit reproducibility** — the specified environment reproduces identical bytes.
-
-**Reusable lesson:** Keep reconstruction claims precise and evidence-specific.
-
-## KB-MC-016 - Licensing is part of the release boundary
-
-**Context:** Public binary redistribution.
-
-**Finding:** The retained private V1 incorporates VirtuaAPU. At the audited revision, VirtuaAPU did not provide an explicit published licence file.
-
-**Decision:** Publish cleared source-side integration material, but do not redistribute VirtuaAPU or the V1 executable incorporating it until the licensing path is resolved.
-
-**Reusable lesson:** Technical validity and redistribution eligibility are separate requirements.
-
-## KB-MC-017 - Review publication scope and documentation scope separately
-
-**Context:** Initial public release preparation.
-
-**Finding:** Restricting private or non-redistributable material does not require reducing safe technical documentation.
-
-**Decision:** Keep redistribution controls focused on the affected content while publishing safe decisions, measurements, limitations and lessons.
-
-**Reusable lesson:** A careful release boundary can coexist with comprehensive technical documentation.
-
-## KB-MC-018 - Local QA and production verification are separate gates
-
-**Context:** Miguel's Game Dev Lab music-player maintenance.
-
-**Finding:** A local candidate passed QA before the live site had been updated.
-
-**Decision:** Treat candidate validation, repository publication, deployment and live verification as distinct states.
-
-**Reusable lesson:** Confirm the production artifact before closing a live-site issue.
-
-## KB-MC-019 - Keep tooling proportionate to the task
-
-**Context:** Publication and recovery automation.
-
-**Finding:** Large automation scripts introduced avoidable parser, state and helper errors during otherwise small operations.
-
-**Decision:** Prefer direct, auditable steps for small tasks; use automation when it reduces meaningful repetition or risk.
-
-**Reusable lesson:** Tooling should simplify the workflow rather than become an additional engineering problem.
-
-## KB-MC-020 - Reuse verified local artifacts when available
-
-**Context:** Music-source recovery.
-
-**Finding:** The required MP3 files were already present locally from an earlier official download.
-
-**Decision:** Inventory and validate existing artifacts before requesting reacquisition.
-
-**Reusable lesson:** Check the known local state before creating unnecessary repeat work.
-
-## KB-MC-021 - Native execution serves technical restoration
-
-**Context:** Choosing a native AArch64 port rather than running the game through GBA emulation on the RG34XX-H.
-
-**Finding:** Native execution avoids spending part of the target's resources reproducing the original GBA CPU, graphics, audio and timing environment. It also gives the port more direct control over timing, presentation, audio, threading, input, lifecycle behaviour and resource use within Linux/muOS.
-
-**Decision:** Treat the additional hardware margin as a means to reduce avoidable technical compromises while preserving the same creative work. It is not a budget that must be spent on new effects, mechanics or content.
-
-**Restoration premise:** Ask what technical limitations could be removed if the same game had more optimisation time and more hardware margin available to express what is already present in the finished work.
-
-**Evidence boundary:** This premise is not a historical claim about undocumented developer intentions. The published game remains the primary evidence for the work being preserved.
-
-**Reusable lesson:** Native execution can support preservation by removing technical obstacles and creating efficiency headroom without requiring creative reinterpretation.
-
-## KB-MC-022 - Preserve the work, not every technical defect
-
-**Context:** Deciding whether an original bug, slowdown or other visible behaviour should be reproduced unchanged.
-
-**Finding:** Familiarity with a technical defect does not automatically make that defect part of the creative work. This is analogous to restoration of a painting: degraded varnish can become familiar to viewers without becoming part of the original image.
-
-**Decision:** Correct known technical bugs, crashes, save problems, avoidable slowdowns, stutter and similar defects when the correction preserves content, mechanics, aesthetics, structure and deliberate cadence. If the evidence does not establish whether a behaviour is defect or design, preserve it by default.
-
-**Evidence boundary:** Observable restored behaviour that differs from the historical original should be documented with its rationale and evidence.
-
-**Reusable lesson:** Preservation can require removing technical degradation while remaining conservative about ambiguous creative intent.
-
-## KB-MC-023 - Curation is part of preservation
-
-**Context:** Project Picori exposes options and port-specific functions beyond the original GBA interface.
-
-**Finding:** Requiring the player to assemble a faithful experience from many small settings weakens the preservation reference.
-
-**Decision:** Define and validate one intentional preservation configuration. Keep inherited upstream options accessible where they still have a clear purpose, but do not treat every possible configuration as equally representative of the project.
-
-The preservation reference keeps Project Picori instructional overlays disabled while leaving the corresponding menus accessible through shortcuts. Port shortcuts do not replace controls used by the original GBA scheme.
-
-**Reusable lesson:** A preservation port benefits from curatorial defaults: provide a coherent reference experience instead of outsourcing every presentation decision to the user.
-
-## KB-MC-024 - Efficiency follows fidelity and stability
-
-**Context:** The RG34XX-H has more execution margin than the validated port requires in normal use.
-
-**Decision:** First satisfy fidelity, stability, timing and audio requirements. After those requirements are met, treat remaining CPU/GPU capacity as stability reserve and an opportunity to reduce unnecessary resource use rather than as capacity that must be consumed.
-
-**Example:** The retained V1 uses CPU ceiling 936 MHz and GPU 420 MHz rather than simply pursuing maximum clocks.
-
-**Evidence boundary:** Lower clocks were selected with the objective of reducing power and thermal demand, but no unmeasured power, battery or temperature percentage is inferred from the clock reduction.
-
-**Reusable lesson:** The successful use of additional hardware margin may be to need less of it.
-
-## KB-MC-025 - Restoration and archaeological reproduction are different goals
-
-**Context:** A corrected technical defect may cause the restored port to behave differently from the original ROM in that specific case.
-
-**Decision:** The main user-facing target is the curated restored work. Uncorrected historical behaviour may be retained when useful for A/B testing, documentation or investigation, but it does not need to be exposed as a normal user mode.
-
-**Reusable lesson:** Preserve enough historical evidence to understand the change without making every original defect part of the intended user experience.
-
-## Template for future entries
-
-When adding a new lesson, prefer:
-
-- **Status**
-- **Context**
-- **Finding/problem**
-- **Decision/resolution**
-- **Validation**
-- **Evidence limits**
-- **Reusable lesson**
+Raposo, M. (2026d). *Source baseline for The Minish Cap—RG34XX* (Commit `90fd77a82d579de9460f2de1167a95ec264e57c3`) [Project metadata]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/SOURCE_BASELINE.json

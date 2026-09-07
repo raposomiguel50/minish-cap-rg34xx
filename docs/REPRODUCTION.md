@@ -1,156 +1,37 @@
 # Reconstruction and reproducibility status
 
-This document defines the current reconstruction status of the public RG34XX/H700 integration and the evidence required for stronger reproducibility claims.
+## What is available
 
-## Evidence levels
+The repository provides the upstream pin, 15 historical patches, a launcher and selected archived evidence. The pinned foundation is EstebanPdN's `zelda-tmc-3ds` at `e72663ca4059dabf9dbf7f03c36fc791d90b8db5`, derived from work credited in that upstream README (EstebanPdN, 2026; Raposo, 2026b, 2026c, 2026d).
 
-The project distinguishes three levels:
+The private executable is identified in the archived acceptance as SHA-256 `787ba3cb8c297ea44a0605745347fe5a6e792094f0be755b51a8200c1eadc710`, size 8,858,736 bytes. Neither its bytes nor proprietary game assets are part of this evidence publication (Raposo, 2026a).
 
-1. **Historical auditability** — decisions, experiments and supporting evidence can be traced.
-2. **Functional reconstruction** — a new build can be produced from documented inputs and validated on the target.
-3. **Bit-for-bit reproducibility** — the documented source, toolchain, dependencies and build procedure recreate an identical binary artifact.
+## Three separate claims
 
-The current public material provides the strongest support for **historical auditability**.
+**Traceability:** a named patch, launcher setting or archived observation can be inspected. The new evidence extract includes original member hashes, machine summaries and selected diagnostic lines.
 
-Bit-for-bit reproduction of the retained private V1 is not currently claimed.
+**Functional reconstruction:** a new build from a specified complete source/dependency environment passes target validation. This audit did not perform that build.
 
-## Authoritative public baseline
+**Bit-for-bit reproduction:** the documented environment regenerates the private executable's exact bytes. This is not established by a binary hash, four retained source snapshots or the patch directory (Raposo, 2026a, 2026b, 2026d).
 
-Principal upstream:
+## Numerical reanalysis
 
-- Project Picori: https://github.com/EstebanPdN/zelda-tmc-3ds
-- revision: `e72663ca4059dabf9dbf7f03c36fc791d90b8db5`
+The read-only `docs/evidence/2026-09-07/reanalyse.py` recalculates timing and selected monitor statistics from the owner-held archive. It creates a new output directory, does not launch the game and does not execute scripts stored in the archive. The public evidence subset contains selected summaries and the calculation method, not the complete raw traces. Public numerical reproducibility from this repository alone is consequently limited (Raposo, 2026a).
 
-The public integration repository provides:
+## Before claiming a new runnable release
 
-- target/build compatibility patches;
-- RG34XX/H700 integration patches;
-- launcher/runtime material;
-- upstream/reference pins;
-- provenance and legal-status documentation;
-- patch-history classification;
-- engineering documentation.
+A reconstruction needs a complete pinned source/dependency/toolchain list, a resolved redistribution path, reviewed non-overlapping patch order, build logs, output hashes and a fresh target test. The public historical patch map is not a substitute for that process. The privately recorded VirtuaAPU boundary is unchanged; see [LEGAL_STATUS.md](LEGAL_STATUS.md) and [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md).
 
-See:
+No reconstruction command is presented here as already validated. Do not overwrite the private V1, original project tree, saves or prior evidence while attempting a new build.
 
-- `SOURCE_BASELINE.json`
-- `config/UPSTREAM_SOURCES.tsv`
-- `config/REFERENCE_HASHES.tsv`
-- `docs/PATCH_SERIES.md`
-- `docs/PROVENANCE.md`
+## References
 
-## Retained private V1 identity
+EstebanPdN. (2026). *The Minish Cap 3DS* (Commit `e72663ca4059dabf9dbf7f03c36fc791d90b8db5`) [Source code]. GitHub. https://github.com/EstebanPdN/zelda-tmc-3ds/tree/e72663ca4059dabf9dbf7f03c36fc791d90b8db5
 
-The validated private V1 executable is identified by SHA-256:
+Raposo, M. (2026a). *Archived development records for The Minish Cap—RG34XX (27 August–5 September 2026)* (Evidence extract 1.0) [Data set]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/tree/ede6e9090e7ca78c6c3a8c3d324d8c1de881f8b3/docs/evidence/2026-09-07
 
-`787ba3cb8c297ea44a0605745347fe5a6e792094f0be755b51a8200c1eadc710`
+Raposo, M. (2026b). *H700 integration patches for The Minish Cap—RG34XX* (Commit `90fd77a82d579de9460f2de1167a95ec264e57c3`) [Source code]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/tree/90fd77a82d579de9460f2de1167a95ec264e57c3/patches
 
-The hash identifies the retained artifact. It does not establish that another environment can reproduce identical bytes.
+Raposo, M. (2026c). *Reference launcher for The Minish Cap—RG34XX* (Commit `90fd77a82d579de9460f2de1167a95ec264e57c3`) [Source code]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/launcher/The%20Minish%20Cap.sh
 
-## Preserved source material
-
-Four P13.1 source snapshots were retained and hash-verified in the private engineering record:
-
-- `port/port_ppu.cpp`
-- `port/port_gpu_renderer.cpp`
-- `port/port_main.c`
-- `xmake.lua`
-
-These files improve historical traceability but are not presented as a complete final source tree or build environment.
-
-A complete reconstruction would also need to account for:
-
-- exact source ancestry;
-- all accepted source changes;
-- dependency revisions;
-- compiler/toolchain identity;
-- build flags;
-- link inputs;
-- strip/post-processing steps;
-- launcher/runtime policy;
-- generated files that affect the output.
-
-## Licensing boundary
-
-The retained private V1 incorporated VirtuaAPU.
-
-At the audited revision, VirtuaAPU did not provide an explicit published licence file. The public repository therefore does not redistribute VirtuaAPU source or the V1 executable incorporating it.
-
-This is a redistribution limitation and is separate from the technical identity of the retained private artifact.
-
-See `docs/LEGAL_STATUS.md` and `THIRD_PARTY_NOTICES.md`.
-
-## Public reconstruction starting point
-
-A developer can begin from the exact public upstream revision:
-
-```bash
-git clone https://github.com/EstebanPdN/zelda-tmc-3ds.git
-cd zelda-tmc-3ds
-git checkout --detach e72663ca4059dabf9dbf7f03c36fc791d90b8db5
-```
-
-Then:
-
-1. review `docs/PATCH_SERIES.md`;
-2. begin with Foundation patches;
-3. verify each patch against the pinned source revision;
-4. keep instrumentation and A/B patches separate unless reproducing those experiments;
-5. record dependency and toolchain choices;
-6. validate host-build success separately from H700 target behaviour.
-
-No single `apply-all` procedure is provided because the published patch directory contains both stable-direction work and historical/diagnostic material.
-
-## Target validation reference
-
-Validated reference environment:
-
-- ANBERNIC RG34XX-H
-- Allwinner H700
-- Cortex-A53 / AArch64
-- muOS
-- 720x480 display
-
-Retained behaviour and configuration evidence includes:
-
-- 240x160 -> 720x480 integer 3x presentation;
-- logical cadence around ~59.7275 Hz;
-- panel around ~119.455 Hz;
-- one explicit presentation per logical tick in the accepted timing direction;
-- CPU ceiling 936 MHz, GPU 420 MHz, audio 1600, `TMC_RENDER_THREADS=3`;
-- clean-exit/lifecycle work;
-- target audio QA.
-
-These values apply to the documented reference line and are not presented as universal settings for every H700 device or CFW.
-
-## Requirements for functional reconstruction
-
-A supported functional reconstruction should be demonstrated from a new clean directory with:
-
-1. the documented upstream revision;
-2. explicit dependency/toolchain pins;
-3. a defined accepted patch sequence;
-4. successful AArch64 build without hidden local inputs;
-5. architecture/link checks;
-6. launch through a normal target CFW/Ports context;
-7. visual, input, audio and exit QA;
-8. recorded hashes and toolchain versions;
-9. documented differences from the retained V1, if any.
-
-## Requirements for bit-for-bit reproducibility
-
-A stronger claim would additionally require:
-
-- complete final source identity;
-- exact dependency objects;
-- exact compiler/linker/toolchain versions;
-- deterministic timestamps/build metadata where relevant;
-- exact flags and environment;
-- identical post-processing/strip steps;
-- identical resulting SHA-256.
-
-These requirements have not yet been demonstrated for the retained V1.
-
-## Current position
-
-The public repository provides a traceable baseline, source-side integration history and clear reconstruction boundaries. Future reconstruction work can build on that record without overstating the evidence currently available.
+Raposo, M. (2026d). *Source baseline for The Minish Cap—RG34XX* (Commit `90fd77a82d579de9460f2de1167a95ec264e57c3`) [Project metadata]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/SOURCE_BASELINE.json
