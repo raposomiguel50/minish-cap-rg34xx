@@ -1,0 +1,31 @@
+{
+  "checks": {
+    "cpu_gov": true,
+    "cpu_max": true,
+    "cpu_min": true,
+    "cpu_over_cap": true,
+    "diagnostic_env_absent": true,
+    "final_hz": true,
+    "game_exit": true,
+    "game_start": true,
+    "gpu_max": true,
+    "hz": true,
+    "render_threads": true,
+    "restore": true,
+    "samples": true,
+    "temperature": true
+  },
+  "cpu_governor_ratio": 0.9931350114416476,
+  "cpu_max_ratio": 1.0,
+  "cpu_min_ratio": 1.0,
+  "cpu_over_cap_samples": 0,
+  "final_hz": "60.005",
+  "gpu_max_ratio": 1.0,
+  "high_refresh_ratio": 1.0,
+  "post_gpu_max": "0",
+  "post_restore": "YES",
+  "pre_gpu_max": "0",
+  "samples": 874,
+  "schema": "P13_1_RC1_FINAL_MANUAL_QA_EXTERNAL_MACHINE_R1",
+  "temperature_max_c": 52.6
+}

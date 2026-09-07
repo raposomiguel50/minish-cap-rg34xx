@@ -1,0 +1,48 @@
+{
+  "baseline": {
+    "cpu_cur_mean_khz": 1060432.612312812,
+    "energy_eligible": false,
+    "energy_mwh": null
+  },
+  "clean_binary_sha256": "787ba3cb8c297ea44a0605745347fe5a6e792094f0be755b51a8200c1eadc710",
+  "clean_binary_size": 8858736,
+  "manual_qa_required_now": false,
+  "optional_system_quiesce_decision": "SKIP",
+  "public_state_change": false,
+  "reference": "P12.RC1_OPERATOR_AV_OK",
+  "runtime": {
+    "audio_frames": 1600,
+    "cpu_cap_khz": 936000,
+    "cpuset": null,
+    "dvfs_low_khz": 0,
+    "dvfs_mode": "fixed",
+    "gpu_cap_hz": 420000000,
+    "ondemand": {
+      "powersave_bias": null,
+      "sampling_down_factor": null,
+      "sampling_rate": null,
+      "up_threshold": null
+    }
+  },
+  "schema": "P13_AUTOLAB2_STAGE_A_WINNER_R1",
+  "source_profile_next": "P13.1_PROFILE_DRIVEN_SOURCE_PATCH_AUTOLAB",
+  "source_profile_stage_required": true,
+  "stable_promotion": false,
+  "strip_applied": true,
+  "winner": {
+    "cpu_cur_mean_khz": 932807.8817733991,
+    "energy_eligible": false,
+    "energy_mwh": null,
+    "energy_ratio_vs_p12": null,
+    "io": {
+      "rchar_delta": 59051253,
+      "read_bytes_delta": 6033408,
+      "syscr_delta": 644484,
+      "syscw_delta": 194141,
+      "wchar_delta": 101785390,
+      "write_bytes_delta": 351141888
+    },
+    "rss_p50_kb": 334412.0,
+    "temperature_max_c": 54.2
+  }
+}

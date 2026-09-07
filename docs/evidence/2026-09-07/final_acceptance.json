@@ -1,0 +1,49 @@
+{
+  "accepted_utc": "2026-09-05T11:55:54.654653Z",
+  "audio_frames": 1600,
+  "automated_soak_runs": 2,
+  "backend": "SDL_RENDERER",
+  "candidate_acceptance": "ACCEPTED",
+  "clean_binary_sha256": "787ba3cb8c297ea44a0605745347fe5a6e792094f0be755b51a8200c1eadc710",
+  "cpu_cap_khz": 936000,
+  "device_launcher_sha256": "f25fecdced8dbb67445002a14e326073728da35b403740cca9463902001544e1",
+  "fullscreen_clear_skip": false,
+  "gpu_cap_hz": 420000000,
+  "machine_evidence": {
+    "checks": {
+      "cpu_gov": true,
+      "cpu_max": true,
+      "cpu_min": true,
+      "cpu_over_cap": true,
+      "diagnostic_env_absent": true,
+      "final_hz": true,
+      "game_exit": true,
+      "game_start": true,
+      "gpu_max": true,
+      "hz": true,
+      "render_threads": true,
+      "restore": true,
+      "samples": true,
+      "temperature": true
+    },
+    "cpu_max_ratio": 1.0,
+    "cpu_over_cap_samples": 0,
+    "gpu_max_ratio": 1.0,
+    "high_refresh_ratio": 1.0,
+    "report": "ports/minish-cap/project/reports/20260905-123332_P13_1_RC1_FINAL_MANUAL_AV_QA_R1",
+    "samples": 874,
+    "temperature_max_c": 52.6
+  },
+  "machine_qa": "PASS",
+  "manual_gameplay_sessions": 1,
+  "next_action_change": false,
+  "operator_audio_qa": "OK",
+  "operator_confirmation_source": "user_chat_2026-09-05",
+  "operator_visual_qa": "OK",
+  "public_current_build_change": false,
+  "runtime_env": {
+    "TMC_RENDER_THREADS": "3"
+  },
+  "schema": "P13_1_RC1_FINAL_AV_QA_ACCEPTED_R1",
+  "stable_promotion": false
+}

@@ -1,0 +1,64 @@
+{
+  "quit_before": {
+    "source_member": "ports/minish-cap/project/reports/20260827-184742_P10_3_1D2_EXIT_PROOF_R1/D2_LOG_FULL.txt",
+    "selection": "Exact lines, original line numbers; omitted unrelated log lines",
+    "lines": [
+      {"line": 302, "text": "[rg34xx] MENU+L2: returning to muOS."},
+      {"line": 303, "text": "[exitdiag] AGBMAIN_RETURNED\\n[exitdiag] BEFORE_TTS_SHUTDOWN\\n[exitdiag] AFTER_TTS_SHUTDOWN\\n[exitdiag] BEFORE_GPU_SHUTDOWN\\n[exitdiag] AFTER_GPU_SHUTDOWN\\n[exitdiag] BEFORE_DISCORD_SHUTDOWN\\n[exitdiag] AFTER_DISCORD_SHUTDOWN\\n[exitdiag] BEFORE_AUDIO_SHUTDOWN\\n[exitdiag] AFTER_AUDIO_SHUTDOWN\\n[exitdiag] BEFORE_PPU_SHUTDOWN\\n[exitdiag] AFTER_PPU_SHUTDOWN\\n[exitdiag] BEFORE_GAMEPAD_CLOSE\\n[exitdiag] AFTER_GAMEPAD_CLOSE\\n[exitdiag] BEFORE_WINDOW_DESTROY\\n[exitdiag] AFTER_WINDOW_DESTROY\\n[exitdiag] BEFORE_SDL_QUIT\\n[exitdiag] AFTER_SDL_QUIT\\n[exitdiag] BEFORE_RETURN_0\\n[exitdiag] RAW_CRASH sig=11 fault=[address omitted] ip=[address omitted] sp=[address omitted] lr=[address omitted]"}
+    ],
+    "redaction": "Transient memory addresses replaced with [address omitted]; all other selected text retained."
+  },
+  "quit_after": {
+    "source_member": "ports/minish-cap/project/reports/20260828-005939_P10_3_1D3_AUTOPILOT_DEPLOY_TEST_PROOF_R1/D3_LOG_FULL.txt",
+    "selection": "Exact lines, original line numbers; omitted unrelated log lines",
+    "lines": [
+      {"line": 186, "text": "[rg34xx] MENU+L2: returning to muOS."},
+      {"line": 187, "text": "[exitdiag] AGBMAIN_RETURNED\\n[exitdiag] BEFORE_TTS_SHUTDOWN\\n[exitdiag] AFTER_TTS_SHUTDOWN\\n[exitdiag] BEFORE_GPU_SHUTDOWN\\n[exitdiag] AFTER_GPU_SHUTDOWN\\n[exitdiag] BEFORE_DISCORD_SHUTDOWN\\n[exitdiag] AFTER_DISCORD_SHUTDOWN\\n[exitdiag] BEFORE_AUDIO_SHUTDOWN\\n[exitdiag] AFTER_AUDIO_SHUTDOWN\\n[exitdiag] BEFORE_PPU_SHUTDOWN\\n[exitdiag] AFTER_PPU_SHUTDOWN\\n[exitdiag] BEFORE_GAMEPAD_CLOSE\\n[exitdiag] AFTER_GAMEPAD_CLOSE\\n[exitdiag] BEFORE_WINDOW_DESTROY\\n[exitdiag] AFTER_WINDOW_DESTROY\\n[exitdiag] BEFORE_SDL_QUIT\\n[exitdiag] AFTER_SDL_QUIT\\n[exitdiag] BEFORE_RETURN_0\\n[exitdiag] BEFORE_RG34XX__EXIT_0\\n"}
+    ],
+    "redaction": "None"
+  },
+  "final_session": {
+    "source_member": "ports/minish-cap/project/reports/20260905-123332_P13_1_RC1_FINAL_MANUAL_AV_QA_R1/SESSION_LOG.txt",
+    "selection": "Exact lines, original line numbers; omitted unrelated log lines",
+    "lines": [
+      {"line": 1, "text": "RG34XX_PROFILE=P13.1.RC1_PROFILE_DRIVEN_CLEAN_CPUCAP936_GPU420_AUDIO1600_RT3_119HZ"},
+      {"line": 8, "text": "RG34XX_OS_EXIT=MENU+L2"},
+      {"line": 9, "text": "RG34XX_SETTINGS=MENU+R2"},
+      {"line": 10, "text": "RG34XX_REFRESH_ACTIVE_HZ=119.455"},
+      {"line": 12, "text": "RG34XX_CPU_CAP_APPLIED_KHZ=936000"},
+      {"line": 16, "text": "RG34XX_GPU_CAP_APPLIED_HZ=420000000"},
+      {"line": 20, "text": "Console-Parity mode ON: edge-cache off, save-states inert, widescreen off, pacing locked to 59.7275 Hz."},
+      {"line": 21, "text": "SDL video driver: sdl2"},
+      {"line": 26, "text": "[render] OpenMP scanline threads = 3 (of 4 cores)"},
+      {"line": 27, "text": "PPU: SDL_Renderer driver = opengles2"},
+      {"line": 130, "text": "RG34XX_GPU_MAX_RESTORE=PASS:0"},
+      {"line": 132, "text": "RG34XX_CPU_MAX_RESTORE=PASS:1512000"},
+      {"line": 133, "text": "RG34XX_GAME_EXIT_RC=0"}
+    ],
+    "redaction": "None"
+  },
+  "monitor_pre_post": {
+    "source_member": "ports/minish-cap/project/reports/20260905-123332_P13_1_RC1_FINAL_MANUAL_AV_QA_R1/EXTERNAL_MONITOR.txt",
+    "selection": "Exact named lines selected from pre/post blocks; numerical sample rows omitted here.",
+    "lines": ["PRE_HZ=60.005", "PRE_CPU_MAX=1512000", "PRE_CPU_MIN=480000", "PRE_CPU_GOV=powersave", "PRE_GPU_MAX=0", "PRE_GPU_MIN=0", "PRE_GPU_GOV=simple_ondemand", "POST_RESTORE_SEEN=YES", "POST_CPU_MAX=1512000", "POST_CPU_MIN=480000", "POST_CPU_GOV=ondemand", "POST_GPU_MAX=0", "POST_GPU_MIN=0", "POST_GPU_GOV=simple_ondemand", "FINAL_HZ=60.005", "TOTAL_SAMPLES=874", "GAME_EXIT_OBSERVED=YES", "MONITOR_SESSION=END"],
+    "redaction": "None"
+  },
+  "stable_STABLE_VERIFY.txt": {
+    "source_member": "ports/minish-cap/project/reports/20260905-183519_V1_STABLE_FINALIZE_R4_END_TO_END_VERIFIED/STABLE_VERIFY.txt",
+    "source_sha256": "ac6dce353b5ec32e2aa818e5f349953edc5e70cf70976f7edd2f5d615413c608",
+    "text": "STABLE_V1_VERIFY=PASS\n",
+    "redaction": "None"
+  },
+  "stable_DEVICE_FINALIZE.txt": {
+    "source_member": "ports/minish-cap/project/reports/20260905-183519_V1_STABLE_FINALIZE_R4_END_TO_END_VERIFIED/DEVICE_FINALIZE.txt",
+    "source_sha256": "8f5cdaad6571caed5737d77279b84dd025319f9e8d9afe3532e2793ca79409d6",
+    "text": "V1_PROMOTION_IDENTITY=PASS\nFINAL_TREE=/mnt/sdcard/ports/minishcap\nFINAL_TREE_COUNT=1\nFINAL_MENU=/mnt/sdcard/ROMS/Ports/The Minish Cap.sh\nFINAL_MENU_COUNT=1\nFINAL_VISIBLE_V1_INVARIANT=PASS\nOLD_DEVICE_BUILDS_REMOVED=PASS\nV1_DEVICE_FINALIZE=PASS\n",
+    "redaction": "None"
+  },
+  "stable_R2_AUTHORITY.txt": {
+    "source_member": "ports/minish-cap/project/reports/20260905-183519_V1_STABLE_FINALIZE_R4_END_TO_END_VERIFIED/R2_AUTHORITY.txt",
+    "source_sha256": "5d294bb9bc8b20d201b36d730bdcfa4e3ab51699d9f8500aa32eaf88da1af1dd",
+    "text": "R2_AUTHORITY_RUN=project/reports/command-runs/20260905_172141_MINISH_CAP_V1_STABLE_PROMOTION_R2_SINGLE_SESSION\nR2_BACKUP_AUTHORITY=ports/minish-cap/private/device-backups/V1_STABLE_PROMOTION_R2_20260905-172141\nR2_CANONICAL_PATH_SMOKE_START_EXIT=PASS\nR2_FAILURE_GATE_EXPECTED_WRONG_MARKER=RG34XX_CPU_CAP_RESTORE\nACTUAL_PROVEN_LAUNCHER_MARKER=RG34XX_CPU_MAX_RESTORE\n",
+    "redaction": "None"
+  }
+}

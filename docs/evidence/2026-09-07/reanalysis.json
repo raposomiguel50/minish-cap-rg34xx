@@ -1,0 +1,135 @@
+{
+  "schema": "MC_APA_REANALYSIS_1",
+  "status": "PASS",
+  "new_hardware_runs": 0,
+  "archive_filename": "RG34XX_PORT_MINISH_CAP_HANDOVER_V0.1.0_20260906_123500.zip",
+  "archive_sha256": "07ae7e1be8aed80dc9494c084d3ac5bfb5b60be186f6778344bec8fb7393ca10",
+  "archive_entries": 3593,
+  "method": "All X records; linear quantiles at (n-1)*q. PRESENT_END - PRESENT_BEGIN paired by presentation sequence. No trimming.",
+  "timing": {
+    "P11.3": {
+      "tick_lateness_ms": {
+        "n": 10203,
+        "mean": 0.9880522140546899,
+        "median": 0.015637,
+        "p95": 5.790786499999999,
+        "max": 70.186618,
+        "min": 0.001504
+      },
+      "present_call_ms": {
+        "n": 10187,
+        "mean": 7.116730407185629,
+        "median": 7.469125,
+        "p95": 13.4894751,
+        "max": 46.450584,
+        "min": 0.228625
+      },
+      "one_present_count": 8625,
+      "zero_present_count": 798,
+      "two_present_count": 778,
+      "mean_presents_per_tick": 0.99843183377438,
+      "one_present_ratio": 0.8453396059982358,
+      "two_present_ratio": 0.0762520827207684
+    },
+    "P11.4": {
+      "tick_lateness_ms": {
+        "n": 10449,
+        "mean": 0.10521964207101157,
+        "median": 0.002659,
+        "p95": 0.027887200000000004,
+        "max": 64.134375,
+        "min": 0.000929
+      },
+      "present_call_ms": {
+        "n": 10426,
+        "mean": 0.8544241141377326,
+        "median": 0.5694165,
+        "p95": 2.02877125,
+        "max": 60.91725,
+        "min": 0.226625
+      },
+      "one_present_count": 10346,
+      "zero_present_count": 63,
+      "two_present_count": 40,
+      "mean_presents_per_tick": 0.9977988324241555,
+      "one_present_ratio": 0.9901425973777395,
+      "two_present_ratio": 0.0038281175232079624
+    }
+  },
+  "final_monitor": {
+    "samples": 874,
+    "temperature_max_c": 52.6,
+    "high_refresh_ratio": 1.0,
+    "cpu_cap_ratio": 1.0,
+    "gpu_cap_ratio": 1.0
+  },
+  "limits": [
+    "One historical capture per timing variant; ticks are repeated observations, not independent experiments.",
+    "No randomised or matched-scene causal experiment established for P11.3 versus P11.4.",
+    "No motion-to-photon latency measurement. No energy saving inferred.",
+    "Archive summaries are reproduced, not a new independent hardware replication."
+  ],
+  "original_gameplay_bug_corrections": "Not established by the reviewed patches and selected primary records.",
+  "sources": [
+    {
+      "member": "ports/minish-cap/project/reports/20260830-173723_P11_3_DEPLOY_HOST_PROVEN_BINARY_PHASE_CAPTURE_R1_1/P11_3_TRACE.tsv",
+      "bytes": 7934430,
+      "sha256": "a2f60210bc523cbf89354862c01e00995eafda1b6556433b2ba3f389221b6c96"
+    },
+    {
+      "member": "ports/minish-cap/project/reports/20260830-210141_P11_4_SINGLE_PRESENT_119HZ_AB_R1_1/P11_4_TRACE.tsv",
+      "bytes": 7239276,
+      "sha256": "2b8b727584df19a5955bc8f942bf929b4a74ec9db0effa0c1f2718aa2ffb635a"
+    },
+    {
+      "member": "ports/minish-cap/project/reports/20260830-210141_P11_4_SINGLE_PRESENT_119HZ_AB_R1_1/AB_SUMMARY.json",
+      "bytes": 4265,
+      "sha256": "4c23ba8731cb950c6da0b00cbd3e3cab4f359599df1ac504e222638ab147efa8"
+    },
+    {
+      "member": "ports/minish-cap/project/reports/20260830-225600_P11_5_AUDIO_BUFFER_1600_AB_R1/AUDIO_AB_SUMMARY.json",
+      "bytes": 3681,
+      "sha256": "d89ab3e11be0da1de7797bef48fe92015d758517b2c81bdae81d42069bf76113"
+    },
+    {
+      "member": "ports/minish-cap/project/reports/20260905-123332_P13_1_RC1_FINAL_MANUAL_AV_QA_R1/MACHINE_SUMMARY.json",
+      "bytes": 722,
+      "sha256": "90ea7a57ed66f074c5b3ab185d263db3543f895ca140fed3296afe665cc110ab"
+    },
+    {
+      "member": "ports/minish-cap/project/autolab/P13_1/P13_1_RC1_FINAL_AV_QA_ACCEPTED.json",
+      "bytes": 1489,
+      "sha256": "5ab87e6939daa05b7464539dfb5d181e3e84a8432db714678397dc681ccd7a14"
+    },
+    {
+      "member": "ports/minish-cap/project/autolab/P13_1/P13_1_WINNER.json",
+      "bytes": 851,
+      "sha256": "7152455ae0b1123f34254e2b8b8052f7eda92101a83158758270436d96a94e96"
+    },
+    {
+      "member": "ports/minish-cap/project/autolab/P13/P13_AUTOLAB2_STAGE_A_WINNER.json",
+      "bytes": 1345,
+      "sha256": "0ac15f32b870cf9c5cfd6c6d1198174f0a1a0bc3ffbae3a2ebaa2388808e5406"
+    },
+    {
+      "member": "ports/minish-cap/project/reports/20260905-123332_P13_1_RC1_FINAL_MANUAL_AV_QA_R1/EXTERNAL_MONITOR.txt",
+      "bytes": 82564,
+      "sha256": "eb3a852491e7b5ce5c9295ec948d378e2c99d472cce6e3d3da3e9b8bb847a4e6"
+    },
+    {
+      "member": "ports/minish-cap/project/reports/20260827-184742_P10_3_1D2_EXIT_PROOF_R1/D2_LOG_FULL.txt",
+      "bytes": 22623,
+      "sha256": "1f62a65c4851d8c43661461b083609a9997b1b78865917f674204fa92f83fa6c"
+    },
+    {
+      "member": "ports/minish-cap/project/reports/20260828-005939_P10_3_1D3_AUTOPILOT_DEPLOY_TEST_PROOF_R1/D3_LOG_FULL.txt",
+      "bytes": 12357,
+      "sha256": "c5840b44fba22f7fed4d83523b92073f96bf7d3dbd8fc5016f15eb6a89ef4101"
+    },
+    {
+      "member": "ports/minish-cap/project/reports/20260905-123332_P13_1_RC1_FINAL_MANUAL_AV_QA_R1/SESSION_LOG.txt",
+      "bytes": 5766,
+      "sha256": "285deea2c4c1470e244cb6faf0ac0acf08b361d015414a4640c7263b2c3f2bc2"
+    }
+  ]
+}
