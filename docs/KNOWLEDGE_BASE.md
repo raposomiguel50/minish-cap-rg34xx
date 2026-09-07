@@ -40,11 +40,13 @@ Historical experiments remain documented when they clarify a technical boundary 
 
 **Context:** RG34XX-H presentation and handheld integration.
 
-**Decision:** Preserve the game’s art, music, sound effects, UI and GBA control identity. Port-specific diagnostics remain outside the game image, and device-specific combinations are reserved for port functions.
+**Decision:** Preserve the game's art, music, sound effects, UI and GBA control identity. Port-specific diagnostics remain outside the game image, and device-specific combinations are reserved for port functions.
 
-Reference presentation: original 240x160 image scaled to 720x480 using integer 3x scaling.
+Reference presentation: original 240x160 image scaled to 720x480 using integer 3x scaling, without smoothing, shaders or overlays as part of the preservation reference.
 
-**Reusable lesson:** Platform adaptation can remain technically substantial while preserving the original presentation.
+Project Picori menu functions remain accessible through shortcuts while instructional overlays are disabled by default so they do not cover the game image. The port shortcuts do not replace buttons used by the original GBA control scheme.
+
+**Reusable lesson:** Platform adaptation can remain technically substantial while preserving the original presentation and controls.
 
 ## KB-MC-005 - Display refresh and game cadence are different clocks
 
@@ -108,11 +110,11 @@ In the recorded comparison, tick-lateness p95 improved from approximately **5.79
 
 The CPU ceiling changed from 1416 MHz to 936 MHz, approximately 33.9%.
 
-**Evidence boundary:** That figure describes frequency reduction only. It is not used as a battery-life or energy-consumption percentage.
+**Decision:** After fidelity and stability requirements were satisfied, reduced clocks were retained to avoid unnecessary resource use and with the objective of reducing power and thermal demand.
 
-The comparison record also retains less favourable observations, including higher maximum temperature in one comparison and slightly higher RSS.
+**Evidence boundary:** The 33.9% figure describes frequency reduction only. It is not used as a battery-life, power-consumption or temperature percentage. The comparison record also retains less favourable observations, including higher maximum temperature in one comparison and slightly higher RSS.
 
-**Reusable lesson:** Report the variable that was actually measured.
+**Reusable lesson:** Optimise efficiency only after fidelity and stability are protected, and report the variable that was actually measured.
 
 ## KB-MC-011 - Mixed results improve the record
 
@@ -122,15 +124,17 @@ The comparison record also retains less favourable observations, including highe
 
 **Reusable lesson:** A useful engineering record preserves context and trade-offs, not only favourable values.
 
-## KB-MC-012 - Rejected experiments define useful boundaries
+## KB-MC-012 - Rejected technical experiments define useful boundaries
 
 **Context:** Experimental GPU-renderer work during P13.1.
 
 **Finding:** The investigated GPU backend failed and was not promoted. A fullscreen-clear experiment was also not adopted.
 
-**Decision:** Keep these results available for reference and revisit them only if new evidence or requirements justify it.
+**Decision:** Keep these results available as technical evidence and revisit them only if new evidence or requirements justify it.
 
-**Reusable lesson:** Documenting rejected approaches reduces unnecessary repetition.
+**Evidence boundary:** These were engineering experiments, not a separate creative or expanded direction for the game.
+
+**Reusable lesson:** Documenting rejected approaches reduces unnecessary repetition without confusing technical research with project scope.
 
 ## KB-MC-013 - Clean exit is part of platform integration
 
@@ -223,17 +227,63 @@ Three separate claims are therefore maintained:
 
 **Reusable lesson:** Check the known local state before creating unnecessary repeat work.
 
-## KB-MC-021 - Native execution opens more of the target hardware
+## KB-MC-021 - Native execution serves technical restoration
 
 **Context:** Choosing a native AArch64 port rather than running the game through GBA emulation on the RG34XX-H.
 
-**Finding:** Native execution avoids spending part of the target's resources reproducing the original GBA CPU, graphics, audio and timing environment. It also gives the port more direct control over timing, presentation, audio, threading, input and lifecycle behaviour within Linux/muOS.
+**Finding:** Native execution avoids spending part of the target's resources reproducing the original GBA CPU, graphics, audio and timing environment. It also gives the port more direct control over timing, presentation, audio, threading, input, lifecycle behaviour and resource use within Linux/muOS.
 
-**Decision:** Use that margin to explore the RG34XX-H more directly and to examine what becomes possible when the original GBA hardware constraints are relaxed.
+**Decision:** Treat the additional hardware margin as a means to reduce avoidable technical compromises while preserving the same creative work. It is not a budget that must be spent on new effects, mechanics or content.
 
-**Project perspective:** This creates a useful thought exercise: imagine and explore what the original developers could have achieved with more optimisation time and more hardware headroom to express their vision and creativity.
+**Restoration premise:** Ask what technical limitations could be removed if the same game had more optimisation time and more hardware margin available to express what is already present in the finished work.
 
-**Reusable lesson:** Native ports can be used not only to improve platform integration, but also to study how additional hardware margin changes the creative and technical possibilities available to a game.
+**Evidence boundary:** This premise is not a historical claim about undocumented developer intentions. The published game remains the primary evidence for the work being preserved.
+
+**Reusable lesson:** Native execution can support preservation by removing technical obstacles and creating efficiency headroom without requiring creative reinterpretation.
+
+## KB-MC-022 - Preserve the work, not every technical defect
+
+**Context:** Deciding whether an original bug, slowdown or other visible behaviour should be reproduced unchanged.
+
+**Finding:** Familiarity with a technical defect does not automatically make that defect part of the creative work. This is analogous to restoration of a painting: degraded varnish can become familiar to viewers without becoming part of the original image.
+
+**Decision:** Correct known technical bugs, crashes, save problems, avoidable slowdowns, stutter and similar defects when the correction preserves content, mechanics, aesthetics, structure and deliberate cadence. If the evidence does not establish whether a behaviour is defect or design, preserve it by default.
+
+**Evidence boundary:** Observable restored behaviour that differs from the historical original should be documented with its rationale and evidence.
+
+**Reusable lesson:** Preservation can require removing technical degradation while remaining conservative about ambiguous creative intent.
+
+## KB-MC-023 - Curation is part of preservation
+
+**Context:** Project Picori exposes options and port-specific functions beyond the original GBA interface.
+
+**Finding:** Requiring the player to assemble a faithful experience from many small settings weakens the preservation reference.
+
+**Decision:** Define and validate one intentional preservation configuration. Keep inherited upstream options accessible where they still have a clear purpose, but do not treat every possible configuration as equally representative of the project.
+
+The preservation reference keeps Project Picori instructional overlays disabled while leaving the corresponding menus accessible through shortcuts. Port shortcuts do not replace controls used by the original GBA scheme.
+
+**Reusable lesson:** A preservation port benefits from curatorial defaults: provide a coherent reference experience instead of outsourcing every presentation decision to the user.
+
+## KB-MC-024 - Efficiency follows fidelity and stability
+
+**Context:** The RG34XX-H has more execution margin than the validated port requires in normal use.
+
+**Decision:** First satisfy fidelity, stability, timing and audio requirements. After those requirements are met, treat remaining CPU/GPU capacity as stability reserve and an opportunity to reduce unnecessary resource use rather than as capacity that must be consumed.
+
+**Example:** The retained V1 uses CPU ceiling 936 MHz and GPU 420 MHz rather than simply pursuing maximum clocks.
+
+**Evidence boundary:** Lower clocks were selected with the objective of reducing power and thermal demand, but no unmeasured power, battery or temperature percentage is inferred from the clock reduction.
+
+**Reusable lesson:** The successful use of additional hardware margin may be to need less of it.
+
+## KB-MC-025 - Restoration and archaeological reproduction are different goals
+
+**Context:** A corrected technical defect may cause the restored port to behave differently from the original ROM in that specific case.
+
+**Decision:** The main user-facing target is the curated restored work. Uncorrected historical behaviour may be retained when useful for A/B testing, documentation or investigation, but it does not need to be exposed as a normal user mode.
+
+**Reusable lesson:** Preserve enough historical evidence to understand the change without making every original defect part of the intended user experience.
 
 ## Template for future entries
 
