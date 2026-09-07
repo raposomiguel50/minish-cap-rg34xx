@@ -14,13 +14,40 @@ AI-assisted output is reviewed against the project requirements and available ev
 
 The workflow follows the same principles used throughout the project:
 
-- **preservation** — retain the original game identity as the reference;
+- **preservation** — retain the original creative work as the authority;
 - **containment** — address each problem within the smallest practical boundary;
-- **focus** — keep stable scope separate from optional research;
-- **restoration** — adapt behaviour to the target without unnecessarily redefining the experience;
-- **minimalism** — prefer smaller, justified interventions where they are sufficient.
+- **focus** — keep accepted scope separate from optional technical research;
+- **restoration** — correct justified technical defects without adding or repainting creative content;
+- **minimalism** — prefer smaller, justified interventions where they are sufficient;
+- **curation** — define and validate a coherent reference experience rather than require the player to assemble one from many micro-settings.
+
+The finished game is the primary evidence for what is being preserved. When the distinction between a technical defect and a creative decision is uncertain, preservation is the default.
 
 See [`PHILOSOPHY.md`](PHILOSOPHY.md).
+
+## Restoration decisions
+
+Technical restoration and historical reproduction are treated as different questions.
+
+A known bug, crash, save problem, avoidable slowdown, stutter or similar implementation defect may be corrected when the correction preserves content, mechanics, visual identity, sound, structure and deliberate cadence.
+
+A familiar defect is not automatically treated as part of the work merely because players have become accustomed to it. Conversely, a limitation that has become part of the deliberate visual, audio or gameplay language is not automatically treated as something to remove.
+
+When restoration changes observable behaviour, the difference, rationale and supporting evidence are documented. Historical behaviour may be retained for A/B testing, investigation or reference without becoming the default user-facing mode.
+
+## Curated reference configuration
+
+The project validates one preservation reference rather than treating every upstream option combination as equally representative.
+
+The reference direction includes:
+
+- original 240x160 presentation at exact 3x integer scale to 720x480;
+- no smoothing, shaders or instructional overlays as part of the default game image;
+- Project Picori menu functions accessible through shortcuts while their instructional overlays remain disabled by default;
+- original GBA controls reserved for gameplay;
+- port functions assigned to device-specific combinations that do not replace the original controls.
+
+Inherited Project Picori options may remain accessible where useful, but changing them can move the configuration outside the validated preservation reference.
 
 ## Evidence-based validation
 
@@ -44,11 +71,24 @@ Measurements are reported within the limits of what they demonstrate.
 
 Examples:
 
-- CPU-frequency reduction is not converted directly into a battery-life percentage;
+- CPU-frequency reduction is not converted directly into a battery-life, power or temperature percentage;
 - panel refresh rate is kept separate from game-logic cadence;
 - heuristic audio counters are not treated as direct perceptual measurements;
 - a binary SHA-256 identifies an artifact but does not prove reproducibility;
 - validation on RG34XX-H + muOS is not presented as universal H700 compatibility.
+
+## Efficiency after fidelity
+
+The optimisation order is deliberate:
+
+1. preserve the work faithfully;
+2. maintain stable execution;
+3. remove justified technical obstacles;
+4. reduce unnecessary resource use once the first three requirements are satisfied.
+
+The retained V1 configuration uses CPU ceiling 936 MHz and GPU 420 MHz rather than simply maximising clocks. The reduced clocks were selected with the objective of avoiding unnecessary power and thermal demand while keeping the accepted experience intact.
+
+That objective is not presented as a measured percentage unless direct power or thermal evidence supports one.
 
 ## Controlled experiments
 
@@ -95,6 +135,8 @@ Examples include:
 - an early benchmark context that was invalidated;
 - high-refresh hypotheses revised after instrumentation.
 
+These are technical investigations, not an alternative creative direction for the game.
+
 See [`KNOWLEDGE_BASE.md`](KNOWLEDGE_BASE.md).
 
 ## Project continuity
@@ -138,7 +180,7 @@ Automation is useful when it reduces repetition or risk. For small, well-defined
 | Project purpose and preservation criteria | I define and approve them |
 | Scope and priorities | I define them |
 | Target hardware | I select it |
-| Presentation and interaction decisions | I make the final decisions |
+| Presentation, restoration and curation decisions | I make the final decisions |
 | Acceptance/rejection of experiments | I decide |
 | Real-device observations and final QA | I perform or evaluate them |
 | Calculations and repetitive analysis | ChatGPT assists |
