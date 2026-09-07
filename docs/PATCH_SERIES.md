@@ -1,31 +1,137 @@
-# Patch map and evidence
+# What does each patch do?
 
-This map inventories **15 public patches at commit `90fd77a82d579de9460f2de1167a95ec264e57c3`**. It describes source changes, not a guaranteed linear application order or a reconstructed V1. All links below are to that immutable revision.
+A patch describes a source-code change. This map groups the **15 published patches** by purpose so you can find the relevant work.
 
-| Patch | Role | What the source changes |
-| --- | --- | --- |
-| [P04_AARCH64_LINK_COMPLETENESS_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P04_AARCH64_LINK_COMPLETENESS_R1.patch) | Build | Adds a required source file and Linux/Android EGL/GLES links. |
-| [P04_FMT_PACKED_COLLISION_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P04_FMT_PACKED_COLLISION_R1.patch) | Build | Moves fmt header before project headers. |
-| [P06_H700_CORTEX_A53_TARGET_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P06_H700_CORTEX_A53_TARGET_R1.patch) | Build | Adds ARMv8-A/SIMD and Cortex-A53 tuning flags in its platform condition. |
-| [P09_RG34XX_HANDHELD_POLISH_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P09_RG34XX_HANDHELD_POLISH_R1.patch) | Historical integration | Handheld input/menu labelling; later superseded in parts by P10.3. |
-| [P10_3_1D2_CLEAN_QUIT_UNWIND_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P10_3_1D2_CLEAN_QUIT_UNWIND_R1.patch) | Exit handling | Propagates quit requests through main loops and waits. |
-| [P10_3_1D3_RG34XX_POST_SHUTDOWN_EXIT_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P10_3_1D3_RG34XX_POST_SHUTDOWN_EXIT_R1.patch) | Historical workaround | Calls _Exit after shutdown on target profile; see refined P10.3.2. |
-| [P10_3_1_EXIT_DIAG_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P10_3_1_EXIT_DIAG_R1.patch) | Instrumentation | Adds exit-path/crash markers; diagnostic code is not itself a fix. |
-| [P10_3_1_RG34XX_A53_AUDIO_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P10_3_1_RG34XX_A53_AUDIO_R1.patch) | Audio configuration | Selects linear in one enhanced-audio branch; gbaAccurate remains nearest. |
-| [P10_3_2_RG34XX_CLEAN_EXIT_FILESELECT_UI_R3.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P10_3_2_RG34XX_CLEAN_EXIT_FILESELECT_UI_R3.patch) | Later integration | Combines quit handling, conditional post-shutdown _Exit and legacy hint/L-action suppression. |
-| [P10_3_RG34XX_SEAMLESS_HIGH_REFRESH_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P10_3_RG34XX_SEAMLESS_HIGH_REFRESH_R1.patch) | Historical integration | Adds MENU+L2/R2 routes and seamless UI; initial double-rate timing is historical. |
-| [P11_1_RG34XX_TIMING_INPUT_PRESENT_TRACE_R3.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P11_1_RG34XX_TIMING_INPUT_PRESENT_TRACE_R3.patch) | Instrumentation | Defines tick/input/presentation trace rows. |
-| [P11_2_RG34XX_HIGH_REFRESH_VSYNC_OFF_AB_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P11_2_RG34XX_HIGH_REFRESH_VSYNC_OFF_AB_R1.patch) | Timing experiment | Changes selected high-refresh VSync policy. |
-| [P11_3_RG34XX_PPU_PHASE_SPLIT_TRACE_R3.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P11_3_RG34XX_PPU_PHASE_SPLIT_TRACE_R3.patch) | Instrumentation | Adds presentation-phase markers used in the reanalysis. |
-| [P11_4_RG34XX_SINGLE_PRESENT_119HZ_AB_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P11_4_RG34XX_SINGLE_PRESENT_119HZ_AB_R1.patch) | Timing policy | Changes presentation period to the logical period in the selected path. |
-| [P11_7_RG34XX_PRODUCTION_LIKE_RUNTIME_POLICY_R1.patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P11_7_RG34XX_PRODUCTION_LIKE_RUNTIME_POLICY_R1.patch) | Runtime policy | Separates production-like settings from diagnostic pacing behaviour. |
+**Do not apply them all in filename order.** They record different development stages. Some overlap, replace earlier approaches or only add diagnostics.
 
-## What this proves—and what it does not
+All patch links below use the fixed revision `90fd77a82d579de9460f2de1167a95ec264e57c3`.
 
-The patches show which instructions/configuration paths were changed. [Exit diagnostics and later session output](evidence/2026-09-07/log_excerpts.json) provide additional execution evidence. A build-source filename containing a room name is not evidence of an original gameplay-bug fix. Instrumentation and experimental patches must not be presented as released features merely because they are stored here.
+## How to read the map
 
-The P11.4 captured result is quantified in [Validation](VALIDATION.md). The audio comparison retained a machine regression verdict. The final accepted configuration is identified separately by executable hash and runtime settings. The exact final source environment has not been reconstructed by this audit.
+**Build** changes help create the target executable. **Instrumentation** adds measurements. **Experiments** test alternatives. A stored experiment is not automatically a selected feature.
 
-## Reconstruction use
+The archive is not a complete final build recipe. Start with [Reconstruction](REPRODUCTION.md) before attempting a new executable.
 
-Use the pinned upstream, review a patch's preimage and purpose, apply only a compatible conceptual change in a separate worktree, then build and validate the target. Do not apply these files blindly in filename order: some overlap, supersede earlier changes or add diagnostics. See [REPRODUCTION.md](REPRODUCTION.md).
+## Build support
+
+### P04_AARCH64_LINK_COMPLETENESS_R1
+
+Adds the required source file and Linux/Android EGL/GLES links.
+
+[Inspect this patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P04_AARCH64_LINK_COMPLETENESS_R1.patch)
+
+### P04_FMT_PACKED_COLLISION_R1
+
+Moves the fmt header before project headers.
+
+[Inspect this patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P04_FMT_PACKED_COLLISION_R1.patch)
+
+### P06_H700_CORTEX_A53_TARGET_R1
+
+Adds ARMv8-A/SIMD and Cortex-A53 compiler targeting in its platform condition.
+
+[Inspect this patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P06_H700_CORTEX_A53_TARGET_R1.patch)
+
+
+## Controls and presentation
+
+### P09_RG34XX_HANDHELD_POLISH_R1
+
+Historical handheld input and menu labels; later work supersedes parts of it.
+
+[Inspect this patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P09_RG34XX_HANDHELD_POLISH_R1.patch)
+
+### P10_3_RG34XX_SEAMLESS_HIGH_REFRESH_R1
+
+Adds MENU+L2/R2 routes and seamless UI. Its initial double-rate timing is historical.
+
+[Inspect this patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P10_3_RG34XX_SEAMLESS_HIGH_REFRESH_R1.patch)
+
+### P10_3_2_RG34XX_CLEAN_EXIT_FILESELECT_UI_R3
+
+Combines quit handling, conditional post-shutdown _Exit and suppression of the legacy hint/L action.
+
+[Inspect this patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P10_3_2_RG34XX_CLEAN_EXIT_FILESELECT_UI_R3.patch)
+
+
+## Exit diagnosis and handling
+
+### P10_3_1_EXIT_DIAG_R1
+
+Adds exit/crash markers. Instrumentation records a problem; it is not itself a fix.
+
+[Inspect this patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P10_3_1_EXIT_DIAG_R1.patch)
+
+### P10_3_1D2_CLEAN_QUIT_UNWIND_R1
+
+Propagates quit requests through main loops and waits.
+
+[Inspect this patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P10_3_1D2_CLEAN_QUIT_UNWIND_R1.patch)
+
+### P10_3_1D3_RG34XX_POST_SHUTDOWN_EXIT_R1
+
+Historical workaround: calls _Exit after shutdown. P10.3.2 refines the condition.
+
+[Inspect this patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P10_3_1D3_RG34XX_POST_SHUTDOWN_EXIT_R1.patch)
+
+
+## Audio configuration
+
+### P10_3_1_RG34XX_A53_AUDIO_R1
+
+Selects linear resampling in one enhanced-audio branch; gbaAccurate retains nearest.
+
+[Inspect this patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P10_3_1_RG34XX_A53_AUDIO_R1.patch)
+
+
+## Timing measurement and scheduling
+
+### P11_1_RG34XX_TIMING_INPUT_PRESENT_TRACE_R3
+
+Defines tick, input and presentation trace records.
+
+[Inspect this patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P11_1_RG34XX_TIMING_INPUT_PRESENT_TRACE_R3.patch)
+
+### P11_2_RG34XX_HIGH_REFRESH_VSYNC_OFF_AB_R1
+
+Tests a different high-refresh VSync policy.
+
+[Inspect this patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P11_2_RG34XX_HIGH_REFRESH_VSYNC_OFF_AB_R1.patch)
+
+### P11_3_RG34XX_PPU_PHASE_SPLIT_TRACE_R3
+
+Adds presentation-phase markers used in the timing analysis.
+
+[Inspect this patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P11_3_RG34XX_PPU_PHASE_SPLIT_TRACE_R3.patch)
+
+### P11_4_RG34XX_SINGLE_PRESENT_119HZ_AB_R1
+
+Sets the presentation period to the logical period in the selected path.
+
+[Inspect this patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P11_4_RG34XX_SINGLE_PRESENT_119HZ_AB_R1.patch)
+
+### P11_7_RG34XX_PRODUCTION_LIKE_RUNTIME_POLICY_R1
+
+Separates production-like settings from diagnostic pacing behaviour.
+
+[Inspect this patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P11_7_RG34XX_PRODUCTION_LIKE_RUNTIME_POLICY_R1.patch)
+
+## What additional evidence is needed?
+
+A patch shows the code change. A test shows what happened when a particular build ran.
+
+[Exit diagnostics](evidence/2026-09-07/log_excerpts.json) support the shutdown case. [Timing results](VALIDATION.md) describe the presentation comparison, including remaining delays.
+
+The audio comparison retains a regression verdict. The final accepted build has its own identity and settings; it was not reconstructed during this review.
+
+Adding a source file named after a room does not establish a new fix to that room's gameplay.
+
+## How to study a patch safely
+
+1. Check the pinned upstream source and the patch's original code context.
+2. Read the purpose and related test before applying it.
+3. Work in a separate copy, then build and test that change.
+
+Keep the private V1 and saves untouched. Diagnostics and historical alternatives should not enter a release merely because they exist here.
+
+**Next:** [Read the reconstruction requirements](REPRODUCTION.md).

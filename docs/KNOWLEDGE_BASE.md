@@ -1,160 +1,251 @@
-# Engineering knowledge base
+# Learn from the port
 
-Each entry identifies its evidence category. **Approved policies and website-maintenance lessons are not game-port test results.** Full methods, statistics, source paths and limits are in [EVIDENCE_AUDIT.md](EVIDENCE_AUDIT.md).
+A guide to the problems, decisions and evidence behind the RG34XX integration.
 
-## KB-MC-001 — Foundation and attribution
+**Use it to:** understand a change before copying an approach into another project. Each entry separates a result from a rule or open question.
 
-**Status:** Source provenance.
+**Reviewed:** 7 September 2026. **Scope:** the recorded RG34XX/muOS work, not every device or game version.
 
-The pinned foundation is EstebanPdN's Project Picori-derived fork, not an independently created engine. Its README identifies the Android, Project Picori and zeldaret antecedents (EstebanPdN, 2026). The revision is recorded in [SOURCE_BASELINE.json](../SOURCE_BASELINE.json).
+## Find a topic
 
-## KB-MC-002 — Host and target evidence
+| Your question | Start here |
+| --- | --- |
+| Where did the source come from? | [Foundation](#kb-mc-001) |
+| How were menus and controls adapted? | [Controls](#kb-mc-004) |
+| Did timing and audio improve? | [Timing](#kb-mc-005) · [Audio](#kb-mc-007) |
+| Why use lower clocks? | [Energy evidence](#kb-mc-010) |
+| What happened on exit? | [Shutdown](#kb-mc-013) |
+| Can I rebuild or distribute it? | [Reconstruction](#kb-mc-015) · [Distribution](#kb-mc-016) |
+| How do preservation decisions work? | [Principles](#kb-mc-021) |
 
-**Status:** Methodological rule.
+**Reading key:** source = code inspection; record = archived observation; policy = a decision rule. A policy is not a completed feature.
 
-A host build does not establish target timing or runtime behaviour. The [archived manual-session record](evidence/2026-09-07/final_acceptance.json) supplies separate target observations; this audit did not repeat them.
+[Glossary](GLOSSARY.md) · [Full results](VALIDATION.md) · [Open log questions](AUDIT_SUPPLEMENT_2026-09-07.md)
 
-## KB-MC-003 — CFW runtime boundary
+<a id="kb-mc-001"></a>
+## KB-MC-001 — Which work is upstream?
 
-**Status:** Source inspection.
+**Type: source provenance.** The foundation is EstebanPdN's Project Picori-derived fork. Its README credits the Android port, Project Picori and zeldaret (EstebanPdN, 2026).
 
-The [launcher](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/launcher/The%20Minish%20Cap.sh) loads PortMaster control helpers, selects an SDL2-backed shim path when applicable, and sets renderer preference opengles2/software. These settings are not proof of all-CFW compatibility.
+This integration adds H700-specific work; it is not a newly authored game engine.
 
-## KB-MC-004 — Presentation and controls
+**Use the lesson:** identify inherited code before describing your contribution. [Exact source pin](../SOURCE_BASELINE.json).
 
-**Status:** Source plus session record.
+<a id="kb-mc-002"></a>
+## KB-MC-002 — Does a host build prove the handheld works?
 
-MENU+R2 accesses settings; MENU+L2 exits. The seamless-profile patch suppresses the L Settings hint and its legacy L action, not the settings implementation. Console-Parity and 3× scale are selected by the launcher. Sources: [patch map](PATCH_SERIES.md), [session excerpts](evidence/2026-09-07/log_excerpts.json) and the pinned launcher linked above.
+**Type: method.** No. Compiling on a development computer does not test the handheld's timing, audio or shutdown behaviour.
 
-## KB-MC-005 — Simulation and panel clocks
+The [manual-session record](evidence/2026-09-07/final_acceptance.json) provides separate device observations.
 
-**Status:** Recalculated observation.
+**Use the lesson:** track build success and target-device acceptance separately.
 
-P11.3/P11.4 capture p95 tick lateness was 5.790787/0.027887 ms. Their maxima were 70.186618/64.134375 ms; exactly-one-present ticks were 84.534%/99.014%. Panel 119.455 Hz is not 120 FPS logic. Source: [timing reanalysis](evidence/2026-09-07/reanalysis.json); definitions are in the [P11 instrumentation patches](PATCH_SERIES.md).
+<a id="kb-mc-003"></a>
+## KB-MC-003 — What does the launcher set up?
 
-## KB-MC-006 — Single-present scheduling
+**Type: source change.** The launcher loads PortMaster control helpers and selects an SDL2-backed shim where applicable. Its renderer preferences include opengles2/software.
 
-**Status:** Source plus observation.
+These are platform-integration choices, not proof of compatibility with every firmware.
 
-[P11.4](../patches/P11_4_RG34XX_SINGLE_PRESENT_119HZ_AB_R1.patch) changes renderPeriodNs to tickPeriodNs in the selected path. The [data](evidence/2026-09-07/reanalysis.json) still contain zero- and two-present ticks. Describe a scheduling policy, not an invariant absent from the data.
+**Use the lesson:** inspect the runtime around the executable. [Pinned launcher](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/launcher/The%20Minish%20Cap.sh).
 
-## KB-MC-007 — Audio has mixed evidence
+<a id="kb-mc-004"></a>
+## KB-MC-004 — Can menus remain accessible without overlay hints?
 
-**Status:** Archived machine result and later operator report.
+**Type: source and record.** Yes. The integration hides the legacy `L Settings` hint and its old L-button action. Settings remain accessible through `MENU+R2`; `MENU+L2` exits.
 
-The [P11.5 machine verdict](evidence/2026-09-07/audio_summary.json) is AUDIO1600_MACHINE_AUDIO_REGRESSION; maximum callback gap rose from 62.2 to 168.8 ms. The later [final-session record](evidence/2026-09-07/final_acceptance.json) reports audio OK. Neither observation replaces the other.
+The launcher selects Console-Parity and 3× scale.
 
-## KB-MC-008 — Benchmark context
+**Use the lesson:** distinguish a visible prompt from the function it opens. [Patch map](PATCH_SERIES.md) · [Session excerpts](evidence/2026-09-07/log_excerpts.json).
 
-**Status:** Methodological limit.
+<a id="kb-mc-005"></a>
+## KB-MC-005 — Why separate game speed from screen refresh?
 
-The [historical AutoLab account](https://github.com/raposomiguel50/minish-cap-rg34xx/tree/5c306562615b1595ed49c7388dc768c8348b1296/docs/evidence/2026-09-07) distinguishes direct-SSH and normal Ports launch contexts. The two timing captures audited here were not established as randomised, matched-scene replications. State the actual context before inferring causation; see the [timing-analysis method](EVIDENCE_AUDIT.md#timing-analysis).
+**Type: reanalysis.** The screen can refresh at about 119.455 Hz while game logic stays near 59.7275 Hz. They are different clocks.
 
-## KB-MC-009 — Automation and human QA
+P11.3/P11.4 recorded p95 tick lateness of **5.790787/0.027887 ms**. Their maxima were **70.186618/64.134375 ms**.
 
-**Status:** Recorded acceptance.
+**Use the lesson:** explain the measured clock before calling a result “faster”. These are two captures, not a 120 FPS gameplay result. [Timing data](evidence/2026-09-07/reanalysis.json).
 
-The [final acceptance](evidence/2026-09-07/final_acceptance.json) reports two automated soaks and one manual gameplay session, with visual/audio OK. These are different tests and are not three independent full playthroughs.
+<a id="kb-mc-006"></a>
+## KB-MC-006 — Does a one-present policy mean one present every tick?
 
-## KB-MC-010 — Clock reduction and energy
+**Type: source and record.** [P11.4](../patches/P11_4_RG34XX_SINGLE_PRESENT_119HZ_AB_R1.patch) sets `renderPeriodNs` to `tickPeriodNs` in the selected path.
 
-**Status:** Source plus archived result.
+The capture still has zero- and two-present ticks. Exactly-one-present ticks increased from **84.534% to 99.014%**.
 
-The 1,416-to-936 MHz comparison is a 33.9% CPU-ceiling change. GPU ceiling 420 MHz was retained. [Stage A energy fields](evidence/2026-09-07/stage_a_winner.json) are null/ineligible; do not claim 33.9% energy savings. See the [runtime record](evidence/2026-09-07/runtime_winner.json) and [baseline distinction](VALIDATION.md#efficiency-objective-versus-measurement).
+**Use the lesson:** distinguish the scheduling rule from actual execution. [Full comparison](VALIDATION.md).
 
-## KB-MC-011 — Adverse observations remain visible
+<a id="kb-mc-007"></a>
+## KB-MC-007 — Can a later listening test cancel an earlier regression?
 
-**Status:** Archived result.
+**Type: two recorded observations.** The P11.5 machine verdict was `AUDIO1600_MACHINE_AUDIO_REGRESSION`. The largest callback gap increased from **62.2 to 168.8 ms**.
 
-The [P13.1 winner record](evidence/2026-09-07/runtime_winner.json) includes maximum-temperature delta +5.3 °C and median RSS ratio 1.003497 in that comparison. They do not support a general claim of lower temperatures or memory use.
+The later manual session reports audio `OK`. The observations answer different questions and both remain relevant.
 
-## KB-MC-012 — Rejected renderer work
+**Use the lesson:** retain instrumentation and listening results together. [Machine result](evidence/2026-09-07/audio_summary.json) · [Later acceptance](evidence/2026-09-07/final_acceptance.json).
 
-**Status:** Recorded selection.
+<a id="kb-mc-008"></a>
+## KB-MC-008 — Why does the launch context matter?
 
-The [retained winner](evidence/2026-09-07/runtime_winner.json) says backend SDL_RENDERER and fullscreen_clear_skip=false. Historical GPU-renderer experiments are not evidence that a new GPU backend shipped.
+**Type: archived method and limitation.** AutoLab notes distinguish direct-SSH tests from a normal muOS Ports launch. Background conditions can differ.
 
-## KB-MC-013 — Exit is an integration boundary
+The later procedure must not be assigned retrospectively to the earlier P11 timing pair. Matched scenes and randomised order were not established for that pair.
 
-**Status:** Patch plus diagnostic observation.
+**Use the lesson:** record the actual test context. [Dated workflow notes](https://github.com/raposomiguel50/minish-cap-rg34xx/tree/5c306562615b1595ed49c7388dc768c8348b1296/docs/evidence/2026-09-07).
 
-D2 records signal 11 after shutdown markers. D3 reaches the profile-specific _Exit path; the later session reports exit code 0. This is a targeted workaround, not identification of the faulty destructor or an original-ROM bug fix. Sources: [D2/D3 and final-session excerpts](evidence/2026-09-07/log_excerpts.json) and [exit patches](PATCH_SERIES.md).
+<a id="kb-mc-009"></a>
+## KB-MC-009 — What did automation test?
 
-## KB-MC-014 — Executable identity
+**Type: recorded acceptance.** The records describe two automated soak runs and one manual gameplay session. Visual and audio acceptance are `OK` in that manual session.
 
-**Status:** Recorded metadata.
+Those are not three independent full playthroughs.
 
-The [acceptance](evidence/2026-09-07/final_acceptance.json) identifies SHA-256 787ba3cb8c297ea44a0605745347fe5a6e792094f0be755b51a8200c1eadc710. A hash is not proof of a successful reconstruction. See also [SOURCE_BASELINE.json](../SOURCE_BASELINE.json).
+**Use the lesson:** name each test and what it can establish. [Acceptance record](evidence/2026-09-07/final_acceptance.json).
 
-## KB-MC-015 — Reconstruction claims
+<a id="kb-mc-010"></a>
+## KB-MC-010 — Is 33.9% less CPU frequency 33.9% less energy?
 
-**Status:** Publication limit.
+**Type: settings and records.** No. The comparison reduces the CPU ceiling from **1,416 to 936 MHz**. It does not measure the same percentage in energy.
 
-A historical patch set, a runnable new build and a bit-for-bit rebuilt V1 are different deliverables. This editorial audit supplies neither a new executable nor a new build validation. The [patch map](PATCH_SERIES.md), [source baseline](../SOURCE_BASELINE.json) and [reconstruction status](REPRODUCTION.md) identify what is available.
+GPU ceiling **420 MHz** was retained. Stage A energy fields are null/ineligible.
 
-## KB-MC-016 — Release eligibility
+**Use the lesson:** report the variable actually measured. [Energy fields](evidence/2026-09-07/stage_a_winner.json) · [Baseline details](VALIDATION.md#efficiency-objective-versus-measurement).
 
-**Status:** Recorded project boundary.
+<a id="kb-mc-011"></a>
+## KB-MC-011 — Why keep worse results?
 
-Private acceptance is separate from permission to redistribute dependencies. The recorded VirtuaAPU boundary remains unchanged; see [LEGAL_STATUS.md](LEGAL_STATUS.md). This audit does not resolve a licence.
+**Type: recorded result.** One P13.1 comparison has maximum temperature **5.3 °C higher** and median RSS ratio **1.003497**.
 
-## KB-MC-017 — Documentation and binary scope
+RSS is resident process memory. These values do not support a general reduction in heat or memory use.
 
-**Status:** Publication rule.
+**Use the lesson:** show trade-offs beside favourable measurements. [Winner record](evidence/2026-09-07/runtime_winner.json).
 
-A binary restriction need not prevent publishing cleared patches, measurement definitions and selected evidence. It does not justify disclosing the complete private archive. See [public materials and reconstruction limits](REPRODUCTION.md).
+<a id="kb-mc-012"></a>
+## KB-MC-012 — Did the experimental GPU renderer ship?
 
-## KB-MC-018 — Local QA versus live deployment
+**Type: recorded selection.** The selected backend is `SDL_RENDERER`; `fullscreen_clear_skip=false`.
 
-**Status:** Website-maintenance lesson; not game-test evidence.
+The existence of renderer experiments does not make them features of the selected build.
 
-Candidate QA, repository publication, deployment and live verification are separate states. This operational lesson from lab-site maintenance is not a Minish Cap performance result.
+**Use the lesson:** distinguish investigated, rejected and selected approaches. [Selection record](evidence/2026-09-07/runtime_winner.json).
 
-## KB-MC-019 — Proportionate tooling
+<a id="kb-mc-013"></a>
+## KB-MC-013 — What was changed to avoid the exit crash?
 
-**Status:** Workflow policy; not a measured result.
+**Type: patch and diagnostics.** D2 records signal 11 after subsystem shutdown. The target-specific route uses `_Exit(0)` after that shutdown; a later session exits with code 0.
 
-Use direct, auditable operations for small changes and automation for real repetition. Parse and test a tool before asking the operator to run it.
+This is a port workaround. The exact failing finalizer was not isolated.
 
-## KB-MC-020 — Reuse existing artifacts
+**Use the lesson:** state which failure path was addressed. [Detailed exit case](EVIDENCE_AUDIT.md#2-exit-handling-a-port-defect-not-an-original-game-bug).
 
-**Status:** Workflow policy; not game-test evidence.
+<a id="kb-mc-014"></a>
+## KB-MC-014 — What does the executable hash prove?
 
-Inventory and verify known local artifacts before asking for another download, copy or test. Music-source recovery is separate from game-port evidence.
+**Type: metadata.** The acceptance record gives a SHA-256 fingerprint for private V1.
 
-## KB-MC-021 — Native execution
+That identifies file contents. It does not prove a successful rebuild or correct gameplay.
 
-**Status:** Technical scope and policy.
+**Use the lesson:** pair file identity with a build and test record. [Private V1 identity](REPRODUCTION.md#what-identifies-private-v1).
 
-Native game logic still uses Linux, SDL and software models of original presentation/audio behaviour. No native-versus-emulator speed or energy comparison is established here. The policy is to use available control for faithful execution. See [implementation scope and limits](EVIDENCE_AUDIT.md#interpretation-and-limits).
+<a id="kb-mc-015"></a>
+## KB-MC-015 — Is a patch archive a rebuild recipe?
 
-## KB-MC-022 — Original bugs and restoration
+**Type: publication limit.** No. Historical patches can overlap or supersede one another. Some exist only to measure behaviour.
 
-**Status:** Approved policy, not an implemented bug-fix list.
+A new working build and a byte-identical rebuild are separate outcomes. Neither was produced by the documentation review.
 
-A demonstrated original technical bug may be corrected when compatible with the creative work. This is an eligibility rule. The reviewed material does not establish an original-GBA gameplay-bug correction.
+**Use the lesson:** check the required inputs first. [Reconstruction guide](REPRODUCTION.md).
 
-## KB-MC-023 — Curatorial defaults
+<a id="kb-mc-016"></a>
+## KB-MC-016 — Does private acceptance permit redistribution?
 
-**Status:** Approved policy with specific source examples.
+**Type: distribution boundary.** No. A working private executable and permission to distribute its dependencies are different requirements.
 
-Select a coherent reference rather than requiring many manual adjustments. [Shortcut access and hint suppression](PATCH_SERIES.md) are evidenced; this does not prove every upstream option was individually audited.
+The recorded VirtuaAPU restriction remains unresolved.
 
-## KB-MC-024 — Efficiency after fidelity
+**Use the lesson:** check dependency rights before packaging. [Recorded legal status](LEGAL_STATUS.md).
 
-**Status:** Approved priority plus recorded settings.
+<a id="kb-mc-017"></a>
+## KB-MC-017 — Can knowledge be shared without the executable?
 
-CPU 936 MHz/GPU 420 MHz are recorded ceilings. Reducing power or thermal demand was the objective; actual savings are not established by those settings. Sources: [accepted configuration](evidence/2026-09-07/final_acceptance.json) and [energy-measurement status](evidence/2026-09-07/stage_a_winner.json).
+**Type: publication policy.** Yes. Cleared patches, measurement definitions and selected evidence can explain the work without distributing the private binary.
 
-## KB-MC-025 — Historical reference
+The complete private archive is not automatically safe to publish.
 
-**Status:** Approved policy.
+**Use the lesson:** review documentation and binary distribution separately. [Available material](REPRODUCTION.md#what-is-available).
 
-Retain uncorrected historical behaviour when useful for comparison or investigation, without a requirement to expose a normal user mode. This is not a claim that such a mode was implemented.
+<a id="kb-mc-018"></a>
+## KB-MC-018 — Does local website QA mean the live site is fixed?
 
-## Entry template
+**Type: website-maintenance lesson, not a game test.** No. Candidate testing, repository publication, deployment and live verification are separate steps.
 
-State the category, exact symptom or decision, source revision/path, implementation if any, test configuration, observed result and limitation. No generic “improved”, “fixed” or “validated” statement without the supporting case.
+**Use the lesson:** verify the published artifact before closing a live issue.
+
+<a id="kb-mc-019"></a>
+## KB-MC-019 — When is automation useful?
+
+**Type: workflow policy.** Use it for repeatable work or a clear reduction in risk. A small operation may be safer as a direct, auditable step.
+
+**Use the lesson:** test the tool before asking someone to run it. Do not make the tool more complex than the task.
+
+<a id="kb-mc-020"></a>
+## KB-MC-020 — Should a missing result trigger another download or test?
+
+**Type: workflow policy.** First inspect known local files and earlier results. The required artifact may already exist.
+
+**Use the lesson:** verify and reuse existing evidence before repeating work. The site's music recovery is not game-performance evidence.
+
+<a id="kb-mc-021"></a>
+## KB-MC-021 — What is native execution for?
+
+**Type: scope and policy.** It gives the port control over its build and integration. Linux, SDL and software models of GBA graphics/audio behaviour remain.
+
+There is no measured native-versus-emulator speed or energy comparison in this review.
+
+**Use the lesson:** use native execution to serve fidelity, not as an automatic performance claim. [Implementation limits](EVIDENCE_AUDIT.md#interpretation-and-limits).
+
+<a id="kb-mc-022"></a>
+## KB-MC-022 — Can restoration include original bug fixes?
+
+**Type: approved policy.** A demonstrated technical bug is eligible for correction when compatible with the creative work.
+
+This is a decision rule. The reviewed records do not establish an original-GBA gameplay-bug correction by this integration.
+
+**Use the lesson:** document the reproduction case, patch and test before reporting a completed fix. [Preservation principles](PHILOSOPHY.md).
+
+<a id="kb-mc-023"></a>
+## KB-MC-023 — Why choose defaults instead of exposing every adjustment?
+
+**Type: policy with source examples.** A reference configuration gives the player an intentional starting point.
+
+Shortcut access and hint suppression are documented examples. They do not prove every upstream setting was audited.
+
+**Use the lesson:** keep useful options accessible without requiring them to assemble the intended experience. [Current control changes](#kb-mc-004).
+
+<a id="kb-mc-024"></a>
+## KB-MC-024 — Why leave hardware capacity unused?
+
+**Type: priority and recorded settings.** Fidelity and stability come first. Spare capacity can remain a reserve rather than become extra effects.
+
+The accepted record uses CPU/GPU ceilings of **936/420 MHz**. Lower power and heat were goals; those settings alone do not establish savings.
+
+**Use the lesson:** pursue efficiency without weakening the tested experience. [Acceptance](evidence/2026-09-07/final_acceptance.json) · [Energy limits](#kb-mc-010).
+
+<a id="kb-mc-025"></a>
+## KB-MC-025 — Must every historical defect become a user option?
+
+**Type: approved policy.** No. Historical behaviour may be kept for comparison or research without becoming a normal play mode.
+
+This does not claim that such a mode has been implemented.
+
+**Use the lesson:** preserve useful evidence without overwhelming the player with settings.
+
+## Improve an article
+
+Report the entry ID, unclear passage and missing information through [GitHub issues](https://github.com/raposomiguel50/minish-cap-rg34xx/issues).
+
+[How articles are maintained](DEVELOPMENT_METHOD.md) · [Inspect the detailed report](EVIDENCE_AUDIT.md)
 
 ## External reference
 

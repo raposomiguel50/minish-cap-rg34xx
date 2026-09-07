@@ -1,50 +1,82 @@
-# Technical restoration, preservation and curation
+# Why this approach?
 
-**Status: approved project policy.** This document explains decision criteria. It is not a catalogue of bugs already fixed or a substitute for the [implementation and evidence audit](EVIDENCE_AUDIT.md).
+**Purpose:** explain the decisions behind the port. These are project principles, not a list of completed fixes.
 
-## The creative work is the reference
+## Keep the creative work intact
 
-My aim is to preserve the released game's content, art, music, mechanics, structure, progression, deliberate cadence and control identity. Additional hardware capability is useful when it supports reliable execution of that work; it is not a reason to add creative material.
+My aim is to preserve the released game's content, artwork, music, mechanics, progression and control identity.
 
-The premise of giving the original developers more optimisation time and technical margin is a conservative guide to this aim. It does not reconstruct an unmade game or attribute undocumented intentions to its authors. The released work is the main reference.
+More hardware capacity is useful when it helps the same work run reliably. It is not a reason to add content or reinterpret the game.
 
-## Why the RG34XX
+I use a conservative premise: what technical obstacles might more optimisation time and hardware margin remove from this same work?
 
-I grew up with PC games, and my father gave me my first console, a Game Boy Advance. The RG34XX's physical resemblance to that console motivated the choice. Its 720 × 480 screen also fits a 3× scale of the game's 240 × 160 image (ANBERNIC, n.d.). ANBERNIC calls the device RG34XX; the [historical project records](evidence/2026-09-07/final_acceptance.json) use RG34XX-H.
+The finished game remains the reference. The premise does not establish undocumented intentions or justify an imagined expanded edition.
 
-## Restoration, not overpainting
+## Choose a fitting device
 
-I use painting restoration as an analogy: retain the image rather than add new detail, and distinguish the work from a degraded layer obscuring it. Familiarity with yellowed varnish does not, in this analogy, make it part of the intended image.
+I grew up with PC games. My father gave me my first console, a Game Boy Advance. The RG34XX's resemblance to it is the main reason for this choice.
 
-For this project, the equivalent decision is to distinguish creative choices from demonstrated implementation defects. The analogy is a curatorial principle, **not empirical proof** that a particular game behaviour is defective.
+The screen reinforces that fit. Its 720 × 480 resolution accommodates the game's 240 × 160 image at an exact 3× scale (ANBERNIC, n.d.).
 
-Known technical bugs are eligible for correction when feasible and compatible with the work. A bug's popularity or use as an exploit does not by itself make it intentional. Conversely, when code, observed behaviour and contextual evidence do not resolve defect versus design, preserve the behaviour by default. Characteristics arising from hardware limits but incorporated into the art, composition or sound remain part of the work.
+Historical logs use the name RG34XX-H. The product name used here is RG34XX.
 
-Each adopted correction should identify the symptom, reproduction conditions, original/port origin, patch or commit, tested build and observed result. This audit has not established an original-GBA gameplay-bug correction; the [concrete exit fix documented so far](EVIDENCE_AUDIT.md#2-exit-handling-a-port-defect-not-an-original-game-bug) concerns the host port.
+## Restore rather than repaint
 
-## One curated reference
+Painting restoration offers a useful analogy. Preserve the image; do not add new details. A familiar layer of yellowed varnish is not necessarily part of the work beneath it.
 
-The reference should be usable without requiring the player to assemble it through many technical choices. The [launcher](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/launcher/The%20Minish%20Cap.sh) selects `--window_scale=3 --console-parity`; the [integration patches](PATCH_SERIES.md) hide the legacy settings hint while retaining access through MENU+R2. MENU+L2 exits. These are documented choices, not a claim that every upstream option has been audited or removed.
+For this port, the distinction is between creative choices and demonstrated technical defects. The analogy guides decisions; it does not prove that a particular behaviour is defective.
 
-The approved default policy is integer-scaled original imagery, without smoothing, shaders or instructional overlays that change the game image. GBA controls stay assigned to the game; device-specific shortcuts provide port functions. Useful inherited options can remain accessible, but changing them need not represent the validated reference. Options without a clear purpose may be hidden or removed only through a separately documented change.
+Known technical bugs are eligible for correction. Their popularity or use as exploits does not make them intentional. Each correction still needs a reproducible case and a documented test.
 
-New content, new mechanics and new non-preservation presentation features are outside this port's scope. Such work would need a separate project or branch; this is a boundary, **not an announcement or commitment to develop one**.
+When the evidence cannot distinguish a defect from a design choice, preserve the behaviour. Keep limitations that have become part of the artwork, composition or characteristic sound.
 
-## Native execution is a means
+The [documented exit intervention](EVIDENCE_AUDIT.md#2-exit-handling-a-port-defect-not-an-original-game-bug) concerns the port. No original-GBA gameplay-bug correction is established by this review.
 
-The practical purpose is control over the host build, timing, input, presentation, audio and lifecycle. Native game logic does not eliminate Linux, SDL or all software models of original hardware behaviour. Actual gains must be measured; no automatic speed or power advantage is inferred from the word “native”. See the [audited implementation and measurement limits](EVIDENCE_AUDIT.md).
+## Provide a curated starting point
 
-## Fidelity before efficiency
+The player should not need dozens of adjustments to reach the intended experience.
 
-The order is fidelity, stability, justified removal of technical obstacles, then efficiency. Spare CPU/GPU capacity is a reserve rather than an obligation to add effects. Reduced clocks are acceptable only while the tested fidelity, timing and audio criteria remain satisfied.
+The reference policy is simple: original imagery at integer scale, original controls, and no smoothing, shaders or instructional messages over gameplay.
 
-The [archived accepted configuration](evidence/2026-09-07/final_acceptance.json) specifies CPU ceiling 936 MHz, GPU ceiling 420 MHz, audio 1,600 frames and three render threads. Lower power and temperature are objectives, not results established by the frequency values. The audit retains an [adverse temperature comparison](evidence/2026-09-07/runtime_winner.json) and [missing energy measurements](evidence/2026-09-07/stage_a_winner.json).
+The current source provides concrete examples. It hides the legacy `L Settings` hint, retains settings through `MENU+R2`, and assigns exit to `MENU+L2`.
 
-## Focus, containment and shared knowledge
+The GBA control set remains reserved for the game. Additional port functions use the device-specific shortcuts.
 
-Prefer a small intervention with a clear purpose, test and evidence trail. Detailed documentation is compatible with minimal code changes. Record negative results and distinguish a proposed test from an executed one.
+Useful inherited Project Picori options can remain accessible. Changing them may move the setup outside the validated reference.
 
-Historical uncorrected behaviour can remain useful for comparison, diagnostics or research without becoming a mandatory user-facing mode. The curated port and the historical reference answer different questions. Neither should be used to invent an improvement that has not been demonstrated.
+Unnecessary options may be hidden or removed through a documented change. New creative or non-preservation features belong in a separate project or branch, not this port.
+
+This boundary is not a promise to develop that separate work.
+
+## Use native execution as a tool
+
+Native game logic gives the project control over the host build, timing, input, audio and shutdown handling.
+
+It still uses Linux, SDL and software models of original hardware behaviour. The word “native” does not establish a speed or energy advantage by itself.
+
+[What the source and measurements show](EVIDENCE_AUDIT.md).
+
+## Prefer efficiency after fidelity
+
+The order is **fidelity → stability → justified technical correction → efficiency**.
+
+Spare capacity is a reserve. It does not have to become extra effects or features.
+
+The accepted record uses CPU/GPU ceilings of 936/420 MHz, an audio request of 1,600 frames and three rendering threads.
+
+Lower power and heat are goals, not measured benefits inferred from those settings. The [results](VALIDATION.md) retain missing energy measurements and an adverse temperature comparison.
+
+Underclocking is acceptable only while the tested timing, sound and fidelity criteria remain satisfied. Stability and fidelity take priority when they conflict with efficiency.
+
+## Keep each intervention focused
+
+Use the smallest change that addresses the demonstrated problem. Record what changed, why it changed and what the test showed.
+
+Historical uncorrected behaviour can remain useful for comparison. It does not need to become a normal user-facing mode.
+
+Detailed documentation supports small changes. Its purpose is to help others understand, check and reuse the work.
+
+**Next:** [See the practical lessons](KNOWLEDGE_BASE.md).
 
 ## External reference
 

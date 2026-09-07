@@ -1,56 +1,75 @@
 # The Minish Cap — RG34XX
 
-An unofficial H700/Linux integration of EstebanPdN's Project Picori-derived Minish Cap port. The pinned source is `zelda-tmc-3ds` at `e72663ca4059dabf9dbf7f03c36fc791d90b8db5`; its README credits the Android port, Project Picori and the zeldaret decompilation (EstebanPdN, 2026). The integration pin is recorded in [SOURCE_BASELINE.json](SOURCE_BASELINE.json).
+An unofficial native port of *The Minish Cap* for the **ANBERNIC RG34XX** handheld, running **muOS**.
 
-## What this repository documents
+A port adapts a game's software to another device. This project builds on EstebanPdN's Project Picori-derived work, rather than creating a new game engine.
 
-The public material contains [15 integration patches](docs/PATCH_SERIES.md) and a [launcher](launcher/The%20Minish%20Cap.sh). The patches address AArch64 build/link configuration, handheld controls and menu hints, quit propagation, a post-shutdown exit workaround, audio configuration and timing instrumentation/policy. They are historical stages, **not** one validated linear patch series.
+**Available here:** integration patches, a launcher, test records and development guides. **There is no public game download.** See [distribution status](docs/PORTMASTER_STATUS.md).
 
-The recorded target is the RG34XX with muOS. Historical project records use the label **RG34XX-H**; ANBERNIC markets the GBA-style device as **RG34XX**. Its 720 × 480 display accommodates the game's 240 × 160 image at integer scale 3× (ANBERNIC, n.d.). See the [recorded target configuration](docs/evidence/2026-09-07/final_acceptance.json).
+## Start with your question
 
-## Why this project
+| I want to… | Read |
+| --- | --- |
+| Understand the choices | [Why this approach](docs/PHILOSOPHY.md) |
+| Learn from the work | [Practical lessons](docs/KNOWLEDGE_BASE.md) |
+| Check the results | [Tests and results](docs/VALIDATION.md) |
+| Study or rebuild the port | [Reconstruction guide](docs/REPRODUCTION.md) |
+
+New to the terminology? Use the [short glossary](docs/GLOSSARY.md).
+
+## Why this handheld?
 
 I grew up with PC games. My father gave me my first console, a Game Boy Advance. I chose the RG34XX for its close physical resemblance to that handheld.
 
-**Project principles:** preserve the existing creative work, make justified technical interventions and provide a curated reference configuration. The premise of additional optimisation time and hardware margin concerns execution of the same work, not new content or an imagined expanded edition. These are decision criteria; they are not claims that every possible defect has been corrected. See [Philosophy](docs/PHILOSOPHY.md).
+Its 720 × 480 screen also fits the game's 240 × 160 image at exactly 3× scale. Each original pixel becomes a 3 × 3 block, without stretching the image (ANBERNIC, n.d.).
 
-## Implemented changes and recorded results
+Archived project records call the device **RG34XX-H**. This documentation uses the product name **RG34XX**.
 
-| Area | Specific evidence | Limit |
-| --- | --- | --- |
-| Build | Source inclusion/link changes; `fmt` header order; ARMv8-A/SIMD and Cortex-A53 tuning flags | Build changes are not gameplay-bug fixes |
-| Exit | Quit requests propagate through loops; `_Exit(0)` follows explicit shutdown in the target profile; a later session logs exit code 0 | Exact failing finalizer not identified |
-| Controls/UI | MENU+R2 settings; MENU+L2 exit; suppression of the legacy `L Settings` hint | Settings remain accessible |
-| Timing | Historical p95 tick lateness: 5.790787 → 0.027887 ms, from 10,203 and 10,449 ticks | One capture per variant; maxima and unmatched conditions matter |
-| Runtime | Accepted record: CPU ceiling 936 MHz, GPU ceiling 420 MHz, audio 1,600 frames, three render threads | Not measured energy savings |
+## What changed?
 
-Supporting material: [patch inventory](docs/PATCH_SERIES.md), [diagnostic log excerpts](docs/evidence/2026-09-07/log_excerpts.json), [timing reanalysis](docs/evidence/2026-09-07/reanalysis.json) and [final acceptance record](docs/evidence/2026-09-07/final_acceptance.json). The full [evidence audit](docs/EVIDENCE_AUDIT.md) includes measurement definitions, adverse results and traceability.
+**Build support.** P04 adjusts source inclusion, library linking and header order. P06 adds ARMv8-A and Cortex-A53 compiler targeting.
 
-The audio record is mixed: the earlier 1,600-frame [machine test](docs/evidence/2026-09-07/audio_summary.json) was labelled `AUDIO1600_MACHINE_AUDIO_REGRESSION`; the later [operator acceptance](docs/evidence/2026-09-07/final_acceptance.json) records audio `OK`. No correction of an **original GBA gameplay bug/glitch** is established by the reviewed material. A policy permitting such corrections must not be read as a completed result.
+**Menus and exit.** The integration hides the legacy `L Settings` hint. Settings remain available through `MENU+R2`; `MENU+L2` exits. A later recorded session ended with exit code 0.
 
-## Native execution and efficiency
+**Presentation timing.** P11.4 changes when the port presents frames. Two archived captures show lower p95 tick lateness, but some delays remain.
 
-The game logic is built for the host platform. The port still uses Linux, SDL integration and software models of GBA presentation/audio behaviour; it is not bare-metal execution or removal of every emulated subsystem. No native-versus-emulator benchmark is claimed. Lower clock limits were selected to reduce unnecessary resource demand, but the archived records do not establish measured battery-life or thermal savings. See [native-execution scope and efficiency limits](docs/EVIDENCE_AUDIT.md).
+**Runtime settings.** The accepted record uses CPU/GPU ceilings of 936/420 MHz and three rendering threads. These settings do not establish battery savings.
 
-## Reading order
+The [patch map](docs/PATCH_SERIES.md) shows the code changes. The [results](docs/VALIDATION.md) explain the tests and their limits.
 
-[Evidence audit](docs/EVIDENCE_AUDIT.md) · [Validation](docs/VALIDATION.md) · [Patch map](docs/PATCH_SERIES.md) · [Knowledge base](docs/KNOWLEDGE_BASE.md) · [Reconstruction](docs/REPRODUCTION.md) · [Philosophy](docs/PHILOSOPHY.md) · [Development method](docs/DEVELOPMENT_METHOD.md)
+## What stays the same?
 
-## Private V1 and public boundaries
+The aim is to preserve the game's creative work: its content, artwork, music, mechanics and control identity.
 
-The [archived acceptance record](docs/evidence/2026-09-07/final_acceptance.json) identifies private V1 by SHA-256:
+Technical restoration and curation guide the choices. They do not mean adding content or claiming fixes that have not been demonstrated.
 
-`787ba3cb8c297ea44a0605745347fe5a6e792094f0be755b51a8200c1eadc710`
+No correction of an original GBA gameplay bug is established by the reviewed records. The documented exit intervention concerns the port.
 
-That hash is an identity reference, not proof of a bit-for-bit reproducible build. The public tree does not contain the game ROM, extracted Nintendo assets, saves or the V1 executable. It is a source-side integration and evidence publication, not a downloadable game release. See [source baseline](SOURCE_BASELINE.json) and [reconstruction limits](docs/REPRODUCTION.md).
+[Read the preservation principles](docs/PHILOSOPHY.md).
 
-The recorded VirtuaAPU licensing boundary remains unresolved for binary distribution. See [Third-party notices](THIRD_PARTY_NOTICES.md), [Legal status](docs/LEGAL_STATUS.md), [Provenance](docs/PROVENANCE.md) and [PortMaster status](docs/PORTMASTER_STATUS.md). This editorial audit does not change licences or publish a binary.
+## What does “native” mean here?
 
-## Authorship and assistance
+The game logic is built as ARM64 code for the target device. Linux, SDL and software models of GBA graphics/audio behaviour still provide supporting layers.
 
-I define the scope, preservation criteria and acceptance decisions. ChatGPT assists with code, analysis and documentation; its output is not evidence of successful execution. The audit distinguishes archived device observations from the analysis performed on those records.
+This gives the project control over its own build and integration. No controlled native-versus-emulator performance comparison is claimed.
 
-Original integration work is published under the repository's GPL-3.0-or-later terms; upstream components retain their own notices. See [LICENSE](LICENSE), [COPYING.txt](COPYING.txt) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+## What can I download?
+
+The repository contains **15 historical patches**, a launcher and documentation. The patches are not one ready-to-apply build sequence.
+
+The private V1 executable, ROM, extracted Nintendo assets and saves are not included. The recorded VirtuaAPU distribution restriction remains unresolved.
+
+[What a rebuild still needs](docs/REPRODUCTION.md) · [Third-party notices](THIRD_PARTY_NOTICES.md)
+
+## Foundation and credits
+
+The pinned foundation is EstebanPdN's `zelda-tmc-3ds` fork. Its README credits the Android port, Project Picori and zeldaret (EstebanPdN, 2026).
+
+Exact revisions and file identities are in [SOURCE_BASELINE.json](SOURCE_BASELINE.json).
+
+I set the project goals and acceptance criteria. ChatGPT assists with code, analysis and documentation. [How the work is reviewed](docs/DEVELOPMENT_METHOD.md).
+
+Original integration work uses the repository's [GPL-3.0-or-later terms](LICENSE). Upstream and third-party notices remain applicable.
 
 ## External references
 

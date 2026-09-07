@@ -1,28 +1,62 @@
-# Reconstruction and reproducibility status
+# Can I rebuild the port?
 
-## What is available
+**Not from a complete, validated recipe yet.** This repository provides useful starting material, but it does not reproduce the private V1 by itself.
 
-The repository provides the [upstream pin](../SOURCE_BASELINE.json), [15 historical patches](PATCH_SERIES.md), a [launcher](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/launcher/The%20Minish%20Cap.sh) and [selected archived evidence](evidence/2026-09-07/README.md). The pinned foundation is EstebanPdN's `zelda-tmc-3ds` at `e72663ca4059dabf9dbf7f03c36fc791d90b8db5`, derived from work credited in that upstream README (EstebanPdN, 2026).
+Use this page to see what exists and what a new build still needs.
 
-The private executable is identified in the [archived acceptance](evidence/2026-09-07/final_acceptance.json) as SHA-256 `787ba3cb8c297ea44a0605745347fe5a6e792094f0be755b51a8200c1eadc710`, with size 8,858,736 bytes in the [winner record](evidence/2026-09-07/runtime_winner.json). Neither its bytes nor proprietary game assets are part of this evidence publication.
+## What is available?
 
-## Three separate claims
+The public material includes the [upstream revision](../SOURCE_BASELINE.json), [15 historical patches](PATCH_SERIES.md), a [launcher](../launcher/The%20Minish%20Cap.sh) and [selected test records](evidence/2026-09-07/README.md).
 
-**Traceability:** a named patch, launcher setting or archived observation can be inspected. The new evidence extract includes original member hashes, machine summaries and selected diagnostic lines.
+The source foundation is EstebanPdN's Project Picori-derived fork. Its pinned revision is `e72663ca4059dabf9dbf7f03c36fc791d90b8db5` (EstebanPdN, 2026).
 
-**Functional reconstruction:** a new build from a specified complete source/dependency environment passes target validation. This audit did not perform that build.
+The private executable, ROM, extracted game assets and saves are not included.
 
-**Bit-for-bit reproduction:** the documented environment regenerates the private executable's exact bytes. This is not established by a binary hash, four retained source snapshots or the patch directory. See [source baseline](../SOURCE_BASELINE.json), [patch map](PATCH_SERIES.md) and [validation limits](VALIDATION.md).
+## What do the three evidence levels mean?
 
-## Numerical reanalysis
+**Traceable:** you can inspect the patch, setting or recorded observation.
 
-The read-only [reanalyse.py](evidence/2026-09-07/reanalyse.py) recalculates timing and selected monitor statistics from the owner-held archive. It creates a new output directory, does not launch the game and does not execute scripts stored in the archive. The public evidence subset contains selected summaries and the calculation method, not the complete raw traces. Public numerical reproducibility from this repository alone is consequently limited. Original member paths and hashes are recorded in [reanalysis.json](evidence/2026-09-07/reanalysis.json).
+**Rebuilt and working:** a new build passes checks on the target device. This documentation review did not perform that build.
 
-## Before claiming a new runnable release
+**Bit-for-bit reproduced:** the rebuild creates exactly the same bytes as the reference executable. This has not been demonstrated.
 
-A reconstruction needs a complete pinned source/dependency/toolchain list, a resolved redistribution path, reviewed non-overlapping patch order, build logs, output hashes and a fresh target test. The public historical patch map is not a substitute for that process. The privately recorded VirtuaAPU boundary is unchanged; see [LEGAL_STATUS.md](LEGAL_STATUS.md) and [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md).
+A matching file fingerprint identifies bytes. It does not replace a build recipe or a gameplay test.
 
-No reconstruction command is presented here as already validated. Do not overwrite the private V1, original project tree, saves or prior evidence while attempting a new build.
+## What identifies private V1?
+
+The [acceptance record](evidence/2026-09-07/final_acceptance.json) identifies this SHA-256:
+
+`787ba3cb8c297ea44a0605745347fe5a6e792094f0be755b51a8200c1eadc710`
+
+The [selection record](evidence/2026-09-07/runtime_winner.json) gives a size of **8,858,736 bytes**.
+
+These values identify the private file. They are not a downloadable release.
+
+## What would a new build need?
+
+1. A complete list of source, dependency and toolchain versions.
+2. A reviewed patch order, without overlapping historical alternatives.
+3. Build settings, generated inputs and any final processing steps.
+4. Build logs and the new executable's fingerprint.
+5. Fresh device tests of that executable.
+
+Distribution also needs a resolved licensing path. The recorded VirtuaAPU restriction remains open.
+
+**Do not apply every patch in filename order.** Some add diagnostics; others overlap or replace earlier approaches.
+
+Use a new worktree. Leave private V1, saves and earlier evidence untouched.
+
+## Can I reproduce the statistics?
+
+The published [analysis script](evidence/2026-09-07/reanalyse.py) reads archived timing and monitor data. It does not launch the game or execute archived scripts.
+
+The public extract contains the calculation method and selected summaries, not all raw traces. Recalculating every statistic therefore still requires the private archive.
+
+[Source paths and hashes](evidence/2026-09-07/reanalysis.json) identify those inputs. A hash does not provide access to a missing file.
+
+**Next:** [Learn which patches do what](PATCH_SERIES.md).
+
+[Licensing status](LEGAL_STATUS.md) · [Third-party notices](../THIRD_PARTY_NOTICES.md)
 
 ## External reference
 

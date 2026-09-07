@@ -1,43 +1,113 @@
-# Development and reporting method
+# How work becomes reusable knowledge
 
-## Responsibility
+**Purpose:** help readers understand a result, find its evidence and use the lesson without repeating avoidable mistakes.
 
-I define the project purpose, target platform, preservation criteria and acceptance decisions. ChatGPT assists with code, automation, analysis and documentation. An AI-generated statement, script or expected-output template is not evidence that a command ran successfully.
+**Owner:** project maintainer. **Reviewed:** 7 September 2026. These are the reporting rules for this project.
 
-## Source-to-claim reporting
+## Start with the reader's task
 
-Every factual result should identify the source path/revision, relevant configuration, observation and limit. Keep five categories separate: source implementation, recorded observation, reanalysis, approved policy and unsupported claim. Use immutable revisions for code and versioned extracts for data.
+The overview answers what the project is and what is available. The learning guide explains decisions. The technical report preserves methods and evidence.
 
-For this audit, 15 historical patches were inspected, two timing traces were recalculated and selected final-session telemetry was checked. There were **no new hardware runs**. Hash agreement checks artifact identity; it does not establish the historical authenticity or completeness of a test. Supporting material: [reanalysis and source hashes](evidence/2026-09-07/reanalysis.json) and [patch inventory](PATCH_SERIES.md).
+Readers should not need the full audit to understand the project. They should not lose access to the audit when a summary is shortened.
 
-## Editorial rule
+This approach adapts ITIL's focus on value and practical simplicity. Guidance on knowledge management also treats knowledge as something to review and improve, not merely store (PeopleCert, n.d.; Singh, 2026).
 
-Describe project decisions in the project's own voice. Refer to internal evidence by its file, revision, table or log location, not by repeatedly citing the project author or the lab as a bibliographic authority. Retain the evidence and its provenance; remove redundant self-referencing, not substantiation.
+The template and review rules below are local choices. They are not a claim of ITIL certification.
 
-Use APA-style author–date citations and references for external works used in these documents. Keep external attribution separate from links to the project's own supporting material. Do not turn informal conversation into quotations or attributed scholarly claims.
+## Give each topic one main home
 
-Before publication, check that internal author–date self-citations have not been reintroduced, external credits remain intact, numerical results and limitations are preserved, and policy has not become a claim of completed work. Write diplomatically, directly and concisely.
+Keep the complete explanation in one maintained article. Use short summaries and links elsewhere.
 
-## Experiments and statistics
+Use stable article IDs, descriptive headings and ordinary search terms. Explain specialist words at first use or link to the [glossary](GLOSSARY.md).
 
-Define the variable before reporting its value. Tick lateness, a presentation-call duration, panel refresh and perceptual latency are different quantities. Repeated ticks within a session are not independent experiments. Report adverse maxima and negative verdicts alongside improved percentiles. Do not imply randomised or matched-scene testing when the record does not establish it.
+Keep filenames and revision IDs in evidence links. Do not make the reader decode them before learning what the topic means.
 
-The earlier audio-machine verdict and later operator acceptance are both retained. CPU-frequency reduction is not converted into energy or thermal savings. See [Validation](VALIDATION.md) and [Evidence audit](EVIDENCE_AUDIT.md) for the concrete records.
+## Capture the lesson during the work
 
-## Preservation policy is not a completed feature
+Record the question, affected platform, source revision and observed symptom.
 
-[PHILOSOPHY.md](PHILOSOPHY.md) contains approved decision criteria. Any proposed original-game bug correction requires a reproducible symptom, defect/design assessment, source change, build identity and test result before appearing as completed work. No such original-GBA gameplay-bug correction is claimed by this audit.
+Then record the change, tested build, result and remaining uncertainty. Retain failed attempts when they explain why an approach was rejected.
 
-## Controlled intervention
+Reuse an existing article when it already covers the topic. Do not create another account of the same result unless the context genuinely differs.
 
-Work on an isolated copy, retain the prior state and change the smallest justified scope. A technical experiment can be useful even when rejected. The historical GPU-renderer and fullscreen-clear directions were not selected in the [recorded winner](evidence/2026-09-07/runtime_winner.json); their existence must not become a claim of a new renderer shipped in V1.
+## Use a short article structure
 
-## Continuity and publication
+**Question:** what does the reader need to understand or decide?
 
-Persist executed actions, outcomes, failures and evidence independently of the conversation. Keep local state, repository publication, deployment and live verification distinct. Do not say the Honor project record has been synchronised without an actual local write and verification. Public evidence is selected to exclude ROMs, private binaries and personal runtime data.
+**Answer:** state the useful conclusion first.
 
-A small read-only analysis of thousands of trace rows is appropriate automation. Repeatedly generating large untested publication runners is not. Questions should resolve a real ambiguity, one at a time, rather than repeatedly reconfirm an approved decision.
+**What changed:** describe the specific intervention or decision.
 
-## Reusable contribution
+**Evidence and limits:** link the source and explain what the observation does not establish.
 
-The reusable material is the source change, configuration, measurement definition, result, alternative and limitation. Publishing a principle does not demonstrate its fulfilment; publishing a number without its context does not establish a performance improvement.
+**Use this lesson:** give the next useful action or reading link.
+
+Include only fields that help the reader. Do not add empty sections to satisfy a template.
+
+## Keep the status clear
+
+| Label | Meaning |
+| --- | --- |
+| Source change | Visible in a patch or configuration |
+| Recorded result | Present in an archived test output |
+| Reanalysis | Calculated again from existing data |
+| Project policy | An approved rule, not a completed feature |
+| Open question | Evidence is incomplete or conflicting |
+
+A successful command does not prove every property of its output. A policy does not demonstrate that a feature was implemented.
+
+## Review, publish and maintain
+
+Draft the article from the evidence. Check it against the source, then review readability and scope before publication.
+
+Keep the evidence date separate from the editorial review date. Revising prose does not create a new hardware test.
+
+When evidence changes, update the main article and its summaries together. Mark superseded advice and link its replacement; retain the historical record.
+
+A reader can flag an unclear passage through [GitHub issues](https://github.com/raposomiguel50/minish-cap-rg34xx/issues). Record what was unclear and whether the revision resolved it.
+
+Assess usefulness through actual feedback and whether readers find the answer they need. File counts and paragraph lengths are checks, not proof of understanding.
+
+## Write for understanding
+
+Use short sentences and one idea per paragraph. Aim for one to three sentences per paragraph; keep technical detail in its own section.
+
+Lead with the answer. Prefer “The session ended with code 0” to a general claim that shutdown is reliable.
+
+Explain the purpose of a change before its implementation details. Keep a result and its important limitation together.
+
+Use descriptive links, not repeated “click here” instructions. Avoid promotional claims, defensive disclaimers and unexplained abbreviations.
+
+## Preserve attribution without self-citation
+
+Use the project's own voice for its decisions. Link internal results directly to files, revisions, tables or log lines.
+
+Do not turn the author's name or the Lab into a repeated bibliographic citation. Do not quote informal conversations as scholarly claims.
+
+Use APA-style references for external works used in the text. Credit upstream contributions separately from this integration's changes.
+
+## Check before publishing
+
+Verify that links resolve, measurements retain their units, and summaries agree with the detailed evidence.
+
+Check that limitations and negative results remain accessible. Confirm that shortening the text has not changed a policy into a completed result.
+
+Search for reintroduced self-citations. Keep unrelated files, private builds, music and site styling outside an editorial change.
+
+Test navigation and layout on a narrow screen. Readability checks cannot replace feedback from real readers.
+
+## Responsibility and continuity
+
+I define the goals, preservation criteria and acceptance decisions. ChatGPT assists with code, analysis and documentation. Generated output needs review before adoption.
+
+Work on a separate copy. Preserve the prior revision and record actions, success, failure and the next step outside the conversation.
+
+Repository publication, website deployment and local Honor records are separate states. Do not mark the Honor record as updated without a verified local write.
+
+**Next:** [Apply this structure to the practical lessons](KNOWLEDGE_BASE.md).
+
+## External references
+
+PeopleCert. (n.d.). *ITIL 4: Guiding principle*. https://www.peoplecert.jp/ITIL4_c_gp.html
+
+Singh, A. (2026, February 10). *How ITIL (Version 5) and AI are redefining the service desk*. PeopleCert Community. https://community.peoplecert.org/public/clubs/itil/blogs/how-itil-version-5-and-ai-are-redefining-the-service-desk-2026-02-05
