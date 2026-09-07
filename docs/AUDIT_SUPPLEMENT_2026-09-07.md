@@ -7,7 +7,7 @@ Miguel's Game Dev Lab
 
 This supplement reports archived observations that limit stronger claims about the selected runtime. It accompanies [EVIDENCE_AUDIT.md](EVIDENCE_AUDIT.md). It does not introduce new device tests, diagnose the cause of every warning or modify the private V1.
 
-The inspected launcher is pinned at revision `90fd77a82d579de9460f2de1167a95ec264e57c3`. The archived P13.1 log and monitor are identified by their original paths and SHA-256 values in the source index (Miguel's Game Dev Lab, 2026a; Raposo, 2026).
+The inspected [launcher](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/launcher/The%20Minish%20Cap.sh) is pinned at revision `90fd77a82d579de9460f2de1167a95ec264e57c3`. The archived P13.1 log and monitor are identified by their original paths and SHA-256 values in the [fixed evidence collection and source index](https://github.com/raposomiguel50/minish-cap-rg34xx/tree/e0f8c056bb94e8112a4b142b6addce78c9deb53b/docs/evidence/2026-09-07).
 
 ## Observations
 
@@ -23,9 +23,9 @@ The inspected launcher is pinned at revision `90fd77a82d579de9460f2de1167a95ec26
 | Pointer warnings | Log lines 103–104 report `ResolveRomPtr` addresses `0x80034678` and `0x8003C28C` outside the ROM. | The warnings remain part of an accepted session. Neither harmlessness, a specific gameplay defect nor a completed fix is inferred. |
 | Extraction time | Line 81 reports completion of asset extraction in 102,799 ms. | This session does not support a claim of instant extraction or first-run startup. |
 
-*Note.* Sources: Miguel's Game Dev Lab (2026a), `P13_1_LOG_EXCERPTS.txt`; Miguel's Game Dev Lab (2026b), `p13_1_monitor`; Raposo (2026), launcher. Line numbers refer to the original runtime log, not the excerpt's display lines. The excerpt explicitly identifies its selection and source hash.
+*Note.* Sources: [P13_1_LOG_EXCERPTS.txt](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/e0f8c056bb94e8112a4b142b6addce78c9deb53b/docs/evidence/2026-09-07/P13_1_LOG_EXCERPTS.txt); [REANALYSIS.json, `p13_1_monitor`](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/e0f8c056bb94e8112a4b142b6addce78c9deb53b/docs/evidence/2026-09-07/REANALYSIS.json); and the pinned launcher linked above. Line numbers refer to the original runtime log, not the excerpt's display lines. The excerpt explicitly identifies its selection and source hash.
 
-The same log records MENU+L2 exit and return code 0 at lines 131 and 135. The final acceptance records visual and audio `OK` in one manual session. Those observations do not erase contradictory diagnostics or prove that every reference default was active (Miguel's Game Dev Lab, 2026a).
+The same log records MENU+L2 exit and return code 0 at lines 131 and 135. The [final acceptance](evidence/2026-09-07/final_acceptance.json) records visual and audio `OK` in one manual session. Those observations do not erase contradictory diagnostics or prove that every reference default was active.
 
 ## Evidence versus diagnosis
 
@@ -35,12 +35,4 @@ These discrepancies warrant narrower wording, not an automatic code change. A di
 
 The final publication check found a newer audit revision on `main`, `d222705dad4ba8c5030fae49e64f2555c286a229`. That revision and its updated documents were retained. The older competing editorial draft was not used to replace them. The additional evidence snapshots are retained in the merged history so their fixed references remain inspectable.
 
-Only this supplement and its report index are added to that newer document baseline. Source patches, launcher, configuration pins and licensing notices are unchanged. Publication on GitHub does not by itself synchronize the separate Honor `Project-Control`; that local synchronization remains pending until independently confirmed.
-
-## References
-
-Miguel's Game Dev Lab. (2026a). *Archived RG34XX integration and runtime records* [Data set and test records]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/tree/e0f8c056bb94e8112a4b142b6addce78c9deb53b/docs/evidence/2026-09-07
-
-Miguel's Game Dev Lab. (2026b). *Reanalysis of archived P11 timing traces and the P13.1 monitor* [Data analysis output]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/blob/e0f8c056bb94e8112a4b142b6addce78c9deb53b/docs/evidence/2026-09-07/REANALYSIS.json
-
-Raposo, M. (2026). *The Minish Cap: RG34XX integration patches and launcher* (Revision 90fd77a82d579de9460f2de1167a95ec264e57c3) [Source code]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/tree/90fd77a82d579de9460f2de1167a95ec264e57c3
+Only this supplement and its report index were added to that newer document baseline. Source patches, launcher, configuration pins and licensing notices were unchanged. Publication on GitHub does not by itself synchronize the separate Honor `Project-Control`; that local synchronization remains pending until independently confirmed.
