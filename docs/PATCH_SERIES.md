@@ -1,6 +1,6 @@
 # Patch map and evidence
 
-This map inventories **15 public patches at commit `90fd77a82d579de9460f2de1167a95ec264e57c3`**. It describes source changes, not a guaranteed linear application order or a reconstructed V1. All links below are to that immutable revision (Raposo, 2026b).
+This map inventories **15 public patches at commit `90fd77a82d579de9460f2de1167a95ec264e57c3`**. It describes source changes, not a guaranteed linear application order or a reconstructed V1. All links below are to that immutable revision.
 
 | Patch | Role | What the source changes |
 | --- | --- | --- |
@@ -22,16 +22,10 @@ This map inventories **15 public patches at commit `90fd77a82d579de9460f2de1167a
 
 ## What this proves—and what it does not
 
-The patches show which instructions/configuration paths were changed. Exit diagnostics and later session output provide additional execution evidence. A build-source filename containing a room name is not evidence of an original gameplay-bug fix. Instrumentation and experimental patches must not be presented as released features merely because they are stored here (Raposo, 2026a, 2026b).
+The patches show which instructions/configuration paths were changed. [Exit diagnostics and later session output](evidence/2026-09-07/log_excerpts.json) provide additional execution evidence. A build-source filename containing a room name is not evidence of an original gameplay-bug fix. Instrumentation and experimental patches must not be presented as released features merely because they are stored here.
 
 The P11.4 captured result is quantified in [Validation](VALIDATION.md). The audio comparison retained a machine regression verdict. The final accepted configuration is identified separately by executable hash and runtime settings. The exact final source environment has not been reconstructed by this audit.
 
 ## Reconstruction use
 
 Use the pinned upstream, review a patch's preimage and purpose, apply only a compatible conceptual change in a separate worktree, then build and validate the target. Do not apply these files blindly in filename order: some overlap, supersede earlier changes or add diagnostics. See [REPRODUCTION.md](REPRODUCTION.md).
-
-## References
-
-Raposo, M. (2026a). *Archived development records for The Minish Cap—RG34XX (27 August–5 September 2026)* (Evidence extract 1.0) [Data set]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/tree/ede6e9090e7ca78c6c3a8c3d324d8c1de881f8b3/docs/evidence/2026-09-07
-
-Raposo, M. (2026b). *H700 integration patches for The Minish Cap—RG34XX* (Commit `90fd77a82d579de9460f2de1167a95ec264e57c3`) [Source code]. GitHub. https://github.com/raposomiguel50/minish-cap-rg34xx/tree/90fd77a82d579de9460f2de1167a95ec264e57c3/patches
