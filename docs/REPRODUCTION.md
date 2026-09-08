@@ -8,7 +8,7 @@ Use this page to see what exists and what a new build still needs.
 
 The public material includes the [upstream revision](../SOURCE_BASELINE.json), [15 historical patches](PATCH_SERIES.md), a [launcher](../launcher/The%20Minish%20Cap.sh) and [selected test records](evidence/2026-09-07/README.md).
 
-The source foundation is EstebanPdN's Project Picori-derived fork. Its pinned revision is `e72663ca4059dabf9dbf7f03c36fc791d90b8db5` (EstebanPdN, 2026).
+The source foundation is [EstebanPdN's Project Picori-derived fork](https://github.com/EstebanPdN/zelda-tmc-3ds/tree/e72663ca4059dabf9dbf7f03c36fc791d90b8db5). Its pinned revision is `e72663ca4059dabf9dbf7f03c36fc791d90b8db5`.
 
 The private executable, ROM, extracted game assets and saves are not included.
 
@@ -57,7 +57,3 @@ The public extract contains the calculation method and selected summaries, not a
 **Next:** [Learn which patches do what](PATCH_SERIES.md).
 
 [Licensing status](LEGAL_STATUS.md) · [Third-party notices](../THIRD_PARTY_NOTICES.md)
-
-## External reference
-
-EstebanPdN. (2026). *The Minish Cap 3DS* (Commit `e72663ca4059dabf9dbf7f03c36fc791d90b8db5`) [Source code]. GitHub. https://github.com/EstebanPdN/zelda-tmc-3ds/tree/e72663ca4059dabf9dbf7f03c36fc791d90b8db5

@@ -21,7 +21,7 @@ New to the terminology? Use the [short glossary](docs/GLOSSARY.md).
 
 I grew up with PC games. My father gave me my first console, a Game Boy Advance. I chose the RG34XX for its close physical resemblance to that handheld.
 
-Its 720 × 480 screen also fits the game's 240 × 160 image at exactly 3× scale. Each original pixel becomes a 3 × 3 block, without stretching the image (ANBERNIC, n.d.).
+Its 720 × 480 screen also fits the game's 240 × 160 image at exactly 3× scale. Each original pixel becomes a 3 × 3 block, without stretching the image.
 
 Archived project records call the device **RG34XX-H**. This documentation uses the product name **RG34XX**.
 
@@ -65,7 +65,7 @@ The private V1 executable, ROM, extracted Nintendo assets and saves are not incl
 
 ## Foundation and credits
 
-The pinned foundation is EstebanPdN's `zelda-tmc-3ds` fork. Its README credits the Android port, Project Picori and zeldaret (EstebanPdN, 2026).
+The pinned foundation is [EstebanPdN's `zelda-tmc-3ds` fork](https://github.com/EstebanPdN/zelda-tmc-3ds/tree/e72663ca4059dabf9dbf7f03c36fc791d90b8db5). Its README credits the Android port, Project Picori and zeldaret.
 
 Exact revisions and file identities are in [SOURCE_BASELINE.json](SOURCE_BASELINE.json).
 
@@ -73,8 +73,5 @@ I set the project goals and acceptance criteria. ChatGPT assists with code, anal
 
 Original integration work uses the repository's [GPL-3.0-or-later terms](LICENSE). Upstream and third-party notices remain applicable.
 
-## External references
 
-ANBERNIC. (n.d.). *ANBERNIC RG 34XX*. Retrieved September 7, 2026, from https://anbernic.com/en-fr/products/rg34xx
-
-EstebanPdN. (2026). *The Minish Cap 3DS* (Commit `e72663ca4059dabf9dbf7f03c36fc791d90b8db5`) [Source code]. GitHub. https://github.com/EstebanPdN/zelda-tmc-3ds/tree/e72663ca4059dabf9dbf7f03c36fc791d90b8db5
+[RG34XX hardware specifications](https://anbernic.com/en-fr/products/rg34xx)

@@ -16,7 +16,7 @@ The finished game is the reference for those decisions. Additional hardware marg
 
 I grew up with PC games. My father gave me my first console, a Game Boy Advance. The RG34XX's resemblance to it is the main reason for this choice.
 
-The screen reinforces that fit. Its 720 × 480 resolution accommodates the game's 240 × 160 image at an exact 3× scale (ANBERNIC, n.d.).
+The screen reinforces that fit. Its 720 × 480 resolution accommodates the game's 240 × 160 image at an exact 3× scale.
 
 Historical logs use the name RG34XX-H. The product name used here is RG34XX.
 
@@ -74,6 +74,5 @@ Detailed documentation supports small changes. Its purpose is to help others und
 
 **Next:** [See the practical lessons](KNOWLEDGE_BASE.md).
 
-## External reference
 
-ANBERNIC. (n.d.). *ANBERNIC RG 34XX*. Retrieved September 7, 2026, from https://anbernic.com/en-fr/products/rg34xx
+[RG34XX hardware specifications](https://anbernic.com/en-fr/products/rg34xx)

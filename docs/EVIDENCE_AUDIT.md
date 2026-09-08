@@ -71,9 +71,9 @@ Randomisation, identical gameplay sequences and matched scenes were not establis
 
 The [patch map](PATCH_SERIES.md) links each build change at its exact revision.
 
-The foundation is EstebanPdN's `zelda-tmc-3ds` fork. Its README credits the Android port, Project Picori and zeldaret (EstebanPdN, 2026).
+The foundation is [EstebanPdN's `zelda-tmc-3ds` fork](https://github.com/EstebanPdN/zelda-tmc-3ds/tree/e72663ca4059dabf9dbf7f03c36fc791d90b8db5). Its README credits the Android port, Project Picori and zeldaret.
 
-The pinned upstream already contains EstebanPdN's Cloud Tops regional-flag change for its PC-port/multi-region path (EstebanPdN, 2026).
+The [pinned upstream](https://github.com/EstebanPdN/zelda-tmc-3ds/tree/e72663ca4059dabf9dbf7f03c36fc791d90b8db5) already contains EstebanPdN's Cloud Tops regional-flag change for its PC-port/multi-region path.
 
 The H700 patch adds that existing upstream source to the build.
 
@@ -110,7 +110,7 @@ The launcher selects `--window_scale=3 --console-parity`. The final log reports 
 
 It also describes save states as inert. Later autosave messages require the qualification in the [diagnostic supplement](AUDIT_SUPPLEMENT_2026-09-07.md).
 
-The screen is 720 × 480. Scaling the game's 240 × 160 image by three fits those dimensions (ANBERNIC, n.d.).
+The screen is 720 × 480. Scaling the game's 240 × 160 image by three fits those dimensions.
 
 These source and log observations are not an exhaustive pixel, sound or control-conformance test.
 
@@ -242,8 +242,5 @@ This is an archival technical review, not independent peer review or hardware re
 
 **Next:** [Inspect unresolved log questions](AUDIT_SUPPLEMENT_2026-09-07.md) or [return to the learning guide](KNOWLEDGE_BASE.md).
 
-## External references
 
-ANBERNIC. (n.d.). *ANBERNIC RG 34XX*. Retrieved September 7, 2026, from https://anbernic.com/en-fr/products/rg34xx
-
-EstebanPdN. (2026). *The Minish Cap 3DS* (Commit `e72663ca4059dabf9dbf7f03c36fc791d90b8db5`) [Source code]. GitHub. https://github.com/EstebanPdN/zelda-tmc-3ds/tree/e72663ca4059dabf9dbf7f03c36fc791d90b8db5
+[RG34XX hardware specifications](https://anbernic.com/en-fr/products/rg34xx)

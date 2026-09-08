@@ -2,7 +2,7 @@
 
 **Purpose:** help readers understand a result, find its evidence and use the lesson without repeating avoidable mistakes.
 
-**Owner:** project maintainer. **Reviewed:** 7 September 2026. These are the reporting rules for this project.
+**Owner:** project maintainer. **Reviewed:** 8 September 2026. These are the reporting rules for this project.
 
 ## Start with the reader's task
 
@@ -10,7 +10,7 @@ The overview answers what the project is and what is available. The learning gui
 
 Readers should not need the full audit to understand the project. They should not lose access to the audit when a summary is shortened.
 
-This approach adapts ITIL's focus on value and practical simplicity. Guidance on knowledge management also treats knowledge as something to review and improve, not merely store (PeopleCert, n.d.; Singh, 2026).
+The knowledge workflow applies ITIL's focus on value and practical simplicity. Articles are reviewed and improved as the work develops.
 
 The article structure and review process below apply these principles to the project.
 
@@ -94,13 +94,19 @@ Explain the purpose of a change before its implementation details. Keep a result
 
 Use descriptive links, not repeated “click here” instructions. Avoid promotional claims, defensive disclaimers and unexplained abbreviations.
 
-## Preserve attribution without self-citation
+## Use sources where they help the reader
 
 Use the project's own voice for its decisions. Link internal results directly to files, revisions, tables or log lines.
 
 Do not turn the author's name or the Lab into a repeated bibliographic citation. Do not quote informal conversations as scholarly claims.
 
-Use APA-style references for external works used in the text. Credit upstream contributions separately from this integration's changes.
+Write ordinary product descriptions and standard specifications directly, in original wording. An author–date citation is not needed after each screen size, model name or platform description.
+
+Keep an official product link where checking the specification is useful. Credit inherited code and specific technical contributions by name and link to their source revision.
+
+Use formal references for quotations, research findings and identifiable borrowed ideas when the article calls for them. Paraphrasing does not remove the need to credit a distinctive contribution.
+
+Place project measurements beside their test conditions and supporting records. Source links support verification; they do not need to interrupt every sentence.
 
 ## Check before publishing
 
@@ -122,8 +128,8 @@ Repository publication, website deployment and local Honor records are separate 
 
 **Next:** [Apply this structure to the practical lessons](KNOWLEDGE_BASE.md).
 
-## External references
+## Knowledge-management reading
 
-PeopleCert. (n.d.). *ITIL 4: Guiding principle*. https://www.peoplecert.jp/ITIL4_c_gp.html
+[ITIL guiding principles](https://www.peoplecert.jp/ITIL4_c_gp.html) — the framework behind the reader-focused workflow.
 
-Singh, A. (2026, February 10). *How ITIL (Version 5) and AI are redefining the service desk*. PeopleCert Community. https://community.peoplecert.org/public/clubs/itil/blogs/how-itil-version-5-and-ai-are-redefining-the-service-desk-2026-02-05
+[A. Singh: Knowledge management and the service desk](https://community.peoplecert.org/public/clubs/itil/blogs/how-itil-version-5-and-ai-are-redefining-the-service-desk-2026-02-05) — further discussion of reviewing and using knowledge.

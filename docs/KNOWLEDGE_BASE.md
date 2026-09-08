@@ -25,7 +25,7 @@ A guide to the problems, decisions and evidence behind the RG34XX integration.
 <a id="kb-mc-001"></a>
 ## KB-MC-001 — Which work is upstream?
 
-**Type: source provenance.** The foundation is EstebanPdN's Project Picori-derived fork. Its README credits the Android port, Project Picori and zeldaret (EstebanPdN, 2026).
+**Type: source provenance.** The foundation is [EstebanPdN's Project Picori-derived fork](https://github.com/EstebanPdN/zelda-tmc-3ds/tree/e72663ca4059dabf9dbf7f03c36fc791d90b8db5). Its README credits the Android port, Project Picori and zeldaret.
 
 This integration adds the H700 build configuration and handheld runtime setup.
 
@@ -250,7 +250,3 @@ These three entries concern the publication workflow, not features or performanc
 Report the entry ID, unclear passage and missing information through [GitHub issues](https://github.com/raposomiguel50/minish-cap-rg34xx/issues).
 
 [How articles are maintained](DEVELOPMENT_METHOD.md) · [Inspect the detailed report](EVIDENCE_AUDIT.md)
-
-## External reference
-
-EstebanPdN. (2026). *The Minish Cap 3DS* (Commit `e72663ca4059dabf9dbf7f03c36fc791d90b8db5`) [Source code]. GitHub. https://github.com/EstebanPdN/zelda-tmc-3ds/tree/e72663ca4059dabf9dbf7f03c36fc791d90b8db5
