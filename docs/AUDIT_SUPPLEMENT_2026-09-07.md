@@ -2,7 +2,7 @@
 
 **Purpose:** identify conflicts in the archived logs without guessing their cause.
 
-**Reviewed:** 7 September 2026. These are documentary findings, not new device tests or new fixes.
+**Analysis date:** 7 September 2026. **Source:** archived device logs and configuration files.
 
 The source is the [pinned launcher](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/launcher/The%20Minish%20Cap.sh), plus the P13.1 log and monitor.
 
@@ -23,7 +23,7 @@ The source is the [pinned launcher](https://github.com/raposomiguel50/minish-cap
 
 **Known:** the same session contains both messages.
 
-**Still needed:** which code paths govern manual save states and background autosave. They may differ, but the review did not establish that explanation.
+**Still needed:** trace the code paths governing manual save states and background autosave. Their relationship remains unresolved.
 
 ## Did every system setting return to its old value?
 
@@ -41,13 +41,13 @@ CPU maximum was 1,512,000 kHz before and after. GPU maximum was recorded as 0 be
 
 **Known:** the warnings occur in the accepted session.
 
-**Still needed:** their origin and effect. The record alone does not prove harmlessness, a specific gameplay defect or a completed correction.
+**Still needed:** locate the source of each address and reproduce its effect on execution.
 
 ## Was first-run extraction instant?
 
 **Recorded:** line 81 reports extraction completed in **102,799 ms**.
 
-**Known:** this session does not support a claim of instant extraction. It is one observation, not a general startup benchmark.
+**Known:** extraction took about 103 seconds in this session. A startup benchmark would require repeated runs under defined conditions.
 
 ## How should these findings be used?
 
@@ -64,13 +64,5 @@ A later investigation must identify the effective value and relevant code path b
 [Monitor calculations: `p13_1_monitor`](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/e0f8c056bb94e8112a4b142b6addce78c9deb53b/docs/evidence/2026-09-07/REANALYSIS.json)
 
 [Final acceptance](evidence/2026-09-07/final_acceptance.json)
-
-## Revision note
-
-The earlier supplement retained the concurrent audit revision `d222705dad4ba8c5030fae49e64f2555c286a229`. The older competing draft did not replace it.
-
-This editorial revision retains those observations and their evidence. It changes neither private V1 nor source patches, launcher, configuration pins or licences.
-
-GitHub publication does not update the separate Honor project record. That local synchronization remains pending until verified.
 
 **Next:** [Return to tests and results](VALIDATION.md).

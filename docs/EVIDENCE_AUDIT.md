@@ -7,11 +7,11 @@ Use this report to inspect the method, exact source changes and full numerical r
 
 ## Summary
 
-The review covers 15 historical patches, a launcher and selected development records. It distinguishes implementation, observations, recalculated statistics and policy.
+The material comprises 15 historical patches, a launcher and selected development records. The sections below describe the source changes and their recorded results.
 
 The records support build changes, menu/input integration, a targeted exit workaround and a later accepted device session. Timing and audio results remain mixed.
 
-No original-GBA gameplay-bug correction, measured energy saving, universal compatibility or bit-for-bit rebuild is established.
+Test coverage is limited to the recorded RG34XX/muOS sessions. Energy measurements and a complete build recipe remain unavailable.
 
 ## Method
 
@@ -19,9 +19,9 @@ No original-GBA gameplay-bug correction, measured energy saving, universal compa
 
 The source reference is commit `90fd77a82d579de9460f2de1167a95ec264e57c3`.
 
-The audit inspected all 15 patches by changed file and hunk. It matched Git blob identifiers against archive copies and examined the launcher separately.
+Source inspection covered all 15 patches by changed file and hunk, followed by a separate examination of the launcher. Git blob identifiers matched the archive copies.
 
-It read archived test outputs. It did not rerun their scripts or treat approved project principles as implementation evidence.
+Test outputs came from the archived sessions. The numerical analysis used those existing records; no test scripts were rerun.
 
 [Patch inventory](PATCH_SERIES.md) · [Pinned launcher](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/launcher/The%20Minish%20Cap.sh) · [Source index and calculations](evidence/2026-09-07/reanalysis.json)
 
@@ -69,17 +69,18 @@ Randomisation, identical gameplay sequences and matched scenes were not establis
 
 **P06 targeting:** adds `-march=armv8-a+simd` and `-mtune=cortex-a53` to C/C++ flags in its Linux, non-x86 condition.
 
-These are build changes, not measured gameplay improvements. The [patch map](PATCH_SERIES.md) links each exact revision.
+The [patch map](PATCH_SERIES.md) links each build change at its exact revision.
 
 The foundation is EstebanPdN's `zelda-tmc-3ds` fork. Its README credits the Android port, Project Picori and zeldaret (EstebanPdN, 2026).
 
 The pinned upstream already contains EstebanPdN's Cloud Tops regional-flag change for its PC-port/multi-region path (EstebanPdN, 2026).
 
-The H700 patch adds that source to the build. It does not make the earlier upstream correction a newly authored gameplay fix.
+The H700 patch adds that existing upstream source to the build.
 
 [Source baseline](../SOURCE_BASELINE.json) · [Link-completeness patch](../patches/P04_AARCH64_LINK_COMPLETENESS_R1.patch)
 
-### 2. Exit handling: a port defect, not an original-game bug
+<a id="2-exit-handling-a-port-defect-not-an-original-game-bug"></a>
+### 2. Shutdown handling
 
 **D2, lines 302–303:** `MENU+L2`, completed subsystem-shutdown markers, `BEFORE_RETURN_0`, then `RAW_CRASH sig=11`.
 
@@ -91,7 +92,7 @@ The patches propagate a quit request through waits and main loops. The seamless 
 
 This supports a targeted workaround and successful exit in those recorded sessions. The exact failing finalizer was not identified.
 
-It does not prove that all crashes were removed or that the GBA ROM had this defect. `D3_EXIT_VERDICT.txt` is empty and supplies no acceptance evidence.
+`D3_EXIT_VERDICT.txt` is empty. The observations above come from the D2/D3 traces and the later session log.
 
 [Diagnostic excerpts](evidence/2026-09-07/log_excerpts.json) · [Exit patches](PATCH_SERIES.md)
 
@@ -103,7 +104,7 @@ P10.3.2 suppresses a host-port file-selection hint and its L-button sidebar acti
 
 The [patch map](PATCH_SERIES.md#interface-provenance) distinguishes the upstream keyboard prompt from that separate file-selection path. Neither belongs to the original GBA interface.
 
-These details establish source provenance. The user-facing result is access to port settings without instructional messages over the game, not restoration of a missing original feature.
+Port settings remain accessible without instructional messages over the game.
 
 The launcher selects `--window_scale=3 --console-parity`. The final log reports widescreen disabled, pacing at 59.7275 Hz and three OpenMP scanline threads.
 
@@ -221,19 +222,19 @@ These are different stages, not interchangeable status messages. Both remain in 
 
 ## Interpretation and limits
 
-The evidence supports specific build/runtime changes, an exit workaround, menu/input choices and descriptive timing results.
+The source changes concern build configuration, shutdown handling, menus, audio and presentation timing. The timing comparison describes two captures on one device.
 
-It does not establish correction of original-GBA gameplay bugs, complete defect removal, lower end-to-end latency or measured energy savings.
+Coverage is limited to the recorded sessions. No end-to-end input-latency test, energy measurement or full playthrough is included. Additional devices and firmware require separate validation.
 
-There is no full-playthrough guarantee, universal device/firmware result or bit-for-bit reconstruction of private V1.
+A byte-identical rebuild still requires the missing source and toolchain inputs listed in [Reconstruction](REPRODUCTION.md).
 
-Native game logic still uses Linux, SDL and software reproduction of GBA graphics/audio behaviour. No controlled native-versus-emulator comparison was identified.
+Native game logic uses Linux, SDL and software reproduction of GBA graphics/audio behaviour. The available performance measurements compare configurations of this native path.
 
 Future original-game bug corrections remain eligible under the approved policy. Each needs its own symptom, reproduction case, source change, build identity and before/after test.
 
 ## Data access
 
-The public patch archive is not the complete final build tree. The private executable was neither rebuilt nor run during this review.
+The public patch archive is not the complete final build tree. This analysis used archived outputs rather than a new build or device session.
 
 Selected machine records, hashes and the analysis script are public. Full raw traces remain in the private development archive.
 

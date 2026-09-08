@@ -20,7 +20,7 @@ It also contains a separate [file-selection settings hint](https://github.com/Es
 
 P09 and P10 record intermediate interface work. Their labels and bindings are historical, not recommended controls for the reference configuration.
 
-For normal use, the relevant outcome is an unobstructed game image with settings available through `MENU+R2`. Prompt edits are not original-game bug fixes.
+For normal use, the relevant outcome is an unobstructed game image with settings available through `MENU+R2`. The patch history retains the intermediate labels and bindings.
 
 ## Build support
 
@@ -68,7 +68,7 @@ Combines quit handling, conditional post-shutdown _Exit and suppression of the h
 
 ### P10_3_1_EXIT_DIAG_R1
 
-Adds exit/crash markers. Instrumentation records a problem; it is not itself a fix.
+Adds exit/crash markers to locate a failure within the shutdown sequence.
 
 [Inspect this patch](https://github.com/raposomiguel50/minish-cap-rg34xx/blob/90fd77a82d579de9460f2de1167a95ec264e57c3/patches/P10_3_1_EXIT_DIAG_R1.patch)
 
@@ -132,9 +132,9 @@ A patch shows the code change. A test shows what happened when a particular buil
 
 [Exit diagnostics](evidence/2026-09-07/log_excerpts.json) support the shutdown case. [Timing results](VALIDATION.md) describe the presentation comparison, including remaining delays.
 
-The audio comparison retains a regression verdict. The final accepted build has its own identity and settings; it was not reconstructed during this review.
+The audio comparison retains a regression verdict. The final accepted build has its own identity and settings in the [acceptance record](evidence/2026-09-07/final_acceptance.json).
 
-Adding a source file named after a room does not establish a new fix to that room's gameplay.
+[Reconstruction](REPRODUCTION.md) lists the source and toolchain inputs still needed for a new build.
 
 ## How to study a patch safely
 

@@ -1,6 +1,6 @@
 # Why this approach?
 
-**Purpose:** explain the decisions behind the port. These are project principles, not a list of completed fixes.
+Preserve the game. Make its technical execution dependable. Choose a coherent presentation for the handheld.
 
 ## Keep the creative work intact
 
@@ -10,7 +10,7 @@ More hardware capacity is useful when it helps the same work run reliably. It is
 
 I use a conservative premise: what technical obstacles might more optimisation time and hardware margin remove from this same work?
 
-The finished game remains the reference. The premise does not establish undocumented intentions or justify an imagined expanded edition.
+The finished game is the reference for those decisions. Additional hardware margin serves the work already present in it.
 
 ## Choose a fitting device
 
@@ -24,13 +24,11 @@ Historical logs use the name RG34XX-H. The product name used here is RG34XX.
 
 Painting restoration offers a useful analogy. Preserve the image; do not add new details. A familiar layer of yellowed varnish is not necessarily part of the work beneath it.
 
-For this port, the distinction is between creative choices and demonstrated technical defects. The analogy guides decisions; it does not prove that a particular behaviour is defective.
+For this port, code, behaviour and historical context help distinguish creative choices from technical defects.
 
 Known technical bugs are eligible for correction. Their popularity or use as exploits does not make them intentional. Each correction still needs a reproducible case and a documented test.
 
 When the evidence cannot distinguish a defect from a design choice, preserve the behaviour. Keep limitations that have become part of the artwork, composition or characteristic sound.
-
-The [documented exit intervention](EVIDENCE_AUDIT.md#2-exit-handling-a-port-defect-not-an-original-game-bug) concerns the port. No original-GBA gameplay-bug correction is established by this review.
 
 ## Provide a curated starting point
 
@@ -46,13 +44,11 @@ Useful inherited Project Picori options can remain accessible. Changing them may
 
 Unnecessary options may be hidden or removed through a documented change. New creative or non-preservation features belong in a separate project or branch, not this port.
 
-This boundary is not a promise to develop that separate work.
-
 ## Use native execution as a tool
 
 Native game logic gives the project control over the host build, timing, input, audio and shutdown handling.
 
-It still uses Linux, SDL and software models of original hardware behaviour. The word “native” does not establish a speed or energy advantage by itself.
+It still uses Linux, SDL and software models of original hardware behaviour. Performance and energy use require their own measurements.
 
 [What the source and measurements show](EVIDENCE_AUDIT.md).
 

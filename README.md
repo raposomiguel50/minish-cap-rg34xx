@@ -2,7 +2,7 @@
 
 An unofficial native port of *The Minish Cap* for the **ANBERNIC RG34XX** handheld, running **muOS**.
 
-A port adapts a game's software to another device. This project builds on EstebanPdN's Project Picori-derived work, rather than creating a new game engine.
+A port adapts a game's software to another device. This project builds on EstebanPdN's Project Picori-derived work.
 
 **Available here:** integration patches, a launcher, test records and development guides. **There is no public game download.** See [distribution status](docs/PORTMASTER_STATUS.md).
 
@@ -31,15 +31,13 @@ Archived project records call the device **RG34XX-H**. This documentation uses t
 
 **Controls.** GBA buttons remain assigned to gameplay. `MENU+R2` opens port settings and `MENU+L2` exits to muOS.
 
-These are integration choices for a handheld. They do not create new game content or correct an original GBA interface defect.
-
 **Presentation timing.** P11.4 changes when the port presents frames. Two archived captures show lower p95 tick lateness, but some delays remain.
 
 **Runtime settings.** The accepted record uses CPU/GPU ceilings of 936/420 MHz and three rendering threads. These settings do not establish battery savings.
 
 ## For developers
 
-The build changes target the H700. Shutdown work addresses a failure in the host port; it is not a fix to the original GBA game.
+The build changes target the H700. The shutdown path propagates quit requests through the game loop and closes subsystems before terminating the process.
 
 The [patch map](docs/PATCH_SERIES.md) shows the code changes. The [results](docs/VALIDATION.md) explain the tests and their limits.
 
@@ -47,9 +45,7 @@ The [patch map](docs/PATCH_SERIES.md) shows the code changes. The [results](docs
 
 The aim is to preserve the game's creative work: its content, artwork, music, mechanics and control identity.
 
-Technical restoration and curation guide the choices. They do not mean adding content or claiming fixes that have not been demonstrated.
-
-No correction of an original GBA gameplay bug is established by the reviewed records. The documented exit intervention concerns the port.
+Restoration guides the technical changes. Curation brings the presentation, controls and runtime settings into one reference configuration.
 
 [Read the preservation principles](docs/PHILOSOPHY.md).
 
@@ -57,7 +53,7 @@ No correction of an original GBA gameplay bug is established by the reviewed rec
 
 The game logic is built as ARM64 code for the target device. Linux, SDL and software models of GBA graphics/audio behaviour still provide supporting layers.
 
-This gives the project control over its own build and integration. No controlled native-versus-emulator performance comparison is claimed.
+The integration controls its build, presentation timing, audio configuration and shutdown handling. [Tests and results](docs/VALIDATION.md) describes the measured configurations.
 
 ## What can I download?
 

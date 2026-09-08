@@ -2,9 +2,9 @@
 
 The records show a targeted exit workaround, changes to menus and timing, and a later accepted device session.
 
-They also contain delays, an earlier audio regression and unresolved diagnostic messages. This page keeps those results together.
+They also contain delays, an earlier audio regression and unresolved diagnostic messages. The tables below identify the configurations, sample sizes and outcomes.
 
-**Evidence review:** 7 September 2026. **New hardware sessions in that review:** 0.
+**Analysis date:** 7 September 2026. **Method:** reanalysis of archived sessions; no new hardware runs.
 
 [Full method](EVIDENCE_AUDIT.md) · [Open questions](AUDIT_SUPPLEMENT_2026-09-07.md) · [Glossary](GLOSSARY.md)
 
@@ -106,14 +106,14 @@ RSS measures resident process memory. These observations do not establish genera
 
 D2 recorded signal 11 after explicit subsystem shutdown. D3 reached the new `_Exit(0)` route. The later accepted session ended with exit code 0.
 
-This supports a **targeted workaround in the port**. The exact failing finalizer was not isolated. It is not evidence of fixing an original GBA bug.
+The **targeted workaround** bypasses process finalizers after explicit subsystem shutdown. The exact failing finalizer remains unidentified.
 
 [Exit evidence and source changes](EVIDENCE_AUDIT.md#2-exit-handling-a-port-defect-not-an-original-game-bug)
 
-## What remains unproven?
+## Test coverage
 
-The review does not establish an original-ROM gameplay-bug correction, measured native-versus-emulator gains, universal device support or a bit-for-bit rebuild.
+The measurements concern configurations of the native port on the RG34XX with muOS. They cover the listed sessions, not a complete playthrough or other devices.
 
-These limits apply to the records reviewed. They do not replace the documented changes and session results above.
+A native-versus-emulator comparison needs matched workloads and new measurements. [Reconstruction](REPRODUCTION.md) lists the inputs and checks needed for a new build.
 
 **Next:** [Read the unresolved diagnostic questions](AUDIT_SUPPLEMENT_2026-09-07.md).

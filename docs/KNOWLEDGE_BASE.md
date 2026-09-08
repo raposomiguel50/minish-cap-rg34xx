@@ -18,7 +18,7 @@ A guide to the problems, decisions and evidence behind the RG34XX integration.
 | Can I rebuild or distribute it? | [Reconstruction](#kb-mc-015) · [Distribution](#kb-mc-016) |
 | How do preservation decisions work? | [Principles](#kb-mc-021) |
 
-**Reading key:** source = code inspection; record = archived observation; policy = a decision rule. A policy is not a completed feature. Website-maintenance notes are grouped separately at the end.
+**Reading key:** source = code inspection; record = archived observation; policy = a decision rule. Website-maintenance notes are grouped separately at the end.
 
 [Glossary](GLOSSARY.md) · [Full results](VALIDATION.md) · [Open log questions](AUDIT_SUPPLEMENT_2026-09-07.md)
 
@@ -27,7 +27,7 @@ A guide to the problems, decisions and evidence behind the RG34XX integration.
 
 **Type: source provenance.** The foundation is EstebanPdN's Project Picori-derived fork. Its README credits the Android port, Project Picori and zeldaret (EstebanPdN, 2026).
 
-This integration adds H700-specific work; it is not a newly authored game engine.
+This integration adds the H700 build configuration and handheld runtime setup.
 
 **Use the lesson:** identify inherited code before describing your contribution. [Exact source pin](../SOURCE_BASELINE.json).
 
@@ -56,7 +56,7 @@ These are platform-integration choices, not proof of compatibility with every fi
 
 `MENU+L2` exits to muOS. These shortcuts use controls beyond the GBA set, leaving the original buttons assigned to gameplay.
 
-The launcher selects Console-Parity and 3× scale. These choices adapt the host interface; they do not repair the original game's interface.
+The launcher selects Console-Parity and 3× scale. Port settings remain separate from the game's own interface.
 
 **Use the lesson:** document where players find the function, why it is separate from gameplay and how that access was checked. [Patch map](PATCH_SERIES.md) · [Session excerpts](evidence/2026-09-07/log_excerpts.json).
 
@@ -155,7 +155,7 @@ That identifies file contents. It does not prove a successful rebuild or correct
 
 **Type: publication limit.** No. Historical patches can overlap or supersede one another. Some exist only to measure behaviour.
 
-A new working build and a byte-identical rebuild are separate outcomes. Neither was produced by the documentation review.
+A working rebuild needs target-device testing. A byte-identical rebuild also needs the complete source and toolchain environment. [Reconstruction status](REPRODUCTION.md) lists the missing inputs.
 
 **Use the lesson:** check the required inputs first. [Reconstruction guide](REPRODUCTION.md).
 
@@ -182,7 +182,7 @@ The complete private archive is not automatically safe to publish.
 
 **Type: scope and policy.** It gives the port control over its build and integration. Linux, SDL and software models of GBA graphics/audio behaviour remain.
 
-There is no measured native-versus-emulator speed or energy comparison in this review.
+The available measurements compare configurations of the native port. A native-versus-emulator comparison would require matched workloads and separate measurements.
 
 **Use the lesson:** use native execution to serve fidelity, not as an automatic performance claim. [Implementation limits](EVIDENCE_AUDIT.md#interpretation-and-limits).
 
@@ -191,7 +191,7 @@ There is no measured native-versus-emulator speed or energy comparison in this r
 
 **Type: approved policy.** A demonstrated technical bug is eligible for correction when compatible with the creative work.
 
-This is a decision rule. The reviewed records do not establish an original-GBA gameplay-bug correction by this integration.
+Identify the defect, establish how to reproduce it, then test the correction against that case. Preserve ambiguous behaviour until its origin is understood.
 
 **Use the lesson:** document the reproduction case, patch and test before reporting a completed fix. [Preservation principles](PHILOSOPHY.md).
 
@@ -200,7 +200,7 @@ This is a decision rule. The reviewed records do not establish an original-GBA g
 
 **Type: policy with source examples.** A reference configuration gives the player an intentional starting point.
 
-The reference separates port settings from gameplay and provides device-specific shortcuts. This does not establish that every inherited setting was audited.
+The reference separates port settings from gameplay and provides device-specific shortcuts. Each retained option needs a clear purpose within that setup.
 
 **Use the lesson:** keep useful options accessible without requiring them to assemble the intended experience. [Current control changes](#kb-mc-004).
 
@@ -217,8 +217,6 @@ The accepted record uses CPU/GPU ceilings of **936/420 MHz**. Lower power and he
 ## KB-MC-025 — Must every historical defect become a user option?
 
 **Type: approved policy.** No. Historical behaviour may be kept for comparison or research without becoming a normal play mode.
-
-This does not claim that such a mode has been implemented.
 
 **Use the lesson:** preserve useful evidence without overwhelming the player with settings.
 
@@ -245,7 +243,7 @@ These three entries concern the publication workflow, not features or performanc
 
 **Type: workflow policy.** First inspect known local files and earlier results. The required artifact may already exist.
 
-**Use the lesson:** verify and reuse existing evidence before repeating work. The site's music recovery is not game-performance evidence.
+**Use the lesson:** verify and reuse existing evidence before repeating work.
 
 ## Improve an article
 

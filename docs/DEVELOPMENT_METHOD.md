@@ -12,7 +12,7 @@ Readers should not need the full audit to understand the project. They should no
 
 This approach adapts ITIL's focus on value and practical simplicity. Guidance on knowledge management also treats knowledge as something to review and improve, not merely store (PeopleCert, n.d.; Singh, 2026).
 
-The template and review rules below are local choices. They are not a claim of ITIL certification.
+The article structure and review process below apply these principles to the project.
 
 ## Give each topic one main home
 
@@ -83,6 +83,8 @@ A reader can flag an unclear passage through [GitHub issues](https://github.com/
 Assess usefulness through actual feedback and whether readers find the answer they need. File counts and paragraph lengths are checks, not proof of understanding.
 
 ## Write for understanding
+
+Describe the project in its own voice. State the decision, implementation or measured result directly. Keep editorial review notes and writing corrections in the maintenance record.
 
 Use short sentences and one idea per paragraph. Aim for one to three sentences per paragraph; keep technical detail in its own section.
 

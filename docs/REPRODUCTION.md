@@ -16,7 +16,7 @@ The private executable, ROM, extracted game assets and saves are not included.
 
 **Traceable:** you can inspect the patch, setting or recorded observation.
 
-**Rebuilt and working:** a new build passes checks on the target device. This documentation review did not perform that build.
+**Rebuilt and working:** a new build passes checks on the target device. A validated public rebuild recipe is still needed.
 
 **Bit-for-bit reproduced:** the rebuild creates exactly the same bytes as the reference executable. This has not been demonstrated.
 
