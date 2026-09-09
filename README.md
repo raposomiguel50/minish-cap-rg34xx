@@ -31,6 +31,8 @@ Archived project records call the device **RG34XX-H**. This documentation uses t
 
 **Controls.** GBA buttons remain assigned to gameplay. `MENU+R2` opens port settings and `MENU+L2` exits to muOS.
 
+**~120 Hz display mode.** During play, the launcher selects a 119.455 Hz display mode, twice the game’s 59.7275 Hz logic rate. The game keeps its original pace; this is not 120 FPS game logic. [How the display mode works](docs/DISPLAY_MODE.md).
+
 **Presentation timing.** P11.4 changes when the port presents frames. Two archived captures show lower p95 tick lateness, but some delays remain.
 
 **Runtime settings.** The accepted record uses CPU/GPU ceilings of 936/420 MHz and three rendering threads. These settings do not establish battery savings.
