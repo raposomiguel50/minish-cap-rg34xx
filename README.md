@@ -1,4 +1,4 @@
-# The Legend of Zelda: The Minish Cap — RG34XX
+# The Legend of Zelda: The Minish Cap — Native port for RG34XX
 
 An unofficial native port of *The Legend of Zelda: The Minish Cap* for the **ANBERNIC RG34XX** handheld, running **muOS**.
 
