@@ -6,6 +6,8 @@ A port adapts a game's software to another device. This project builds on Esteba
 
 **Available here:** integration patches, a launcher, test records and development guides. **There is no public game download.** See [distribution status](docs/PORTMASTER_STATUS.md).
 
+[Project website](https://raposomiguel50.github.io/projects/minish-cap-rg34xx/) · [ModDB project page](https://www.moddb.com/mods/the-legend-of-zelda-the-minish-cap-native-port-for-rg34xx)
+
 ## Start with your question
 
 | I want to… | Read |
